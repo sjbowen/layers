@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Layers of the Old Dock</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+  <style> @-ms-viewport { width: device-width; } </style>
+  <link rel="stylesheet" href="vendor/reset.min.css">
+  <link rel="stylesheet" href="style.css">
+
+<!-- scripts for webpd -->
+	<script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/webpd-latest.js"></script>
+ 
+</head>
+<body class="multiple-scenes ">
+
+<div href="#" id="readyContainer" style="z-index:10;">
+	<p style="position:relative; width: 300px; height 200px; color:black; background-color: #eee; font-size:1.5em;padding: 10px; margin:10px auto; z-index:10;">This interactive piece uses the loudspeaker and motion sensors on your mobile device. Please turn OFF silent or mute mode if switched on.</br></br>
+	<a href="#" id="ready">BEGIN</a> or <a href="index.html">CANCEL</a></p>
+</div>
+
+<div id="pano"></div>
+
+<div id="toggleDeviceOrientation">
+  <img class="enable" src="img/gyro.png">
+  <img class="disable" src="img/gyro_disable.png">
+</div>
+
+<style>
+/* turn off scene list, title, auto rotate buttons (add debug, later) */
+#sceneList, #sceneListToggle, #titleBar, #autorotateToggle {
+  display:none;
+}
+
+</style>
+
+<div id="sceneList">
+  <ul class="scenes">
+    
+      <a href="#" class="scene" data-id="0-the-old-dock">
+        <li class="text">The Old Dock</li>
+      </a>
+    
+      <a href="#" class="scene" data-id="1-the-slave-trade">
+        <li class="text">The Slave Trade</li>
+      </a>
+    
+      <a href="#" class="scene" data-id="2-child-migration">
+        <li class="text">Child Migration</li>
+      </a>
+      
+      <a href="#" class="scene" data-id="3-everything">
+        <li class="text">Everything</li>
+      </a>
+    
+  </ul>
+</div>
+
+<div id="titleBar">
+  <h1 class="sceneName"></h1>
+</div>
+
+<a href="#" id="autorotateToggle">
+  <img class="icon off" src="img/play.png">
+  <img class="icon on" src="img/pause.png">
+</a>
+
+<a href="#" id="fullscreenToggle">
+  <img class="icon off" src="img/fullscreen.png">
+  <img class="icon on" src="img/windowed.png">
+</a>
+
+<a href="#" id="sceneListToggle">
+  <img class="icon off" src="img/expand.png">
+  <img class="icon on" src="img/collapse.png">
+</a> 
+
+<a href="#" id="viewUp" class="viewControlButton viewControlButton-1">
+  <img class="icon" src="img/up.png">
+</a>
+<a href="#" id="viewDown" class="viewControlButton viewControlButton-2">
+  <img class="icon" src="img/down.png">
+</a>
+<a href="#" id="viewLeft" class="viewControlButton viewControlButton-3">
+  <img class="icon" src="img/left.png">
+</a>
+<a href="#" id="viewRight" class="viewControlButton viewControlButton-4">
+  <img class="icon" src="img/right.png">
+</a>
+<a href="#" id="viewIn" class="viewControlButton viewControlButton-5">
+  <img class="icon" src="img/plus.png">
+</a>
+<a href="#" id="viewOut" class="viewControlButton viewControlButton-6">
+  <img class="icon" src="img/minus.png">
+</a>
+
+<div id="debug" style="position:absolute;bottom:20px;left:0px;">
+&nbsp;
+</div>
+
+<div id="debug2" style="position:absolute;bottom:50px;right:50px;">
+&nbsp;
+</div>
+
+<script src="vendor/es5-shim.js"></script>
+<script src="vendor/eventShim.js"></script>
+<script src="vendor/classList.js"></script>
+<script src="vendor/requestAnimationFrame.js" ></script>
+<script src="vendor/screenfull.min.js" ></script>
+<script src="vendor/bowser.min.js" ></script>
+<script src="vendor/marzipano.js" ></script>
+
+<script src="data.js"></script>
+<script src="DeviceOrientationControlMethod.js"></script>
+<script src="index.js"></script>
+
+</body>
+</html>
