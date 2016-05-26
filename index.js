@@ -53,7 +53,9 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	var debugElement2 = document.getElementById('debug2'); // container for scene info
 
 	// variables for gazeSpots and performance mode
-	var timer = null; // empty variable for timer
+	var switchTimer = null; // empty variable for timer
+	var revealTimer = null; // empty variable for timer
+	var lastSpot = null; // empty variable for reveal gaze spot timer
 	var performTimers = []; // empty array for performance timers
 	var performYawSpeed = 0; // yaw spin speed
 	var performPitchSpeed = 0; // pitch speed
@@ -153,29 +155,43 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 			var gazing = false;
 			sceneData.gazeSpots.forEach(function (gazeSpot) {		
 			//for each gazespot, check if view closely matches, set gazing to true if so
-				if ((pitch < (gazeSpot.pitch + gazeSpot.pitchLatitude) && pitch > (gazeSpot.pitch - gazeSpot.pitchLatitude)) && 
-				(yaw < (gazeSpot.yaw + gazeSpot.yawLatitude) && yaw > (gazeSpot.yaw - gazeSpot.yawLatitude))) {
-				if (timer == null) { // if a timer hasn't already been started, start one
-					console.log("gazeSpot id " + gazeSpot.id + " switching to scene " + gazeSpot.target + " found at yaw: " + gazeSpot.yaw + ' pitch: ' + gazeSpot.pitch + " timer started"); 
-					timer = setTimeout(function () {
-						console.log("timer elapsed");
-						if (gazeSpot.target) {switchScene(findSceneById(gazeSpot.target))}; // if gazeSpot has a target, set up a scene switch
-						gazing = false;
-					}, gazeSpot.timeout); 
-					if (webPdUsed) {Pd.send('send5', [1])}; // tell webPd we've found a gaze spot
-					if (webPdUsed && gazeSpot.target) {Pd.send('send6', [parseFloat(gazeSpot.target.charAt(0))])}; // tell webPd the scene to be switched to
-					if (webPdUsed) {Pd.send('send7', [gazeSpot.timeout])}; // tell webPd the timeout for this gaze spot
-					if (webPdUsed) {Pd.send('send8', [gazeSpot.id])}; // tell webPd the id number of this gaze spot (where 0 = no id)
+				if (onSpot(gazeSpot, pitch, yaw)) {
+				if ((switchTimer == null) && (revealTimer == null)) { // if timers havn't already been started, start them
+					if (gazeSpot.selector) { // if this is a reveal type gazespot
+						console.log($(gazeSpot.selector));
+						lastSpot = gazeSpot; // store
+						revealTimer = setTimeout(function () {
+							document.getElementById(gazeSpot.selector).style.opacity = 1;
+							document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out"; }, 500);
 					}
+					if (gazeSpot.target) { // if this is a switch type gazeSpot
+						console.log("Gaze spot that switches to scene " + gazeSpot.target + " found at yaw: " + gazeSpot.yaw + ' pitch: ' + gazeSpot.pitch + " timer started"); 
+						switchTimer = setTimeout(function () {
+							console.log("timer elapsed");
+							if (gazeSpot.target) {switchScene(findSceneById(gazeSpot.target))}; // if gazeSpot has a target, set up a scene switch
+							gazing = false;
+						}, gazeSpot.timeout); 
+						if (webPdUsed) {Pd.send('send5', [1])}; // tell webPd we've found a gaze spot
+						if (webPdUsed && gazeSpot.target) {Pd.send('send6', [parseFloat(gazeSpot.target.charAt(0))])}; // tell webPd the scene to be switched to
+						if (webPdUsed) {Pd.send('send7', [gazeSpot.timeout])}; // tell webPd the timeout for this gaze spot
+						if (webPdUsed) {Pd.send('send8', [gazeSpot.id])}; // tell webPd the id number of this gaze spot (where 0 = no id)
+						}
+					} 
 				gazing = true;
 				}
 			});
  			if (!gazing) { // if not gazing 
- 					if (timer != null) { // and if the timer has not already been cleared
-						clearTimeout(timer);  // clear the timer
-						timer = null;
- 						console.log("off gazespot, timer cleared"); 
+ 					if ((switchTimer != null) || (revealTimer != null)) { // and if the timers have not already been cleared
+						clearTimeout(switchTimer);  // clear the timer
+						clearTimeout(revealTimer);  // clear the timer
+						switchTimer = null;
+						revealTimer = null;
+ 						console.log("off gazespot, timers cleared"); 
  						if (webPdUsed) {Pd.send('send5', [0])};  // tell webPd we've moved off a gaze spot
+						if (lastSpot) {
+							document.getElementById(lastSpot.selector).style.opacity = lastSpot.baseOpacity;
+							document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; 						
+							}
  					}
  				}
 		}); 	
@@ -654,6 +670,11 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	  function toggleDeviceOrientation() {
 		if(deviceOrientationEnabled) { disableGyro(); }
 		else { enableGyro(); }
+	  }
+	  
+	  function onSpot (gazeSpot, pitch, yaw) {
+	  	return (pitch < (gazeSpot.pitch + gazeSpot.pitchLatitude) && pitch > (gazeSpot.pitch - gazeSpot.pitchLatitude)) && 
+				(yaw < (gazeSpot.yaw + gazeSpot.yawLatitude) && yaw > (gazeSpot.yaw - gazeSpot.yawLatitude));
 	  }
 }	    
 //})(); // closing brackets for anonymous self-invoking function, not used in webPd version see comment at top
