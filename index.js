@@ -157,7 +157,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 			//for each gazespot, check if view closely matches, set gazing to true if so
 				if (onSpot(gazeSpot, pitch, yaw)) {
 				if ((switchTimer == null) && (revealTimer == null)) { // if timers havn't already been started, start them
-					if (gazeSpot.selector) { // if this is a reveal type gazespot
+					if (gazeSpot.selector) { // if this is an embedded content reveal type gazespot
 						console.log($(gazeSpot.selector));
 						lastSpot = gazeSpot; // store
 						revealTimer = setTimeout(function () {
@@ -673,8 +673,12 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	  }
 	  
 	  function onSpot (gazeSpot, pitch, yaw) {
-	  	return (pitch < (gazeSpot.pitch + gazeSpot.pitchLatitude) && pitch > (gazeSpot.pitch - gazeSpot.pitchLatitude)) && 
-				(yaw < (gazeSpot.yaw + gazeSpot.yawLatitude) && yaw > (gazeSpot.yaw - gazeSpot.yawLatitude));
+	  	// work out distance from view point to centre of gazeSpot
+	  	var dPitch = gazeSpot.pitch - pitch;
+	  	var dYaw = gazeSpot.yaw - yaw;
+	  	var distance = Math.sqrt((dPitch*dPitch)+(dYaw*dYaw));
+	  	// return true if distance is less than gazeSpot deviation
+		return (distance < gazeSpot.deviation);
 	  }
 }	    
 //})(); // closing brackets for anonymous self-invoking function, not used in webPd version see comment at top

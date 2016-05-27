@@ -10,10 +10,9 @@
 //			uses strings of the form 'rotateX(#rad) rotateY(#deg)'
 //			tip: to place content vertically, rotate X equivalent to pitch of embeddedHotspot
 // gazeSpot specific variables:
-//		yawLatitude, pitchLatitude - tolerance +/- in radians around gazeSpot location to activate it
-//		(this is a bit of a fudge as need to alter tolerance according to distance from poles, a latitude radius would be better
-//		target (optional, scene switch type gazeSpot) - id of scenes object this gazeSpot will switch to
-//		selector (optional, embedded content reveal type gazeSpot) - selector of embedded html to be revealed
+//		deviation - tolerance in radians around gazeSpot location to activate it
+//		target (optional, 'scene switch' type gazeSpot) - id of scenes object this gazeSpot will switch to
+//		selector (optional, 'embedded content reveal' type gazeSpot) - selector of embedded html to be revealed
 //		timeout - duration in milliseconds of scene switch or reveal
 // script object variables:
 // 		type: "rotate" or "scenechange"
@@ -25,7 +24,6 @@
 //		targetPitch, targetFov
 // to prevent movement stopping between rotate events, set accelerations to Infinity
 
-   
 
 var APP_DATA = {
   "scenes": [
@@ -64,8 +62,7 @@ var APP_DATA = {
 		{
 			"yaw": 0,
 			"pitch": -Math.PI/2,
-			"yawLatitude": Math.PI,
-			"pitchLatitude": 0.349066,
+			"deviation": 0.2,
 			"target": "3-everything",
 			"timeout": 3000
 		}
@@ -106,14 +103,14 @@ var APP_DATA = {
 		{
 			"yaw": 2.11185,
 			"pitch": 0.174533,
-			"yawLatitude": 0.261799,
-			"pitchLatitude": 0.261799,
+			"deviation": 0.2,
 			"target": "3-everything",
 			"timeout": 3000
 		},
 		{
 			"yaw": 0,
 			"pitch": Math.PI/2,
+			"deviation": 0.2,
 			"yawLatitude": Math.PI,
 			"pitchLatitude": 0.349066,
 			"target": "0-the-old-dock",
@@ -122,8 +119,7 @@ var APP_DATA = {
 		{
 			"yaw": -0.994838,
 			"pitch": 0.122173,
-			"yawLatitude": 0.261799,
-			"pitchLatitude": 0.261799,
+			"deviation": 0.2,
 			"target": "2-child-migration",
 			"timeout": 3000
 		}
@@ -164,24 +160,21 @@ var APP_DATA = {
 		{
 			"yaw": 2.11185,
 			"pitch": 0.174533,
-			"yawLatitude": 0.261799,
-			"pitchLatitude": 0.261799,
+			"deviation": 0.2,
 			"target": "3-everything",
 			"timeout": 3000
 		},
 		{
 			"yaw": 0,
 			"pitch": Math.PI/2,
-			"yawLatitude": Math.PI,
-			"pitchLatitude": 0.349066,
+			"deviation": 0.2,
 			"target": "0-the-old-dock",
 			"timeout": 3000
 		},
 		{
 			"yaw": -2.67035,
 			"pitch": 0.244346,
-			"yawLatitude": 0.261799,
-			"pitchLatitude": 0.261799,
+			"deviation": 0.2,
 			"target": "1-the-slave-trade",
 			"timeout": 3000
 		}
@@ -244,8 +237,7 @@ var APP_DATA = {
 		{ // reveal gazeSpot, yaw pitch need to match values of equivalent embedHotspot
 			"yaw": -1.13,
 			"pitch": -0.76,
-			"yawLatitude": Math.PI/2,
-			"pitchLatitude": 0.349066,
+			"deviation": 0.2,
 			"selector": "helloworld",
 			"baseOpacity": 0.2,
 			"timeout": 4000
@@ -253,8 +245,7 @@ var APP_DATA = {
 		{ // reveal gazeSpot, yaw pitch need to match values of equivalent embedHotspot
 			"yaw": 2.35,
 			"pitch": -0.65,
-			"yawLatitude": Math.PI/6,
-			"pitchLatitude": 0.349066,
+			"deviation": 0.2,
 			"selector": "bling",
 			"baseOpacity": 0,
 			"timeout": 2000
@@ -262,34 +253,30 @@ var APP_DATA = {
 		{ // reveal gazeSpot, yaw pitch need to match values of equivalent embedHotspot
 			"yaw": 2.9,
 			"pitch": 0,
-			"yawLatitude": Math.PI/8,
-			"pitchLatitude": 0.349066,
+			"deviation": 0.2,
 			"selector": "bananadog",
 			"baseOpacity": 0,
-			"target": "2-child-migration",
+			"target": "2-child-migration", // this exampled demonstrates that reveal gazeSpots can also be switch gazespots
 			"timeout": 2000
 		},
 		{
 			"yaw": 0,
 			"pitch": Math.PI/2,
-			"yawLatitude": Math.PI,
-			"pitchLatitude": 0.349066,
+			"deviation": 0.2,
 			"target": "0-the-old-dock",
 			"timeout": 3000
 		},
 		{
 			"yaw": -0.994838,
 			"pitch": 0.122173,
-			"yawLatitude": 0.261799,
-			"pitchLatitude": 0.261799,
+			"deviation": 0.2,
 			"target": "2-child-migration",
 			"timeout": 3000
 		},
 		{
 			"yaw": -2.67035,
 			"pitch": 0.244346,
-			"yawLatitude": 0.261799,
-			"pitchLatitude": 0.261799,
+			"deviation": 0.2,
 			"target": "1-the-slave-trade",
 			"timeout": 3000
 		}
