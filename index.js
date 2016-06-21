@@ -675,7 +675,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	  function onSpot (gazeSpot, pitch, yaw) {
 	  	// bias the deviation according to pitch, so that it increases closer to the poles
 	  	// equal to deviation plus an additional variable component that tends toward (PI - deviation) so that deviation is PI (180 degs) at the poles
-	  	var biasedDeviation = gazeSpot.deviation + ((Math.PI - gazeSpot.deviation) * Math.abs(Math.sin(pitch)) * Math.abs(Math.sin(gazeSpot.pitch))); 
+	  	var biasedDeviation = gazeSpot.deviation + ((Math.PI - gazeSpot.deviation) * Math.sqrt(Math.abs(Math.sin(pitch)) * Math.abs(Math.sin(gazeSpot.pitch)))); 
 	  	// work out distance from view point to centre of gazeSpot
 	  	var dPitch = gazeSpot.pitch - pitch;
 	  	var dYaw = gazeSpot.yaw - yaw;	  	

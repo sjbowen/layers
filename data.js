@@ -173,7 +173,7 @@ var APP_DATA = {
 		},
 		{
 			"yaw": -2.67035,
-			"pitch": 0.244346,
+			"pitch": 0.04,
 			"deviation": 0.15,
 			"target": "1-the-slave-trade",
 			"timeout": 3000
@@ -275,7 +275,7 @@ var APP_DATA = {
 		},
 		{
 			"yaw": -2.67035,
-			"pitch": 0.244346,
+			"pitch": 0.04,
 			"deviation": 0.15,
 			"target": "1-the-slave-trade",
 			"timeout": 3000
@@ -291,7 +291,7 @@ var APP_DATA = {
     "autorotateEnabled": false, // must be set to true for performance mode to work
     "fullscreenButton": true,
     "viewControlButtons": false,
-    "debugMode": true,
+    "debugMode": false,
     "webPdUsed": true,
     "webPdPatch": "patches/myPatch2.pd"
   }
