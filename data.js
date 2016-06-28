@@ -62,7 +62,7 @@ var APP_DATA = {
 		{
 			"yaw": 0,
 			"pitch": -Math.PI/2,
-			"deviation": 0.05,
+			"deviation": 0.2,
 			"target": "3-everything",
 			"timeout": 3000
 		}
@@ -103,14 +103,14 @@ var APP_DATA = {
 		{
 			"yaw": 2.11185,
 			"pitch": 0.174533,
-			"deviation": 0.15,
+			"deviation": 0.2,
 			"target": "3-everything",
 			"timeout": 3000
 		},
 		{
 			"yaw": 0,
 			"pitch": Math.PI/2,
-			"deviation": 0.15,
+			"deviation": 0.2,
 			"yawLatitude": Math.PI,
 			"pitchLatitude": 0.349066,
 			"target": "0-the-old-dock",
@@ -119,7 +119,7 @@ var APP_DATA = {
 		{
 			"yaw": -0.994838,
 			"pitch": 0.122173,
-			"deviation": 0.15,
+			"deviation": 0.2,
 			"target": "2-child-migration",
 			"timeout": 3000
 		}
@@ -160,21 +160,21 @@ var APP_DATA = {
 		{
 			"yaw": 2.11185,
 			"pitch": 0.174533,
-			"deviation": 0.15,
+			"deviation": 0.2,
 			"target": "3-everything",
 			"timeout": 3000
 		},
 		{
 			"yaw": 0,
 			"pitch": Math.PI/2,
-			"deviation": 0.05,
+			"deviation": 0.2,
 			"target": "0-the-old-dock",
 			"timeout": 3000
 		},
 		{
 			"yaw": -2.67035,
-			"pitch": 0.04,
-			"deviation": 0.15,
+			"pitch": 0.244346,
+			"deviation": 0.2,
 			"target": "1-the-slave-trade",
 			"timeout": 3000
 		}
@@ -237,7 +237,7 @@ var APP_DATA = {
 		{ // reveal gazeSpot, yaw pitch need to match values of equivalent embedHotspot
 			"yaw": -1.13,
 			"pitch": -0.76,
-			"deviation": 0.15,
+			"deviation": 0.2,
 			"selector": "helloworld",
 			"baseOpacity": 0.2,
 			"timeout": 4000
@@ -245,7 +245,7 @@ var APP_DATA = {
 		{ // reveal gazeSpot, yaw pitch need to match values of equivalent embedHotspot
 			"yaw": 2.35,
 			"pitch": -0.65,
-			"deviation": 0.15,
+			"deviation": 0.2,
 			"selector": "bling",
 			"baseOpacity": 0,
 			"timeout": 2000
@@ -253,7 +253,7 @@ var APP_DATA = {
 		{ // reveal gazeSpot, yaw pitch need to match values of equivalent embedHotspot
 			"yaw": 2.9,
 			"pitch": 0,
-			"deviation": 0.15,
+			"deviation": 0.2,
 			"selector": "bananadog",
 			"baseOpacity": 0,
 			"target": "2-child-migration", // this exampled demonstrates that reveal gazeSpots can also be switch gazespots
@@ -262,21 +262,21 @@ var APP_DATA = {
 		{
 			"yaw": 0,
 			"pitch": Math.PI/2,
-			"deviation": 0.05,
+			"deviation": 0.2,
 			"target": "0-the-old-dock",
 			"timeout": 3000
 		},
 		{
 			"yaw": -0.994838,
 			"pitch": 0.122173,
-			"deviation": 0.15,
+			"deviation": 0.2,
 			"target": "2-child-migration",
 			"timeout": 3000
 		},
 		{
 			"yaw": -2.67035,
-			"pitch": 0.04,
-			"deviation": 0.15,
+			"pitch": 0.244346,
+			"deviation": 0.2,
 			"target": "1-the-slave-trade",
 			"timeout": 3000
 		}
