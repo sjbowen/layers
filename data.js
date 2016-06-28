@@ -291,7 +291,7 @@ var APP_DATA = {
     "autorotateEnabled": false, // must be set to true for performance mode to work
     "fullscreenButton": true,
     "viewControlButtons": false,
-    "debugMode": false,
+    "debugMode": true,
     "webPdUsed": true,
     "webPdPatch": "patches/myPatch2.pd"
   }

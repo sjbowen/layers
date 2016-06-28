@@ -673,15 +673,30 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	  }
 	   
 	  function onSpot (gazeSpot, pitch, yaw) {
-	  	// bias the deviation according to pitch, so that it increases closer to the poles
-	  	// equal to deviation plus an additional variable component that tends toward (PI - deviation) so that deviation is PI (180 degs) at the poles
-	  	var biasedDeviation = gazeSpot.deviation + ((Math.PI - gazeSpot.deviation) * Math.sqrt(Math.abs(Math.sin(pitch)) * Math.abs(Math.sin(gazeSpot.pitch)))); 
-	  	// work out distance from view point to centre of gazeSpot
+	  	var yawFactor; 
+	  	// check if pitch and gazeSpot.pitch in same hemisphere
+	  	// if so, bias the contribution of yaw according to view pitch so that it decreases to zero at the poles
+	  	if (((pitch > 0) && (gazeSpot.pitch > 0)) || ((pitch < 0) && (gazeSpot.pitch < 0))) { 
+		  	yawFactor = Math.abs(Math.cos(pitch)); // bug: this is 2PI at zenith instead of zero, google this
+		} else {
+			yawFactor = 1;
+		}		
 	  	var dPitch = gazeSpot.pitch - pitch;
-	  	var dYaw = gazeSpot.yaw - yaw;	  	
+	  	// convert yaw values into range 0 to 2PI
+	  	yaw = yaw + Math.PI;
+	  	var gazeYaw = gazeSpot.yaw + Math.PI;
+	  	// calculate difference in yaw in both directions around full circle and use the smallest difference
+	  	var dYaw1 = Math.abs(gazeYaw - yaw);
+	  	var dYaw2 = (2 * Math.PI) - dYaw1;
+	  	var dYaw;
+	  	if (dYaw1 < Math.PI) {
+	  		dYaw = yawFactor * dYaw1;
+	  	} else {
+	  		dYaw = yawFactor * dYaw2;
+	  	}
 	  	var distance = Math.sqrt((dPitch*dPitch)+(dYaw*dYaw));
 	  	// return true if distance is less than gazeSpot deviation
-		return (distance < biasedDeviation);
+		return (distance < gazeSpot.deviation);
 	  }
 }	    
 //})(); // closing brackets for anonymous self-invoking function, not used in webPd version see comment at top
