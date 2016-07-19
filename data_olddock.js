@@ -1,32 +1,3 @@
-// the data.js file produced by marzipano web-based tool
-// modified by Simon Bowen to include additional data for embedded html (embedHotspots)
-// hotspots that respond to looking at a particular location (gazeSpots)
-// and a script data object for an automatic playlist of view and scene changes
-// common variables within embedHotspots, gazeSpots are:
-// 		yaw, pitch - location on rectilinear projection (in radians), -pitch is up, +pitch is down 
-// embedHotspot specific variables:
-//		radius - radius in pixels of sphere that html is placed upon (so, lower is closer)
-//		extraRotations - rotate embedded content in X,Y direction so no longer on surface of sphere
-//			uses strings of the form 'rotateX(#rad) rotateY(#deg)'
-//			tip: to place content vertically, rotate X equivalent to pitch of embeddedHotspot
-//			tip: to place content horizontally, rotate X equivalent to PI/2 - pitch of embeddedHotspot
-// gazeSpot specific variables:
-//		deviation - tolerance in radians around gazeSpot location to activate it
-//		target (optional, 'scene switch' type gazeSpot) - id of scenes object this gazeSpot will switch to
-//		selector (optional, 'embedded content reveal' type gazeSpot) - selector of embedded html to be revealed
-//		timeout - duration in milliseconds of scene switch or reveal
-//		baseopacity - opacity element will return to once move off gazeSpot. So, can make elements remain in view if set to 1.0
-// script object variables:
-// 		type: "rotate" or "scenechange"
-//		time: time in milliseconds after which to execute rotation or scene change
-//			time is cummulative, so to execute every second use time = 1000, 2000, 3000 etc.
-// for rotate parameters, see http://www.marzipano.net/reference/global.html#autorotate 
-//   	yawSpeed, pitchSpeed, fovSpeed
-//   	yawAccel, pitchAccel, fovAccel
-//		targetPitch, targetFov
-// to prevent movement stopping between rotate events, set accelerations to Infinity
-
-
 var APP_DATA = {
   "scenes": [
     {
@@ -59,7 +30,7 @@ var APP_DATA = {
       "initialViewParameters": {
         "pitch": 0,
         "yaw": 0,
-        "fov": 1.5707963267948966
+        "fov": 0.85
       },
       "linkHotspots": [],
       "infoHotspots": [],
@@ -67,65 +38,65 @@ var APP_DATA = {
       	{
 			"yaw": -0.95,
 			"pitch": 0.1,
-			"radius": 1500,
+			"radius": 750,
  			"extraRotations": 'rotateX(0.1rad)',
-			"html": '<img src="embed/migrantchildren.png" id="children" style="width:400px;height:224px;opacity:0.2;" />'
+			"html": '<img src="embed/migrantchildren.png" id="children" style="width:400px;height:224px;opacity:0.3;" />'
       	},
        	{
 			"yaw": 0.52,
 			"pitch": 0.16,
-			"radius": 1500,
+			"radius": 750,
  			"extraRotations": 'rotateX(0.16rad)',
 			"html": '<img src="embed/manbrother.png" id="brother" style="width:300px;height:300px;opacity:0.2;" />'
       	},
        	{
 			"yaw": 3.1,
 			"pitch": -0.05,
-			"radius": 1000,
+			"radius": 500,
  			"extraRotations": 'rotateX(-0.05rad) rotateY(-0.5rad)',
-			"html": '<img src="embed/childrenshome.png" id="childrenshome" style="width:400px;height:284px;opacity:0.1;" />'
+			"html": '<img src="embed/childrenshome.png" id="childrenshome" style="width:400px;height:284px;opacity:0.2;" />'
       	},
       	{
 			"yaw": 2.31,
 			"pitch": 0.93,
-			"radius": 700,
+			"radius": 250,
  			"extraRotations": 'rotateX(0.641rad) rotateY(0rad)',
-			"html": '<p id="thief" style="width:400px;height:200px;opacity:0.1">"I appear before this immense assembly as a thief and a robber. I stole this head, these limbs, this body from my master and ran off with them."</p>'
+			"html": '<p id="thief" style="width:250px;opacity:0.2">"I appear before this immense assembly as a thief and a robber. I stole this head, these limbs, this body from my master and ran off with them."</p>'
       	},
       	{
 			"yaw": -1.657,
 			"pitch": 0.608,
-			"radius": 700,
+			"radius": 250,
  			"extraRotations": 'rotateX(0.891rad) rotateY(0rad)',
-			"html": '<p id="cried" style="width:300px;height:200px;opacity:0.1">"That first night I was not the only one who cried for the ship, for Mum, for England and everyone back there." </p>'
+			"html": '<p id="cried" style="width:250px;opacity:0.2">"That first night I was not the only one who cried for the ship, for Mum, for England and everyone back there." </p>'
       	},
       	{
 			"yaw": 2.44,
 			"pitch": -0.67,
-			"radius": 1200,
+			"radius": 600,
  			"extraRotations": 'rotateX(-0.47rad) rotateY(0rad)',
-			"html": '<img src="embed/wallart.png" id="wallart" style="width:270px;height:600px;opacity:0.2;" />'
+			"html": '<img src="embed/wallart.png" id="wallart" style="width:270px;height:600px;opacity:0.1;" />'
       	},
       	{
-			"yaw": 0.774,
-			"pitch": -1,
-			"radius": 1500,
- 			"extraRotations": 'rotateX(1rad) rotateY(0rad)',
+			"yaw": 0.15,
+			"pitch": -0.75,
+			"radius": 800,
+ 			"extraRotations": 'rotateX(0.75rad) rotateY(-0.65rad)',
 			"html": '<img src="embed/sale.png" id="sale" style="width:400px;height:464px;opacity:0.2;" />'
       	},
       	{
 			"yaw": -0.94,
-			"pitch": -0.84,
-			"radius": 700,
+			"pitch": -0.6,
+			"radius": 250,
  			"extraRotations": 'rotateX(0.84rad) rotateY(0rad)',
-			"html": '<p id="survivors" style="width:300px;opacity:0.1">"On the whole the Fairbridge girls have made a success of their lives. We are now scattered throughout the world but the one thing that we have in common is that we are all survivors." </p>'
+			"html": '<p id="survivors" style="width:250px;opacity:0.2">"On the whole the Fairbridge girls have made a success of their lives. We are now scattered throughout the world but the one thing that we have in common is that we are all survivors." </p>'
       	}
      ],
       "gazeSpots": [
 		{
 			"yaw": 0,
 			"pitch": Math.PI/2,
-			"deviation": 0.001,
+			"deviation": 0.2,
 			"target": "1-inside-the-old-dock",
 			"timeout": 3000
 		},
@@ -134,7 +105,7 @@ var APP_DATA = {
 			"pitch": 0.1,
 			"deviation": 0.2,
 			"selector": "children",
-			"baseOpacity": 0.5,
+			"baseOpacity": 0.6,
 			"timeout": 2000
       	},
       	{
@@ -142,7 +113,7 @@ var APP_DATA = {
 			"pitch": 0.16,
 			"deviation": 0.2,
 			"selector": "brother",
-			"baseOpacity": 0.5,
+			"baseOpacity": 0.6,
 			"timeout": 2000
       	},
       	{
@@ -150,7 +121,7 @@ var APP_DATA = {
 			"pitch": -0.15,
 			"deviation": 0.2,
 			"selector": "childrenshome",
-			"baseOpacity": 0.1,
+			"baseOpacity": 0.2,
 			"timeout": 2000
       	},
       	{
@@ -174,12 +145,12 @@ var APP_DATA = {
 			"pitch": -0.67,
 			"deviation": 0.2,
 			"selector": "wallart",
-			"baseOpacity": 0.7,
+			"baseOpacity": 0.5,
 			"timeout": 2000
       	},
       	{
-			"yaw": 0.774,
-			"pitch": -1,
+			"yaw": 0.15,
+			"pitch": -0.75,
 			"deviation": 0.2,
 			"selector": "sale",
 			"baseOpacity": 0.2,
@@ -187,7 +158,7 @@ var APP_DATA = {
       	},
       	{
 			"yaw": -0.94,
-			"pitch": -0.84,
+			"pitch": -0.6,
 			"deviation": 0.2,
 			"selector": "survivors",
 			"baseOpacity": 0.2,
@@ -234,7 +205,7 @@ var APP_DATA = {
 		{
 			"yaw": 0,
 			"pitch": -Math.PI/2,
-			"deviation": 0.2,
+			"deviation": 0.4,
 			"target": "0-above-the-old-dock",
 			"timeout": 3000
 		}
@@ -248,8 +219,9 @@ var APP_DATA = {
     "autorotateEnabled": false, // must be set to true for performance mode to work
     "fullscreenButton": true,
     "viewControlButtons": false,
-    "debugMode": true,
+    "deviceOrientationControl": true,
+    "debugMode": false,
     "webPdUsed": true,
-    "webPdPatch": "patches/myPatch2.pd"
+    "webPdPatch": "patches/empty.pd"
   }
 };
