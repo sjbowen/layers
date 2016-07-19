@@ -213,7 +213,7 @@ var APP_DATA = {
     }
   ],
   "script": [],     
-  "name": "Layers of the Old Dock",
+  "name": "Surroundings: Liverpool ONE",
   "settings": {
     "mouseViewMode": "drag",
     "autorotateEnabled": false, // must be set to true for performance mode to work
