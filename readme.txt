@@ -1,4 +1,4 @@
-Code for creating interactive spherical panoramas based on Marzipano (v0.5.0)
+Code for creating interactive spherical panoramas based on Marzipano (v0.3.0)
 This version by Simon Bowen July 2016, www.simon-bowen.com
 
 Uses the code created by Marzipano tools as a starting point: http://www.marzipano.net/tool/
@@ -11,6 +11,16 @@ index.js modifications:
 - added functionality from DeviceOrientationControlMethod
 - added embed hotspots
 - added gazespots
+- added integration with webPd
+
+WebPd Integration:
+On click/touch index.js loads pd file specified in "webPdPatch" in data.js
+(Tim, replace "patches/empty.js" in data_olddock.js)
+Data sent to patch when go on/off gazeSpots as follows:
+send1 = either html selector (for overlayed content) or target scene id (for scene switch) followed by 1 for on, 0 for off 
+send2 = either reveal duration (for overlayed content) or timeout (for scence switch) in milliseconds
+send3 = scene id for scene just switched to (including initial scene when loaded)
+
 
 style.css modifications:
 - styling for device orientation control elements

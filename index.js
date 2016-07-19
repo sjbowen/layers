@@ -162,27 +162,31 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 				if ((switchTimer == null) && (revealTimer == null)) { // if timers havn't already been started, start them
 					if (gazeSpot.selector) { // if this is an embedded content reveal type gazespot
 						console.log($(gazeSpot.selector));
-						lastSpot = gazeSpot; // store
+						lastSpot = gazeSpot; // store this gazeSpot data for when we move off it
 						revealTimer = setTimeout(function () {
 							document.getElementById(gazeSpot.selector).style.opacity = 1;
 							document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out"; }, 500);
-						if (webPdUsed) {Pd.send('send9', [gazeSpot.selector])}; // tell webPd the HTML selector of the embedded content
+						if (webPdUsed) {
+							Pd.send('send1', [gazeSpot.selector, 1]); // tell webPd the HTML selector of the embedded content
+							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the transition of the embedded content
+						};
 					}
 					if (gazeSpot.target) { // if this is a switch type gazeSpot
 						console.log("Gaze spot that switches to scene " + gazeSpot.target + " found at yaw: " + gazeSpot.yaw + ' pitch: ' + gazeSpot.pitch + " timer started"); 
+						lastSpot = gazeSpot; // store this gazeSpot data for when we move off it
 						switchTimer = setTimeout(function () {
 							console.log("timer elapsed");
 							if (gazeSpot.target) {switchScene(findSceneById(gazeSpot.target))}; // if gazeSpot has a target, set up a scene switch
 							gazing = false;
 						}, gazeSpot.timeout); 
-						if (webPdUsed) {Pd.send('send5', [1])}; // tell webPd we've found a gaze spot
-// 						if (webPdUsed && gazeSpot.target) {Pd.send('send6', [parseFloat(gazeSpot.target.charAt(0))])}; // tell webPd the scene to be switched to
-// 						if (webPdUsed) {Pd.send('send7', [gazeSpot.timeout])}; // tell webPd the timeout for this gaze spot
-// 						if (webPdUsed) {Pd.send('send8', [gazeSpot.id])}; // tell webPd the id number of this gaze spot (where 0 = no id)
-						}
-					} 
+						if (webPdUsed) {
+							Pd.send('send1', [gazeSpot.target, 1]); // tell webPd the target of the scene switch
+							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the timeout of the scene switch
+						};
+					}
+				} 
 				gazing = true;
-				}
+			}
 			});
  			if (!gazing) { // if not gazing 
  					if ((switchTimer != null) || (revealTimer != null)) { // and if the timers have not already been cleared
@@ -191,11 +195,16 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 						switchTimer = null;
 						revealTimer = null;
  						console.log("off gazespot, timers cleared"); 
- 						if (webPdUsed) {Pd.send('send5', [0])};  // tell webPd we've moved off a gaze spot
 						if (lastSpot) {
-							document.getElementById(lastSpot.selector).style.opacity = lastSpot.baseOpacity;
-							document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; 						
+							if (lastSpot.selector) { // if moved off an embedded content reveal type gazespot
+								document.getElementById(lastSpot.selector).style.opacity = lastSpot.baseOpacity;
+								document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; // hide content					
+								if (webPdUsed) {Pd.send('send1', [lastSpot.selector, 0])}; // tell webPD we've moved off this gazeSpot
 							}
+							if (lastSpot.target) { // if moved off a scene switch gazespot
+								if (webPdUsed) {Pd.send('send1', [lastSpot.target, 0])}; // tell webPD we've moved off this gazeSpot
+							}
+						}
  					}
  				}
 		});
@@ -406,10 +415,10 @@ function switchScene(scene) {
 	}
 	scene.marzipanoObject.switchTo(); // changes the scene
 	if (webPdUsed) { // send new scene id to webPd
-		var wpdScene = parseFloat(scene.data.id.charAt(0));
-		Pd.send('send4', [wpdScene]);
+// 		var wpdScene = parseFloat(scene.data.id.charAt(0));
+// 		Pd.send('send3', [wpdScene]);
+		Pd.send('send3', [scene.data.id]);
 	}
-// 		if (debugMode) {debugElement2.innerHTML = scene.data.id.charAt(0); };
 	lastscene = scene; // update lastscene to be the current scene
 	startAutorotate();
   }
@@ -643,5 +652,4 @@ function switchScene(scene) {
 		return (distance < gazeSpot.deviation);
 	  }
 
-
-}	    
+}	   // end go function 
