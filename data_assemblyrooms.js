@@ -246,7 +246,7 @@ var APP_DATA = {
     "autorotateEnabled": false,
     "fullscreenButton": false,	
     "viewControlButtons": false,
-    "debugMode": false,
+    "debugMode": true,
     "webPdUsed": true,
     "webPdPatch": "patches/assemblyRooms.pd"
   }

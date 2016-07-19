@@ -23,48 +23,9 @@
 
 <div id="pano"></div>
 
-<div id="toggleDeviceOrientation">
-  <img class="enable" src="img/gyro.png">
-  <img class="disable" src="img/gyro_disable.png">
-</div>
-
-<style>
-/* turn off scene list, title, auto rotate buttons (add debug, later) */
-#sceneList, #sceneListToggle, #titleBar, #autorotateToggle {
-  display:none;
-}
-
-</style>
-
-<div id="sceneList">
-  <ul class="scenes">
-    
-      <a href="#" class="scene" data-id="0-the-old-dock">
-        <li class="text">The Old Dock</li>
-      </a>
-    
-      <a href="#" class="scene" data-id="1-the-slave-trade">
-        <li class="text">The Slave Trade</li>
-      </a>
-    
-      <a href="#" class="scene" data-id="2-child-migration">
-        <li class="text">Child Migration</li>
-      </a>
-      
-      <a href="#" class="scene" data-id="3-everything">
-        <li class="text">Everything</li>
-      </a>
-    
-  </ul>
-</div>
-
-<div id="titleBar">
-  <h1 class="sceneName"></h1>
-</div>
-
-<a href="#" id="autorotateToggle">
-  <img class="icon off" src="img/play.png">
-  <img class="icon on" src="img/pause.png">
+<a href="#" id="deviceOrientationToggle">
+  <img class="icon off" src="img/gyro.png">
+  <img class="icon on" src="img/gyro_disable.png">
 </a>
 
 <a href="#" id="fullscreenToggle">
@@ -72,29 +33,7 @@
   <img class="icon on" src="img/windowed.png">
 </a>
 
-<a href="#" id="sceneListToggle">
-  <img class="icon off" src="img/expand.png">
-  <img class="icon on" src="img/collapse.png">
-</a> 
-
-<a href="#" id="viewUp" class="viewControlButton viewControlButton-1">
-  <img class="icon" src="img/up.png">
-</a>
-<a href="#" id="viewDown" class="viewControlButton viewControlButton-2">
-  <img class="icon" src="img/down.png">
-</a>
-<a href="#" id="viewLeft" class="viewControlButton viewControlButton-3">
-  <img class="icon" src="img/left.png">
-</a>
-<a href="#" id="viewRight" class="viewControlButton viewControlButton-4">
-  <img class="icon" src="img/right.png">
-</a>
-<a href="#" id="viewIn" class="viewControlButton viewControlButton-5">
-  <img class="icon" src="img/plus.png">
-</a>
-<a href="#" id="viewOut" class="viewControlButton viewControlButton-6">
-  <img class="icon" src="img/minus.png">
-</a>
+<!-- Hack to make buttons invisible but functional is to append _invis.png to filename, e.g. gyro_invis.png -->
 
 <div id="debug" style="position:absolute;bottom:20px;left:0px;">
 &nbsp;
@@ -109,11 +48,11 @@
 <script src="vendor/classList.js"></script>
 <script src="vendor/requestAnimationFrame.js" ></script>
 <script src="vendor/screenfull.min.js" ></script>
-<script src="vendor/bowser.min.js" ></script>
-<script src="vendor/marzipano.js" ></script>
+<script src="vendor/bowser.min.js"></script>
+<script src="vendor/marzipano0.3.0.js" ></script>
 
-<script src="data.js"></script>
-<script src="DeviceOrientationControlMethod.js"></script>
+<script src="data_olddock.js"></script>
+<script src="vendor/DeviceOrientationControlMethod.js"></script>
 <script src="index.js"></script>
 
 </body>

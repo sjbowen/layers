@@ -23,44 +23,9 @@
 
 <div id="pano"></div>
 
-<div id="toggleDeviceOrientation">
-  <img class="enable" src="img/gyro.png">
-  <img class="disable" src="img/gyro_disable.png">
-</div>
-
-<style>
-/* turn off scene list, title, auto rotate buttons (add debug, later) */
-#sceneList, #sceneListToggle, #titleBar, #autorotateToggle {
-  display:none;
-}
-
-</style>
-
-<div id="sceneList">
-  <ul class="scenes">
-    
-      <a href="#" class="scene" data-id="0-the-grand-assembly-rooms">
-        <li class="text">The Grand Assembly Rooms</li>
-      </a>
-    
-      <a href="#" class="scene" data-id="1-the-grander-assembly-rooms">
-        <li class="text">The Grander Assembly Rooms</li>
-      </a>
-    
-      <a href="#" class="scene" data-id="2-the-grandest-assembly-rooms">
-        <li class="text">The Grandest Assembly Rooms</li>
-      </a>
-    
-  </ul>
-</div>
-
-<div id="titleBar">
-  <h1 class="sceneName"></h1>
-</div>
-
-<a href="#" id="autorotateToggle">
-  <img class="icon off" src="img/play.png">
-  <img class="icon on" src="img/pause.png">
+<a href="#" id="deviceOrientationToggle">
+  <img class="icon off" src="img/gyro.png">
+  <img class="icon on" src="img/gyro_disable.png">
 </a>
 
 <a href="#" id="fullscreenToggle">
@@ -68,10 +33,6 @@
   <img class="icon on" src="img/windowed.png">
 </a>
 
-<a href="#" id="sceneListToggle">
-  <img class="icon off" src="img/expand.png">
-  <img class="icon on" src="img/collapse.png">
-</a> 
 
 <div id="debug" style="position:absolute;bottom:20px;left:0px;">
 &nbsp;
@@ -87,11 +48,11 @@
 <script src="vendor/requestAnimationFrame.js" ></script>
 <script src="vendor/screenfull.min.js" ></script>
 <script src="vendor/bowser.min.js" ></script>
-<script src="vendor/marzipano.js" ></script>
+<script src="vendor/marzipano_old.js" ></script>
 
 <script src="data_assemblyrooms.js"></script>
 <script src="DeviceOrientationControlMethod.js"></script>
-<script src="index.js"></script>
+<script src="index0.2.1.js"></script>
 
 </body>
 </html>

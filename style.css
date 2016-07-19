@@ -42,36 +42,6 @@ a, a:hover, a:active, a:visited {
   overflow: hidden;
 }
 
-/* controls for device orientation */
-#toggleDeviceOrientation {
-  width: 50px;
-  height: 50px;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  // background-color: rgb(103,115,131);
-  // background-color: rgba(103,115,131,0.8);
-}
-
-#toggleDeviceOrientation img {
-  width: 34px;
-  margin: 8px;
-}
-
-#toggleDeviceOrientation .disable {
-  display: none;
-}
-
-#toggleDeviceOrientation.enabled .disable {
-  display: block;
-}
-
-#toggleDeviceOrientation.enabled .enable {
-  display: none;
-}
-/* end device orientation controls */
-
-
 #titleBar {
   position: absolute;
   top: 0;
@@ -124,6 +94,61 @@ body.multiple-scenes.mobile #titleBar {
 .mobile #titleBar .sceneName {
   line-height: 40px;
 }
+
+
+/* controls for device orientation */
+#deviceOrientationToggle {
+  display: none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  // background-color: rgb(103,115,131);
+  // background-color: rgba(103,115,131,0.8);
+}
+
+body.deviceOrientationControl-enabled #deviceOrientationToggle {
+  display: block;
+}
+
+.mobile #deviceOrientationToggle {
+  width: 50px;
+  height: 50px;
+}
+ 
+#deviceOrientationToggle .icon {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 30px;
+  height: 30px;
+}
+
+.mobile #deviceOrientationToggle .icon {
+  top: 10px;
+  right: 10px;
+}
+
+#deviceOrientationToggle .icon.on {
+  display: none;
+}
+
+#deviceOrientationToggle .icon.off {
+  display: block;
+}
+
+#deviceOrientationToggle.enabled .icon.on {
+  display: block;
+}
+
+#deviceOrientationToggle.enabled .icon.off {
+  display: none;
+}
+
+/* end device orientation controls */
+
 
 #fullscreenToggle {
   display: none;
