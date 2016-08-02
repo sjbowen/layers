@@ -70,6 +70,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	var performYawSpeed = 0; // yaw spin speed
 	var performPitchSpeed = 0; // pitch speed
 	var sceneIndex = 0; // index for scene number
+	var sound = null; // empty variable for HTML id of gazeSpot sound currently playing
 
   // Detect desktop or mobile mode using a matchMedia query for viewport sizes of 500px square or less
   if (window.matchMedia) {
@@ -166,10 +167,19 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 						revealTimer = setTimeout(function () {
 							document.getElementById(gazeSpot.selector).style.opacity = 1;
 							document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out"; }, 500);
-						if (webPdUsed) {
-							Pd.send('send1', [gazeSpot.selector, 1]); // tell webPd the HTML selector of the embedded content
-							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the transition of the embedded content
+						if (gazeSpot.audio) {
+							console.log('audio play');
+							sound = document.getElementById(gazeSpot.audio);
+							sound.play(); 
+							sound.loop = true;
+							// fade in by animating jQuery object
+							$(sound)[0].volume = 0; 
+							$(sound).animate({volume: 1}, gazeSpot.timeout);
 						};
+// 						if (webPdUsed) {
+// 							Pd.send('send1', [gazeSpot.selector, 1]); // tell webPd the HTML selector of the embedded content
+// 							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the transition of the embedded content
+// 						};
 					}
 					if (gazeSpot.target) { // if this is a switch type gazeSpot
 						console.log("Gaze spot that switches to scene " + gazeSpot.target + " found at yaw: " + gazeSpot.yaw + ' pitch: ' + gazeSpot.pitch + " timer started"); 
@@ -179,10 +189,10 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 							if (gazeSpot.target) {switchScene(findSceneById(gazeSpot.target))}; // if gazeSpot has a target, set up a scene switch
 							gazing = false;
 						}, gazeSpot.timeout); 
-						if (webPdUsed) {
-							Pd.send('send1', [gazeSpot.target, 1]); // tell webPd the target of the scene switch
-							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the timeout of the scene switch
-						};
+// 						if (webPdUsed) {
+// 							Pd.send('send1', [gazeSpot.target, 1]); // tell webPd the target of the scene switch
+// 							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the timeout of the scene switch
+// 						};
 					}
 				} 
 				gazing = true;
@@ -198,11 +208,14 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 						if (lastSpot) {
 							if (lastSpot.selector) { // if moved off an embedded content reveal type gazespot
 								document.getElementById(lastSpot.selector).style.opacity = lastSpot.baseOpacity;
-								document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; // hide content					
-								if (webPdUsed) {Pd.send('send1', [lastSpot.selector, 0])}; // tell webPD we've moved off this gazeSpot
+								document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; // hide content	
+// 								sound.pause();
+								$(sound)[0].volume = 1; 
+								$(sound).animate({volume: 0}, lastSpot.timeout); // fade out by animating jquery object
+// 								if (webPdUsed) {Pd.send('send1', [lastSpot.selector, 0])}; // tell webPD we've moved off this gazeSpot
 							}
 							if (lastSpot.target) { // if moved off a scene switch gazespot
-								if (webPdUsed) {Pd.send('send1', [lastSpot.target, 0])}; // tell webPD we've moved off this gazeSpot
+// 								if (webPdUsed) {Pd.send('send1', [lastSpot.target, 0])}; // tell webPD we've moved off this gazeSpot
 							}
 						}
  					}

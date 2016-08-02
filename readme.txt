@@ -46,6 +46,7 @@ gazeSpot specific variables:
 	deviation - tolerance in radians around gazeSpot location to activate it
 	target (optional, 'scene switch' type gazeSpot) - id of scenes object this gazeSpot will switch to
 	selector (optional, 'embedded content reveal' type gazeSpot) - selector of embedded html to be revealed
+	audio (optional, for gazeSpots with audio elements) - id of HTML audio to be played
 	timeout - duration in milliseconds of scene switch or reveal
 	baseopacity - opacity element will return to once move off gazeSpot. So, can make elements remain in view if set to 1.0
 script object variables:
