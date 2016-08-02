@@ -227,6 +227,6 @@ var APP_DATA = {
     "deviceOrientationControl": true,
     "debugMode": false,
     "webPdUsed": true,
-    "webPdPatch": "patches/AmbientUpper2.pd"
+    "webPdPatch": "patches/empty.pd"
   }
 };
