@@ -6,6 +6,7 @@ var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used
 
 var readyContainer = document.querySelector('#readyContainer');
 var readyElement = document.querySelector('#ready');
+var sound = null; // empty variable for HTML id of gazeSpot sound currently playing
 
 if (webPdUsed && readyContainer!=null) {
 
@@ -26,6 +27,19 @@ if (webPdUsed && readyContainer!=null) {
 			  patch = Pd.loadPatch(patchStr)
 			});
 		Pd.start();
+		// also need to use touchend to start playback of all gazeSpot audio here 
+		// load then play and pause each audio clip in turn
+		var scenes = APP_DATA.scenes.map(function(sceneData) {
+			sceneData.gazeSpots.forEach(function (gazeSpot) {
+				if (gazeSpot.audio) {
+					sound = document.getElementById(gazeSpot.audio);
+					sound.play(); 
+					sound.loop = true;
+					sound.pause();
+					console.log(gazeSpot.audio + ' play/paused');
+				};
+			});
+		});
 		go();
 		});
 		
@@ -39,6 +53,19 @@ if (webPdUsed && readyContainer!=null) {
 			  patch = Pd.loadPatch(patchStr)
 			});
 		Pd.start();
+		// also need to use touchend to start playback of all gazeSpot audio here 
+		// load play, then pause each audio clip
+		var scenes = APP_DATA.scenes.map(function(sceneData) {
+			sceneData.gazeSpots.forEach(function (gazeSpot) {
+				if (gazeSpot.audio) {
+					sound = document.getElementById(gazeSpot.audio);
+					sound.play(); 
+					sound.loop = true;
+					sound.pause();
+					console.log(gazeSpot.audio + ' play/paused');
+				};
+			});
+		});
 		go();
 		});
 } else {
@@ -70,7 +97,6 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	var performYawSpeed = 0; // yaw spin speed
 	var performPitchSpeed = 0; // pitch speed
 	var sceneIndex = 0; // index for scene number
-	var sound = null; // empty variable for HTML id of gazeSpot sound currently playing
 
   // Detect desktop or mobile mode using a matchMedia query for viewport sizes of 500px square or less
   if (window.matchMedia) {
