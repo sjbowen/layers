@@ -234,8 +234,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 							if (lastSpot.selector) { // if moved off an embedded content reveal type gazespot
 								document.getElementById(lastSpot.selector).style.opacity = lastSpot.baseOpacity;
 								document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; // hide content	
-								$(sound)[0].volume = 1; 
-								$(sound).animate({volume: 0}, lastSpot.timeout, function() {sound.pause}); // fade out by animating jquery object
+								$(sound).animate({volume: 0}, lastSpot.timeout, function() {sound.pause()}); // fade out by animating jquery object
 // 								if (webPdUsed) {Pd.send('send1', [lastSpot.selector, 0])}; // tell webPD we've moved off this gazeSpot
 							}
 							if (lastSpot.target) { // if moved off a scene switch gazespot
