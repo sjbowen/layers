@@ -8,7 +8,7 @@ var readyContainer = document.querySelector('#readyContainer');
 var readyElement = document.querySelector('#ready');
 var sound = null; // empty variable for HTML id of gazeSpot sound currently playing
 
-if (webPdUsed && readyContainer!=null) {
+if (readyContainer!=null) {
 
 // check whether device has gyro functionality
 	window.addEventListener('deviceorientation', function () {
@@ -22,11 +22,13 @@ if (webPdUsed && readyContainer!=null) {
 	readyElement.addEventListener('click', function () {
 		console.log('click');
 		readyContainer.innerHTML = ''; // hide the ready link
-		var patch
-			$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
-			  patch = Pd.loadPatch(patchStr)
-			});
-		Pd.start();
+		if (webPdUsed) {
+			var patch
+				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
+				  patch = Pd.loadPatch(patchStr)
+				});
+			Pd.start();
+		}
 		// also need to use touchend to start playback of all gazeSpot audio here 
 		// load then play and pause each audio clip in turn
 		var scenes = APP_DATA.scenes.map(function(sceneData) {
@@ -48,11 +50,13 @@ if (webPdUsed && readyContainer!=null) {
 	    document.body.classList.remove('no-touch');
     	document.body.classList.add('touch');
 		readyContainer.innerHTML = ''; // hide the ready link
-		var patch
-			$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
-			  patch = Pd.loadPatch(patchStr)
-			});
-		Pd.start();
+		if (webPdUsed) {
+			var patch
+				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
+				  patch = Pd.loadPatch(patchStr)
+				});
+			Pd.start();
+		}
 		// also need to use touchend to start playback of all gazeSpot audio here 
 		// load play, then pause each audio clip
 		var scenes = APP_DATA.scenes.map(function(sceneData) {
