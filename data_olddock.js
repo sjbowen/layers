@@ -80,6 +80,13 @@ var APP_DATA = {
 			"baseOpacity": 0.2,
 			"timeout": 2000
       	},
+		{
+			"yaw": 0,
+			"pitch": Math.PI/2,
+			"deviation": 0.2,
+			"target": "1-above-the-old-dock",
+			"timeout": 3000
+		},
       	{
 			"yaw": -1.64,
 			"pitch": 0.1,
