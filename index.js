@@ -182,14 +182,14 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 			marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch }, { perspective: { radius: hotspot.radius, extraRotations: hotspot.extraRotations }});
 		});		
 		
-		// Add Gaze Spots by adding event listener for viewChange on the whole scene
-		marzipanoScene.addEventListener('viewChange', function() {
-			var yaw = viewer.view().yaw();
-			var pitch = viewer.view().pitch();
-			var gazing = false;
-			sceneData.gazeSpots.forEach(function (gazeSpot) {		
-			//for each gazespot, check if view closely matches, set gazing to true if so
-				if (onSpot(gazeSpot, pitch, yaw)) {
+	// Add Gaze Spots by adding event listener for viewChange on the whole scene
+	marzipanoScene.addEventListener('viewChange', function() {
+		var yaw = viewer.view().yaw();
+		var pitch = viewer.view().pitch();
+		var gazing = false;
+		sceneData.gazeSpots.forEach(function (gazeSpot) {		
+		//for each gazespot, check if view closely matches, set gazing to true if so
+			if (onSpot(gazeSpot, pitch, yaw)) {
 				if ((switchTimer == null) && (revealFade == null)) { // if timers havn't already been started, start them
 					if (gazeSpot.selector) { // if this is an embedded content reveal type gazespot
 						console.log('gazeSpot found: '+ gazeSpot.selector);
@@ -227,12 +227,11 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 // 							// fade in by animating jQuery object
 // // 							$(sound)[0].volume = 0; 
 // // 							$(sound).animate({volume: 1}, gazeSpot.timeout);
-						};
+					}
 // 						if (webPdUsed) {
 // 							Pd.send('send1', [gazeSpot.selector, 1]); // tell webPd the HTML selector of the embedded content
 // 							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the transition of the embedded content
 // 						};
-					}
 					if (gazeSpot.target) { // if this is a switch type gazeSpot
 						console.log("Gaze spot that switches to scene " + gazeSpot.target + " found at yaw: " + gazeSpot.yaw + ' pitch: ' + gazeSpot.pitch + " timer started"); 
 						lastSpot = gazeSpot; // store this gazeSpot data for when we move off it
@@ -248,28 +247,30 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 					}
 				} 
 				gazing = true;
-			});
- 			if (!gazing) { // if not gazing 
- 					if ((switchTimer != null) || (revealTimer != null)) { // and if the timers have not already been cleared
-						clearTimeout(switchTimer);  // clear the timer
-						clearInterval(revealFade);  // clear the timer
-						switchTimer = null;
-						revealFade = null;
- 						console.log("off gazespot, timers cleared"); 
-						if (lastSpot) {
-							if (lastSpot.selector) { // if moved off an embedded content reveal type gazespot
-								document.getElementById(lastSpot.selector).style.opacity = lastSpot.baseOpacity;
-								document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; // hide content	
-								$(sound).animate({volume: 0}, lastSpot.timeout, function() {sound.pause()}); // fade out by animating jquery object
+		};
+		});	
+		if (!gazing) { // if not gazing 
+				if ((switchTimer != null) || (revealFade != null)) { // and if the timers have not already been cleared
+					clearTimeout(switchTimer);  // clear the timer
+					clearInterval(revealFade);  // clear the timer
+					switchTimer = null;
+					revealFade = null;
+					console.log("off gazespot, timers cleared"); 
+					if (lastSpot) {
+						if (lastSpot.selector) { // if moved off an embedded content reveal type gazespot
+							document.getElementById(lastSpot.selector).style.opacity = lastSpot.baseOpacity;
+							document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; // hide content	
+							$(sound).animate({volume: 0}, lastSpot.timeout, function() {sound.pause()}); // fade out by animating jquery object
 // 								if (webPdUsed) {Pd.send('send1', [lastSpot.selector, 0])}; // tell webPD we've moved off this gazeSpot
-							}
-							if (lastSpot.target) { // if moved off a scene switch gazespot
-// 								if (webPdUsed) {Pd.send('send1', [lastSpot.target, 0])}; // tell webPD we've moved off this gazeSpot
-							}
 						}
- 					}
- 				}
-		});
+						if (lastSpot.target) { // if moved off a scene switch gazespot
+// 								if (webPdUsed) {Pd.send('send1', [lastSpot.target, 0])}; // tell webPD we've moved off this gazeSpot
+						}
+					}
+				}
+			} 				
+	});
+		
     return {
       data: sceneData,
       marzipanoObject: marzipanoScene
