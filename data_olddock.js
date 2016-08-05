@@ -286,7 +286,7 @@ var APP_DATA = {
     "fullscreenButton": true,
     "viewControlButtons": false,
     "deviceOrientationControl": true,
-    "debugMode": true,
+    "debugMode": false,
     "webPdUsed": false
   }
 };

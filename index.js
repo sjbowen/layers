@@ -95,7 +95,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 
 	// variables for gazeSpots and performance mode
 	var switchTimer = null; // empty variable for timer
-	var revealTimer = null; // empty variable for timer
+	var revealFade = null; // empty variable for revealFade interval
 	var lastSpot = null; // empty variable for reveal gaze spot timer
 	var performTimers = []; // empty array for performance timers
 	var performYawSpeed = 0; // yaw spin speed
@@ -190,20 +190,43 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 			sceneData.gazeSpots.forEach(function (gazeSpot) {		
 			//for each gazespot, check if view closely matches, set gazing to true if so
 				if (onSpot(gazeSpot, pitch, yaw)) {
-				if ((switchTimer == null) && (revealTimer == null)) { // if timers havn't already been started, start them
+				if ((switchTimer == null) && (revealFade == null)) { // if timers havn't already been started, start them
 					if (gazeSpot.selector) { // if this is an embedded content reveal type gazespot
-						console.log($(gazeSpot.selector));
+						console.log('gazeSpot found: '+ gazeSpot.selector);
 						lastSpot = gazeSpot; // store this gazeSpot data for when we move off it
-						revealTimer = setTimeout(function () {
-							document.getElementById(gazeSpot.selector).style.opacity = 1;
-							document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out"; }, 500);
-						if (gazeSpot.audio) {
-							sound = document.getElementById(gazeSpot.audio);
-							sound.play(); 
-							sound.loop = true;
-							// fade in by animating jQuery object
-							$(sound)[0].volume = 0; 
-							$(sound).animate({volume: 1}, gazeSpot.timeout);
+						var currentOpacity = gazeSpot.baseOpacity;
+						var currentVol = 0;
+						var opacityIncrement =  50 / ((1 - gazeSpot.baseOpacity) * gazeSpot.timeout);					
+						var audioIncrement = 50 / gazeSpot.timeout;
+						console.log(opacityIncrement + ' ' + audioIncrement);
+						revealFade= setInterval(function () { 
+							if (currentOpacity < (1 - opacityIncrement)) {
+								currentOpacity = currentOpacity + opacityIncrement;
+								document.getElementById(gazeSpot.selector).style.opacity = currentOpacity;
+							} else {
+								currentOpacity = 1;
+								clearInterval(revealFade);
+							}
+							console.log(currentOpacity);
+// 							if (currentVol
+// 							visualFadeIn (gazeSpot);
+// 								  	var fadeTimer = setInterval (function() {
+// 	  		if (currentVol < (1 - increment)) {currentVol = currentVol + increment; sound.volume = currentVol;} // have to use < 1-increment as add additional rogue increments values at several decimal places
+// 	  		else {currentVol = 1; sound.volume = currentVol; clearInterval(fadeTimer)};
+// 	  		console.log(currentVol);
+						}, 50);
+// 
+// 							document.getElementById(gazeSpot.selector).style.opacity = 1;
+// 							document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out"; }, 500);
+// 						if (gazeSpot.audio) {
+// 							sound = document.getElementById(gazeSpot.audio);
+// 							sound.play(); 
+// 							sound.loop = true;
+// 							sound.volume = 0;
+// // 							fadeIn(sound, 1, gazeSpot.timeout);
+// 							// fade in by animating jQuery object
+// // 							$(sound)[0].volume = 0; 
+// // 							$(sound).animate({volume: 1}, gazeSpot.timeout);
 						};
 // 						if (webPdUsed) {
 // 							Pd.send('send1', [gazeSpot.selector, 1]); // tell webPd the HTML selector of the embedded content
@@ -225,14 +248,13 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 					}
 				} 
 				gazing = true;
-			}
 			});
  			if (!gazing) { // if not gazing 
  					if ((switchTimer != null) || (revealTimer != null)) { // and if the timers have not already been cleared
 						clearTimeout(switchTimer);  // clear the timer
-						clearTimeout(revealTimer);  // clear the timer
+						clearInterval(revealFade);  // clear the timer
 						switchTimer = null;
-						revealTimer = null;
+						revealFade = null;
  						console.log("off gazespot, timers cleared"); 
 						if (lastSpot) {
 							if (lastSpot.selector) { // if moved off an embedded content reveal type gazespot
@@ -690,6 +712,17 @@ function switchScene(scene) {
 	  	var distance = Math.sqrt((dPitch*dPitch)+(dYaw*dYaw));
 	  	// return true if distance is less than gazeSpot deviation
 		return (distance < gazeSpot.deviation);
+	  }
+	  
+	  function fadeIn (sound, targetVol, duration) {
+	  	var currentVol = sound.volume;
+	  	var increment = 50 / duration;
+	  	console.log(increment);
+	  	var fadeTimer = setInterval (function() {
+	  		if (currentVol < (1 - increment)) {currentVol = currentVol + increment; sound.volume = currentVol;} // have to use < 1-increment as add additional rogue increments values at several decimal places
+	  		else {currentVol = 1; sound.volume = currentVol; clearInterval(fadeTimer)};
+	  		console.log(currentVol);
+	  	}, 50);
 	  }
 
 }	   // end go function 
