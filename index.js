@@ -7,6 +7,10 @@ var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used
 var readyContainer = document.querySelector('#readyContainer');
 var readyElement = document.querySelector('#ready');
 var sound = null; // empty variable for HTML id of gazeSpot sound currently playing
+// var audioCtx = new (window.AudioContext || window.webkitAudioContext)(); // web audio context for manipulating sounds
+// var gainNode = audioCtx.createGain(); // create a gain node
+var source = null; // empty variable for audio source
+var spotSound = null; // empty variable for gazeSpot sound, as Howls
 
 if (readyContainer!=null) {
 
@@ -29,19 +33,26 @@ if (readyContainer!=null) {
 				});
 			Pd.start();
 		}
+		// play a sound via Howler to avoid audio glitch on first playback of audio
+		var blopSound = new Howl({
+		  src: ['sounds/blop.mp3']
+		});		
+		blopSound.play();
+		
 		// also need to use touchend to start playback of all gazeSpot audio here 
 		// load then play and pause each audio clip in turn
-		var scenes = APP_DATA.scenes.map(function(sceneData) {
-			sceneData.gazeSpots.forEach(function (gazeSpot) {
-				if (gazeSpot.audio) {
-					sound = document.getElementById(gazeSpot.audio);
-					sound.play(); 
-					sound.loop = true;
-					sound.pause();
-					console.log(gazeSpot.audio + ' play/paused');
-				};
-			});
-		});
+		// NOTE:  do I need to do anything to get Howler to work here?
+// 		var scenes = APP_DATA.scenes.map(function(sceneData) {
+// 			sceneData.gazeSpots.forEach(function (gazeSpot) {
+// 				if (gazeSpot.audio) {
+// 					sound = document.getElementById(gazeSpot.audio);
+// 					sound.play(); 
+// 					sound.loop = true;
+// 					sound.pause();
+// 					console.log(gazeSpot.audio + ' play/paused');
+// 				};
+// 			});
+// 		});
 		go();
 		});
 		
@@ -57,19 +68,27 @@ if (readyContainer!=null) {
 				});
 			Pd.start();
 		}
+		// play a sound via Howler to avoid audio glitch on first playback of audio
+		// and to get use touchend to enable audio on mobile devices
+		var blopSound = new Howl({
+		  src: ['sounds/blop.mp3']
+		});		
+		blopSound.play();
+
 		// also need to use touchend to start playback of all gazeSpot audio here 
 		// load play, then pause each audio clip
-		var scenes = APP_DATA.scenes.map(function(sceneData) {
-			sceneData.gazeSpots.forEach(function (gazeSpot) {
-				if (gazeSpot.audio) {
-					sound = document.getElementById(gazeSpot.audio);
-					sound.play(); 
-					sound.loop = true;
-					sound.pause();
-					console.log(gazeSpot.audio + ' play/paused');
-				};
-			});
-		});
+// 		var scenes = APP_DATA.scenes.map(function(sceneData) {
+// 			sceneData.gazeSpots.forEach(function (gazeSpot) {
+// 				if (gazeSpot.audio) {
+// 					sound = document.getElementById(gazeSpot.audio);
+// 					sound.play(); 
+// 					sound.loop = true;
+// 					sound.pause();
+// 					console.log(gazeSpot.audio + ' play/paused');
+// 				};
+// 			});
+// 		});
+		
 		go();
 		});
 } else {
@@ -95,7 +114,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 
 	// variables for gazeSpots and performance mode
 	var switchTimer = null; // empty variable for timer
-	var revealFade = null; // empty variable for revealFade interval
+	var fading = false; // switch for when fading content gazeSpots
 	var lastSpot = null; // empty variable for reveal gaze spot timer
 	var performTimers = []; // empty array for performance timers
 	var performYawSpeed = 0; // yaw spin speed
@@ -190,43 +209,40 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		sceneData.gazeSpots.forEach(function (gazeSpot) {		
 		//for each gazespot, check if view closely matches, set gazing to true if so
 			if (onSpot(gazeSpot, pitch, yaw)) {
-				if ((switchTimer == null) && (revealFade == null)) { // if timers havn't already been started, start them
+				if ((switchTimer == null) && (fading == false)) { // if switch timer or fading not started, start them
 					if (gazeSpot.selector) { // if this is an embedded content reveal type gazespot
 						console.log('gazeSpot found: '+ gazeSpot.selector);
 						lastSpot = gazeSpot; // store this gazeSpot data for when we move off it
-						var currentOpacity = gazeSpot.baseOpacity;
-						var currentVol = 0;
-						var opacityIncrement =  50 / ((1 - gazeSpot.baseOpacity) * gazeSpot.timeout);					
-						var audioIncrement = 50 / gazeSpot.timeout;
-						console.log(opacityIncrement + ' ' + audioIncrement);
-						revealFade= setInterval(function () { 
-							if (currentOpacity < (1 - opacityIncrement)) {
-								currentOpacity = currentOpacity + opacityIncrement;
-								document.getElementById(gazeSpot.selector).style.opacity = currentOpacity;
-							} else {
-								currentOpacity = 1;
-								clearInterval(revealFade);
-							}
-							console.log(currentOpacity);
-// 							if (currentVol
-// 							visualFadeIn (gazeSpot);
-// 								  	var fadeTimer = setInterval (function() {
-// 	  		if (currentVol < (1 - increment)) {currentVol = currentVol + increment; sound.volume = currentVol;} // have to use < 1-increment as add additional rogue increments values at several decimal places
-// 	  		else {currentVol = 1; sound.volume = currentVol; clearInterval(fadeTimer)};
-// 	  		console.log(currentVol);
-						}, 50);
-// 
-// 							document.getElementById(gazeSpot.selector).style.opacity = 1;
-// 							document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out"; }, 500);
-// 						if (gazeSpot.audio) {
+						fading = true; // switch fading on
+						// transition opacity to 1 over timeout duration
+						document.getElementById(gazeSpot.selector).style.opacity = 1;
+						document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out";						
+						if (gazeSpot.audio) { // if there is an audio component, fetch it and start playing at 0 volume
+
+							spotSound = new Howl({
+							  src: ['sounds/1kHz.mp3'],
+							  volume: 0,
+							  loop: true
+							});
+							spotSound.play();
+							spotSound.fade (0, 1, gazeSpot.timeout);
+
 // 							sound = document.getElementById(gazeSpot.audio);
-// 							sound.play(); 
-// 							sound.loop = true;
+// 							sound.play();
+// 							sound.loop = true; 
 // 							sound.volume = 0;
-// // 							fadeIn(sound, 1, gazeSpot.timeout);
-// 							// fade in by animating jQuery object
-// // 							$(sound)[0].volume = 0; 
-// // 							$(sound).animate({volume: 1}, gazeSpot.timeout);
+// 							$(sound).animate({volume: 1}, gazeSpot.timeout); // fade in by animating jQuery object, doesn't work on mobiles?
+// 							console.log(sound);
+
+// 							source = audioCtx.createMediaElementSource(sound); // add sound to audio context
+// 							// create multiple sources and switch between?
+// 							// DON'T use audio elements, instead load and decode directly using buffer
+// 							// OR.. could it be that jQuery will work, now not using setTimeout?
+// 							gainNode.gain.setValueAtTime(0, audioCtx.currentTime); // set gain as zero initially
+// 							gainNode.gain.linearRampToValueAtTime(1.0, audioCtx.currentTime + (gazeSpot.timeout/1000)); // create fade in using RampToValueAtTime
+// 							source.connect(gainNode);	// connect source to gain node
+// 							gainNode.connect(audioCtx.destination); // connect gain node to destination
+						}
 					}
 // 						if (webPdUsed) {
 // 							Pd.send('send1', [gazeSpot.selector, 1]); // tell webPd the HTML selector of the embedded content
@@ -250,17 +266,24 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		};
 		});	
 		if (!gazing) { // if not gazing 
-				if ((switchTimer != null) || (revealFade != null)) { // and if the timers have not already been cleared
+				if ((switchTimer != null) || (fading == true)) { // and if the timers have not already been cleared
 					clearTimeout(switchTimer);  // clear the timer
-					clearInterval(revealFade);  // clear the timer
 					switchTimer = null;
-					revealFade = null;
+					fading = false;  // turn off fading
 					console.log("off gazespot, timers cleared"); 
 					if (lastSpot) {
 						if (lastSpot.selector) { // if moved off an embedded content reveal type gazespot
 							document.getElementById(lastSpot.selector).style.opacity = lastSpot.baseOpacity;
 							document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; // hide content	
-							$(sound).animate({volume: 0}, lastSpot.timeout, function() {sound.pause()}); // fade out by animating jquery object
+							if (lastSpot.audio) {
+// 								gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + (lastSpot.timeout/1000)); // create fade out using RampToValueAtTime
+// 								$(sound).animate({volume: 0}, lastSpot.timeout, function() {sound.pause()}); // fade out by animating jQuery object
+								if (spotSound) { 
+									var currentVol = spotSound.volume();
+									spotSound.fade(currentVol, 0, lastSpot.timeout); 
+								};
+							}
+						
 // 								if (webPdUsed) {Pd.send('send1', [lastSpot.selector, 0])}; // tell webPD we've moved off this gazeSpot
 						}
 						if (lastSpot.target) { // if moved off a scene switch gazespot

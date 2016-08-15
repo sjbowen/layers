@@ -21,6 +21,8 @@ send1 = either html selector (for overlayed content) or target scene id (for sce
 send2 = either reveal duration (for overlayed content) or timeout (for scence switch) in milliseconds
 send3 = scene id for scene just switched to (including initial scene when loaded)
 
+Audio Integration:
+Try using howler.js - https://github.com/goldfire/howler.js
 
 style.css modifications:
 - styling for device orientation control elements
