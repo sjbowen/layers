@@ -92,7 +92,7 @@ var APP_DATA = {
 			"pitch": 0.1,
 			"deviation": 0.2,
 			"selector": "children",
-			"audio": "ChildrenAudio",
+			"audio": ['sounds/children.mp3', 'sounds/children.wav'],
 			"baseOpacity": 0.6,
 			"timeout": 2000
       	},
@@ -101,7 +101,7 @@ var APP_DATA = {
 			"pitch": 0.16,
 			"deviation": 0.2,
 			"selector": "brother",
-			"audio": "SlaveShipAudio",
+			"audio": ['sounds/SlaveShip.mp3', 'sounds/SlaveShip.wav'],
 			"baseOpacity": 0.6,
 			"timeout": 2000
       	},
@@ -118,7 +118,7 @@ var APP_DATA = {
 			"pitch": -0.67,
 			"deviation": 0.2,
 			"selector": "wallart",
-			"audio": "WallArtAudio",
+			"audio": ['sounds/WallArt.mp3', 'sounds/WallArt.wav'],
 			"baseOpacity": 0.5,
 			"timeout": 2000
       	}
@@ -201,7 +201,7 @@ var APP_DATA = {
 			"pitch": -0.15,
 			"deviation": 0.2,
 			"selector": "childrenshome",
-			"audio": "ChildrensHomeAudio",
+			"audio": ['sounds/ChildrensHome.mp3', 'sounds/ChildrensHome.wav'],
 			"baseOpacity": 0.2,
 			"timeout": 2000
       	},
@@ -218,7 +218,7 @@ var APP_DATA = {
 			"pitch": -0.75,
 			"deviation": 0.2,
 			"selector": "sale",
-			"audio": "SlaveSongAudio",
+			"audio": ['sounds/SlaveSong.mp3', 'sounds/SlaveSong.wav'],
 			"baseOpacity": 0.2,
 			"timeout": 2000
       	},

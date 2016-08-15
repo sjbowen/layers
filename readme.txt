@@ -22,7 +22,7 @@ send2 = either reveal duration (for overlayed content) or timeout (for scence sw
 send3 = scene id for scene just switched to (including initial scene when loaded)
 
 Audio Integration:
-Try using howler.js - https://github.com/goldfire/howler.js
+Using howler.js - https://github.com/goldfire/howler.js
 
 style.css modifications:
 - styling for device orientation control elements
@@ -48,7 +48,7 @@ gazeSpot specific variables:
 	deviation - tolerance in radians around gazeSpot location to activate it
 	target (optional, 'scene switch' type gazeSpot) - id of scenes object this gazeSpot will switch to
 	selector (optional, 'embedded content reveal' type gazeSpot) - selector of embedded html to be revealed
-	audio (optional, for gazeSpots with audio elements) - id of HTML audio to be played
+	audio (optional, for gazeSpots with audio elements) - array of URLs of audio to be played, i.e. to enable different formats
 	timeout - duration in milliseconds of scene switch or reveal
 	baseopacity - opacity element will return to once move off gazeSpot. So, can make elements remain in view if set to 1.0
 script object variables:

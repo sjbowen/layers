@@ -6,22 +6,18 @@ var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used
 
 var readyContainer = document.querySelector('#readyContainer');
 var readyElement = document.querySelector('#ready');
-var sound = null; // empty variable for HTML id of gazeSpot sound currently playing
-// var audioCtx = new (window.AudioContext || window.webkitAudioContext)(); // web audio context for manipulating sounds
-// var gainNode = audioCtx.createGain(); // create a gain node
-var source = null; // empty variable for audio source
-var spotSound = null; // empty variable for gazeSpot sound, as Howls
+var spotSound = null; // empty variable for gazeSpot sound, using Howler.js
 
 if (readyContainer!=null) {
 
-// check whether device has gyro functionality
+	// check whether device has gyro functionality
 	window.addEventListener('deviceorientation', function () {
 	    document.body.classList.remove('no-gyro');
     	document.body.classList.add('gyro');
 		});
 
-// start pano display either by click or touch, check if touch device at the same time
-// and get the necessary touchend to enable mobile devices to play audio
+	// start pano display either by click or touch, check if touch device at the same time
+	// and get the necessary touchend to enable mobile devices to play audio
 	
 	readyElement.addEventListener('click', function () {
 		console.log('click');
@@ -37,22 +33,7 @@ if (readyContainer!=null) {
 		var blopSound = new Howl({
 		  src: ['sounds/blop.mp3']
 		});		
-		blopSound.play();
-		
-		// also need to use touchend to start playback of all gazeSpot audio here 
-		// load then play and pause each audio clip in turn
-		// NOTE:  do I need to do anything to get Howler to work here?
-// 		var scenes = APP_DATA.scenes.map(function(sceneData) {
-// 			sceneData.gazeSpots.forEach(function (gazeSpot) {
-// 				if (gazeSpot.audio) {
-// 					sound = document.getElementById(gazeSpot.audio);
-// 					sound.play(); 
-// 					sound.loop = true;
-// 					sound.pause();
-// 					console.log(gazeSpot.audio + ' play/paused');
-// 				};
-// 			});
-// 		});
+		blopSound.play();		
 		go();
 		});
 		
@@ -73,22 +54,7 @@ if (readyContainer!=null) {
 		var blopSound = new Howl({
 		  src: ['sounds/blop.mp3']
 		});		
-		blopSound.play();
-
-		// also need to use touchend to start playback of all gazeSpot audio here 
-		// load play, then pause each audio clip
-// 		var scenes = APP_DATA.scenes.map(function(sceneData) {
-// 			sceneData.gazeSpots.forEach(function (gazeSpot) {
-// 				if (gazeSpot.audio) {
-// 					sound = document.getElementById(gazeSpot.audio);
-// 					sound.play(); 
-// 					sound.loop = true;
-// 					sound.pause();
-// 					console.log(gazeSpot.audio + ' play/paused');
-// 				};
-// 			});
-// 		});
-		
+		blopSound.play();		
 		go();
 		});
 } else {
@@ -220,28 +186,12 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 						if (gazeSpot.audio) { // if there is an audio component, fetch it and start playing at 0 volume
 
 							spotSound = new Howl({
-							  src: ['sounds/1kHz.mp3'],
+							  src: gazeSpot.audio,
 							  volume: 0,
 							  loop: true
 							});
 							spotSound.play();
 							spotSound.fade (0, 1, gazeSpot.timeout);
-
-// 							sound = document.getElementById(gazeSpot.audio);
-// 							sound.play();
-// 							sound.loop = true; 
-// 							sound.volume = 0;
-// 							$(sound).animate({volume: 1}, gazeSpot.timeout); // fade in by animating jQuery object, doesn't work on mobiles?
-// 							console.log(sound);
-
-// 							source = audioCtx.createMediaElementSource(sound); // add sound to audio context
-// 							// create multiple sources and switch between?
-// 							// DON'T use audio elements, instead load and decode directly using buffer
-// 							// OR.. could it be that jQuery will work, now not using setTimeout?
-// 							gainNode.gain.setValueAtTime(0, audioCtx.currentTime); // set gain as zero initially
-// 							gainNode.gain.linearRampToValueAtTime(1.0, audioCtx.currentTime + (gazeSpot.timeout/1000)); // create fade in using RampToValueAtTime
-// 							source.connect(gainNode);	// connect source to gain node
-// 							gainNode.connect(audioCtx.destination); // connect gain node to destination
 						}
 					}
 // 						if (webPdUsed) {
@@ -276,14 +226,9 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 							document.getElementById(lastSpot.selector).style.opacity = lastSpot.baseOpacity;
 							document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; // hide content	
 							if (lastSpot.audio) {
-// 								gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + (lastSpot.timeout/1000)); // create fade out using RampToValueAtTime
-// 								$(sound).animate({volume: 0}, lastSpot.timeout, function() {sound.pause()}); // fade out by animating jQuery object
-								if (spotSound) { 
-									var currentVol = spotSound.volume();
-									spotSound.fade(currentVol, 0, lastSpot.timeout); 
-								};
+								var currentVol = spotSound.volume();
+								spotSound.fade(currentVol, 0, lastSpot.timeout);
 							}
-						
 // 								if (webPdUsed) {Pd.send('send1', [lastSpot.selector, 0])}; // tell webPD we've moved off this gazeSpot
 						}
 						if (lastSpot.target) { // if moved off a scene switch gazespot
@@ -738,15 +683,4 @@ function switchScene(scene) {
 		return (distance < gazeSpot.deviation);
 	  }
 	  
-	  function fadeIn (sound, targetVol, duration) {
-	  	var currentVol = sound.volume;
-	  	var increment = 50 / duration;
-	  	console.log(increment);
-	  	var fadeTimer = setInterval (function() {
-	  		if (currentVol < (1 - increment)) {currentVol = currentVol + increment; sound.volume = currentVol;} // have to use < 1-increment as add additional rogue increments values at several decimal places
-	  		else {currentVol = 1; sound.volume = currentVol; clearInterval(fadeTimer)};
-	  		console.log(currentVol);
-	  	}, 50);
-	  }
-
 }	   // end go function 
