@@ -40,7 +40,7 @@ var APP_DATA = {
 			"pitch": 0.1,
 			"radius": 250,
  			"extraRotations": 'rotateX(0.1rad)',
-			"html": '<p id="instructions" style="width:150px;opacity:1.0">Move your phone around, up and down to explore.</p>'
+			"html": '<p id="instructions" style="width:150px;opacity:1.0">Move your phone around, up and down to explore...</p>'
       	},
       	{
 			"yaw": -1.64,
@@ -77,7 +77,7 @@ var APP_DATA = {
 			"pitch": 0.1,
 			"deviation": 0.2,
 			"selector": "instructions",
-			"baseOpacity": 0.2,
+			"baseOpacity": 0.15,
 			"timeout": 2000
       	},
 		{

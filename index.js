@@ -6,7 +6,7 @@ var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used
 
 var readyContainer = document.querySelector('#readyContainer');
 var readyElement = document.querySelector('#ready');
-var spotSound = null; // empty variable for gazeSpot sound, using Howler.js
+var spotSounds = []; // create a new array to hold HTML selector, Howl sounds as objects (via a constructor function)
 
 if (readyContainer!=null) {
 
@@ -18,6 +18,25 @@ if (readyContainer!=null) {
 
 	// start pano display either by click or touch, check if touch device at the same time
 	// and get the necessary touchend to enable mobile devices to play audio
+
+	// preload the audio
+	var loadCount = 0;
+	var sceneAudio = APP_DATA.scenes.map(function(sceneData) {
+		sceneData.gazeSpots.forEach(function (gazeSpot) {
+			if (gazeSpot.audio) {
+				var sound = new Howl({
+					src: gazeSpot.audio,
+					loop: true,
+					});
+				var spotSound = new soundSelect(gazeSpot.selector, sound);
+				sound.volume(0); // mute the sound
+				sound.play(); // play the sound, check playing all sounds doesn't slow down mobile browsers...
+				spotSounds.push(spotSound);
+			};
+		});
+	});
+
+	console.log(spotSounds);
 	
 	readyElement.addEventListener('click', function () {
 		console.log('click');
@@ -60,6 +79,11 @@ if (readyContainer!=null) {
 } else {
 	if (readyContainer!=null) {readyContainer.innerHTML = ''}; // hide the ready link
 	go();
+}
+
+function soundSelect (selector, sound) {	// object constructor for pairs of HTML selector, Howl sounds
+	this.selector = selector;
+	this.sound = sound;
 }
 
 function go() { // rather than as a self-invoking anonymous function, call this function when readyElement has been clicked or tapped
@@ -184,14 +208,15 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 						document.getElementById(gazeSpot.selector).style.opacity = 1;
 						document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out";						
 						if (gazeSpot.audio) { // if there is an audio component, fetch it and start playing at 0 volume
-
-							spotSound = new Howl({
-							  src: gazeSpot.audio,
-							  volume: 0,
-							  loop: true
+							var sound;
+							spotSounds.forEach(function(spotSound) {	// look for sound matching selector
+								if (spotSound.selector == gazeSpot.selector) {
+									sound = spotSound.sound;
+								};
 							});
-							spotSound.play();
-							spotSound.fade (0, 1, gazeSpot.timeout);
+							var currentVol = sound.volume();
+							console.log('Fade in from ' + currentVol);
+							sound.fade (currentVol, 1, gazeSpot.timeout);
 						}
 					}
 // 						if (webPdUsed) {
@@ -226,8 +251,15 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 							document.getElementById(lastSpot.selector).style.opacity = lastSpot.baseOpacity;
 							document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; // hide content	
 							if (lastSpot.audio) {
-								var currentVol = spotSound.volume();
-								spotSound.fade(currentVol, 0, lastSpot.timeout);
+								var sound;
+								spotSounds.forEach(function(spotSound) {	// look for sound matching selector
+									if (spotSound.selector == lastSpot.selector) {
+										sound = spotSound.sound;
+									};
+								});
+								var currentVol = sound.volume();
+								console.log('Fade out from ' + currentVol);
+								sound.fade(currentVol, 0, lastSpot.timeout);
 							}
 // 								if (webPdUsed) {Pd.send('send1', [lastSpot.selector, 0])}; // tell webPD we've moved off this gazeSpot
 						}
