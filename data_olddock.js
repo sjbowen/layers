@@ -82,7 +82,7 @@ var APP_DATA = {
       	},
 		{
 			"yaw": 0,
-			"pitch": Math.PI/2,
+			"pitch": -Math.PI/2,
 			"deviation": 0.2,
 			"target": "1-above-the-old-dock",
 			"timeout": 3000
@@ -122,7 +122,13 @@ var APP_DATA = {
 			"baseOpacity": 0.5,
 			"timeout": 2000
       	}
-	  ]
+	  ],
+	  "manySpotSwitch": 
+	  	{
+	  		"target": "1-above-the-old-dock",
+	  		"trigger": 5,
+	  		"timeout": 2000
+	  	}
     },
     {
       "id": "1-above-the-old-dock",
@@ -194,7 +200,7 @@ var APP_DATA = {
 			"pitch": Math.PI/2,
 			"deviation": 0.2,
 			"target": "2-inside-the-old-dock",
-			"timeout": 3000
+			"timeout": 5000
 		},
       	{
 			"yaw": 3.1,
@@ -230,7 +236,13 @@ var APP_DATA = {
 			"baseOpacity": 0.2,
 			"timeout": 2000
       	}
-	  ]
+	  ],
+	  "manySpotSwitch": 
+	  	{
+	  		"target": "2-inside-the-old-dock",
+	  		"trigger": 4,
+	  		"timeout": 2000
+	  	}
     },
     {
       "id": "2-inside-the-old-dock",
@@ -287,6 +299,7 @@ var APP_DATA = {
     "viewControlButtons": false,
     "deviceOrientationControl": true,
     "debugMode": false,
-    "webPdUsed": false
+    "webPdUsed": false,
+    "manySpotSwitch": true
   }
 };
