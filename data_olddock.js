@@ -264,17 +264,13 @@ var APP_DATA = {
         {
           "tileSize": 512,
           "size": 2048
-        },
-        {
-          "tileSize": 512,
-          "size": 4096
         }
       ],
-      "faceSize": 3338,
+      "faceSize": 1344,
       "initialViewParameters": {
         "pitch": 0,
         "yaw": 0,
-        "fov": 1.5707963267948966
+        "fov": 0.85
       },
       "linkHotspots": [],
       "infoHotspots": [],
