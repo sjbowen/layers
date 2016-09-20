@@ -18,7 +18,7 @@ if (readyContainer!=null) {
 	// start pano display either by click or touch, check if touch device at the same time
 	// and get the necessary touchend to enable mobile devices to play audio
 
-	// preload the audio
+	// preload the gazeSpot audio
 	var loadCount = 0;
 	var sceneAudio = APP_DATA.scenes.map(function(sceneData) {
 		sceneData.gazeSpots.forEach(function (gazeSpot) {
@@ -30,6 +30,7 @@ if (readyContainer!=null) {
 				var spotSound = new soundSelect(gazeSpot.selector, sound);
 				sound.volume(0); // mute the sound
 				sound.play(); // play the sound, check playing all sounds doesn't slow down mobile browsers...
+				sound.stop(); // stop the sound, important for spoken clips so they start at the beginning
 				spotSounds.push(spotSound);
 			};
 		});
@@ -108,6 +109,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	var performYawSpeed = 0; // yaw spin speed
 	var performPitchSpeed = 0; // pitch speed
 	var sceneIndex = 0; // index for scene number
+	var bgSound = null; // empty variable for bgSound
 
   // Detect desktop or mobile mode using a matchMedia query for viewport sizes of 500px square or less
   if (window.matchMedia) {
@@ -179,6 +181,12 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	} else {
 		trigger = false;
 	}
+	if 	(sceneData.bgAudio) { // check if this scene has background audio, assign variable if so
+		var bgAudio = sceneData.bgAudio;
+	}
+	if 	(sceneData.switchAudio) { // check if this scene has scene switch audio, assign variables if so
+		var switchAudio = sceneData.switchAudio;
+	}
 
     // Create link hotspots.
     sceneData.linkHotspots.forEach(function(hotspot) {
@@ -222,6 +230,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 								};
 							});
 							var currentVol = sound.volume();
+							if (!sound.playing()) { sound.play(); }; // if the sound hasn't been played yet, start it playing
 							console.log('Fade in from ' + currentVol);
 							sound.fade (currentVol, 1, gazeSpot.timeout);
 						}
@@ -498,6 +507,10 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 function switchScene(scene) {
 	stopAutorotate();
 	if (lastscene!=null) {
+		if (bgSound) {
+			bgSound.fade(1,0,1000);
+			bgSound.stop();
+			} // if there was bgSound, fade out and stop
 	   var departureView = lastscene.marzipanoObject.view();
 	   var newView = scene.marzipanoObject.view();
 	   newView.setParameters({
@@ -512,6 +525,21 @@ function switchScene(scene) {
 // 		Pd.send('send3', [wpdScene]);
 		Pd.send('send3', [scene.data.id]);
 	}
+	if (scene.data.switchAudio) { // if there is switch audio load and play it
+		var switchSound = new Howl({
+			src: scene.data.switchAudio.source,
+			});
+		var switchSoundPlay = setTimeout (function () {switchSound.play();}, scene.data.switchAudio.delay);
+	} 
+	if (scene.data.bgAudio) { // if there is bg audio load and play it
+		bgSound = new Howl({
+			src: scene.data.bgAudio.source,
+			loop: true,
+			volume: 0,
+			});
+		bgSound.play();
+		bgSound.fade(0, scene.data.bgAudio.volume, 2000);
+	} 
 	lastscene = scene; // update lastscene to be the current scene
 	startAutorotate();
   }

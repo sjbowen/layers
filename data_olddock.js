@@ -40,14 +40,14 @@ var APP_DATA = {
 			"pitch": 0.1,
 			"radius": 250,
  			"extraRotations": 'rotateX(0.1rad)',
-			"html": '<p id="instructions" style="width:150px;opacity:1.0">Move your phone around, up and down to explore...</p>'
+			"html": '<p id="instructions" style="width:150px;opacity:1.0;font-style:italic">move your phone around, up and down to explore...</p>'
       	},
-      	{
-			"yaw": -1.64,
-			"pitch": 0.1,
-			"radius": 750,
- 			"extraRotations": 'rotateX(-0.1rad)',
-			"html": '<img src="embed/migrantchildren.png" id="children" style="width:400px;height:224px;opacity:0.3;" />'
+       	{
+			"yaw": -2.17,
+			"pitch": -0.35,
+			"radius": 600,
+ 			"extraRotations": 'rotateX(0.35rad)',
+			"html": '<img src="embed/orientLine.png" id="orient" style="width:400px;height:479px;opacity:0.2;" />'
       	},
        	{
 			"yaw": 0.52,
@@ -62,6 +62,13 @@ var APP_DATA = {
 			"radius": 250,
  			"extraRotations": 'rotateX(0.641rad) rotateY(0rad)',
 			"html": '<p id="thief" style="width:250px;opacity:0.2">"I appear before this immense assembly as a thief and a robber. I stole this head, these limbs, this body from my master and ran off with them."</p>'
+      	},
+      	{
+			"yaw": 1.61,
+			"pitch": 0.5,
+			"radius": 250,
+ 			"extraRotations": 'rotateX(1.071rad) rotateY(0rad)',
+			"html": '<p id="mother" style="width:220px;opacity:0.2">"I told my mother about a scheme to send children to Australia. She said, &#39;Although it will be dangerous we won’t stand in your way. In any case you may have a better future there&#39;."</p>'
       	},
       	{
 			"yaw": 2.44,
@@ -88,12 +95,12 @@ var APP_DATA = {
 			"timeout": 3000
 		},
       	{
-			"yaw": -1.64,
-			"pitch": 0.1,
+			"yaw": -2.17,
+			"pitch": -0.35,
 			"deviation": 0.2,
-			"selector": "children",
-			"audio": ['sounds/children.mp3', 'sounds/children.wav'],
-			"baseOpacity": 0.6,
+			"selector": "orient",
+			"audio": ['sounds/LinersM.mp3', 'sounds/LinersM.wav'],
+			"baseOpacity": 0.4,
 			"timeout": 2000
       	},
       	{
@@ -102,6 +109,15 @@ var APP_DATA = {
 			"deviation": 0.2,
 			"selector": "brother",
 			"audio": ['sounds/SlaveShip.mp3', 'sounds/SlaveShip.wav'],
+			"baseOpacity": 0.6,
+			"timeout": 2000
+      	},
+      	{
+			"yaw": 1.61,
+			"pitch": 0.5,
+			"deviation": 0.2,
+			"selector": "mother",
+			"audio": ['sounds/MotherF.mp3', 'sounds/MotherF.wav'],
 			"baseOpacity": 0.6,
 			"timeout": 2000
       	},
@@ -165,6 +181,13 @@ var APP_DATA = {
       "linkHotspots": [],
       "infoHotspots": [],
       "embedHotspots": [
+      	{
+			"yaw": -0.85,
+			"pitch": 0.1,
+			"radius": 750,
+ 			"extraRotations": 'rotateX(-0.1rad)',
+			"html": '<img src="embed/migrantchildren.png" id="children" style="width:400px;height:224px;opacity:0.3;" />'
+      	},
        	{
 			"yaw": 3.1,
 			"pitch": -0.05,
@@ -173,11 +196,11 @@ var APP_DATA = {
 			"html": '<img src="embed/childrenshome.png" id="childrenshome" style="width:400px;height:284px;opacity:0.2;" />'
       	},
       	{
-			"yaw": -1.657,
-			"pitch": 0.608,
+			"yaw": 2.47,
+			"pitch": -0.59,
 			"radius": 250,
- 			"extraRotations": 'rotateX(0.891rad) rotateY(0rad)',
-			"html": '<p id="cried" style="width:250px;opacity:0.2">"That first night I was not the only one who cried for the ship, for Mum, for England and everyone back there." </p>'
+ 			"extraRotations": 'rotateX(0.59rad) rotateY(0rad)',
+			"html": '<p id="railings" style="width:220px;opacity:0.2">"I leaned over the railings and watched the ropes which held us to the dock. When they slipped into the water my heart sank with them." </p>'
       	},
       	{
 			"yaw": 0.15,
@@ -185,13 +208,6 @@ var APP_DATA = {
 			"radius": 800,
  			"extraRotations": 'rotateX(0.75rad) rotateY(-0.65rad)',
 			"html": '<img src="embed/sale.png" id="sale" style="width:400px;height:464px;opacity:0.2;" />'
-      	},
-      	{
-			"yaw": -0.94,
-			"pitch": -0.6,
-			"radius": 250,
- 			"extraRotations": 'rotateX(0.84rad) rotateY(0rad)',
-			"html": '<p id="survivors" style="width:250px;opacity:0.2">"On the whole the Fairbridge girls have made a success of their lives. We are now scattered throughout the world but the one thing that we have in common is that we are all survivors." </p>'
       	}
      ],
       "gazeSpots": [
@@ -203,6 +219,15 @@ var APP_DATA = {
 			"timeout": 5000
 		},
       	{
+			"yaw": -0.85,
+			"pitch": 0.1,
+			"deviation": 0.2,
+			"selector": "children",
+			"audio": ['sounds/children.mp3', 'sounds/children.wav'],
+			"baseOpacity": 0.6,
+			"timeout": 2000
+      	},
+      	{
 			"yaw": 3.1,
 			"pitch": -0.15,
 			"deviation": 0.2,
@@ -212,10 +237,11 @@ var APP_DATA = {
 			"timeout": 2000
       	},
       	{
-			"yaw": -1.657,
-			"pitch": 0.608,
+			"yaw": 2.47,
+			"pitch": -0.59,
 			"deviation": 0.2,
-			"selector": "cried",
+			"selector": "railings",
+			"audio": ['sounds/TheRailingsM.mp3', 'sounds/TheRailingsM.wav'],
 			"baseOpacity": 0.7,
 			"timeout": 2000
       	},
@@ -227,21 +253,13 @@ var APP_DATA = {
 			"audio": ['sounds/SlaveSong.mp3', 'sounds/SlaveSong.wav'],
 			"baseOpacity": 0.2,
 			"timeout": 2000
-      	},
-      	{
-			"yaw": -0.94,
-			"pitch": -0.6,
-			"deviation": 0.2,
-			"selector": "survivors",
-			"baseOpacity": 0.2,
-			"timeout": 2000
       	}
 	  ],
 	  "manySpotSwitch": 
 	  	{
 	  		"target": "2-inside-the-old-dock",
 	  		"trigger": 4,
-	  		"timeout": 2000
+	  		"timeout": 2000,
 	  	}
     },
     {
@@ -282,8 +300,16 @@ var APP_DATA = {
 			"deviation": 0.4,
 			"target": "0-above-the-old-dock",
 			"timeout": 3000
-		}
-      ]
+		},
+      ],
+   	  "bgAudio": {
+   	  	"source": ['sounds/OldDockShort.mp3', 'sounds/OldDockShort.wav'],
+   	  	"volume": 0.5
+   	  },
+   	  "switchAudio": {
+   	  	"source": ['sounds/OldDockInfo1.mp3', 'sounds/OldDockInfo1.wav'],
+   	  	"delay": 6000
+   	  }
     }
   ],
   "script": [],     
@@ -294,7 +320,7 @@ var APP_DATA = {
     "fullscreenButton": true,
     "viewControlButtons": false,
     "deviceOrientationControl": true,
-    "debugMode": false,
+    "debugMode": true,
     "webPdUsed": false,
     "manySpotSwitch": true
   }
