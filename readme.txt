@@ -35,6 +35,9 @@ data.js modifications:
 the data.js file produced by marzipano web-based tool
 modified by Simon Bowen to include additional data for embedded html (embedHotspots)
 hotspots that respond to looking at a particular location (gazeSpots)
+scene to switch to after certain number of gazeSpots found (manySpotSwitch)
+audio to play on scene switch (switchAudio)
+background audio (bgAudio)
 and a script data object for an automatic playlist of view and scene changes
 common variables within embedHotspots, gazeSpots are:
 		yaw, pitch - location on rectilinear projection (in radians), -pitch is up, +pitch is down 

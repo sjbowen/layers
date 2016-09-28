@@ -21,16 +21,12 @@ var APP_DATA = {
           "tileSize": 512,
           "size": 2048
         },
-        {
-          "tileSize": 512,
-          "size": 4096
-        }
       ],
-      "faceSize": 3356,
+      "faceSize": 1500,
       "initialViewParameters": {
         "pitch": 0.1,
         "yaw": -0.8,
-        "fov": 0.85
+        "fov": 1.1424053815586288
       },
       "linkHotspots": [],
       "infoHotspots": [],
@@ -38,7 +34,7 @@ var APP_DATA = {
       	{
 			"yaw": -0.8,
 			"pitch": 0.1,
-			"radius": 250,
+			"radius": 150,
  			"extraRotations": 'rotateX(0.1rad)',
 			"html": '<p id="instructions" style="width:150px;opacity:1.0;font-style:italic">move your phone around, up and down to explore...</p>'
       	},
@@ -166,17 +162,13 @@ var APP_DATA = {
         {
           "tileSize": 512,
           "size": 2048
-        },
-        {
-          "tileSize": 512,
-          "size": 4096
         }
       ],
-      "faceSize": 3356,
+      "faceSize": 1500,
       "initialViewParameters": {
-        "pitch": 0,
-        "yaw": 0,
-        "fov": 0.85
+        "pitch": 0.1,
+        "yaw": -0.8,
+        "fov": 1.1424053815586288
       },
       "linkHotspots": [],
       "infoHotspots": [],
@@ -284,23 +276,40 @@ var APP_DATA = {
           "size": 2048
         }
       ],
-      "faceSize": 1344,
+      "faceSize": 1500,
       "initialViewParameters": {
-        "pitch": 0,
-        "yaw": 0,
-        "fov": 0.85
+        "pitch": 0.1,
+        "yaw": -0.8,
+        "fov": 1.1424053815586288
       },
       "linkHotspots": [],
       "infoHotspots": [],
-      "embedHotspots": [],
+      "embedHotspots": [
+      	{
+			"yaw": -2.6,
+			"pitch": -0.11,
+			"radius": 200,
+ 			"extraRotations": 'rotateX(0.11rad) rotateY(0.4rad)',
+			"html": '<p id="end" style="width:100px;opacity:0.3;color:black">The End?</p>'
+      	}
+      ],
       "gazeSpots": [
 		{
 			"yaw": 0,
 			"pitch": -Math.PI/2,
 			"deviation": 0.4,
-			"target": "0-above-the-old-dock",
+			"target": "0-liverpool-one",
 			"timeout": 3000
 		},
+      	{
+			"yaw": -2.6,
+			"pitch": -0.11,
+			"deviation": 0.2,
+			"selector": "end",
+			"audio": ['sounds/OldDockInfo2.mp3', 'sounds/OldDockInfo2.wav'],
+			"baseOpacity": 0.7,
+			"timeout": 2000
+      	}		
       ],
    	  "bgAudio": {
    	  	"source": ['sounds/OldDockShort.mp3', 'sounds/OldDockShort.wav'],
@@ -313,14 +322,14 @@ var APP_DATA = {
     }
   ],
   "script": [],     
-  "name": "Layers: Liverpool ONE",
+  "name": "Layers: Old Dock",
   "settings": {
     "mouseViewMode": "drag",
     "autorotateEnabled": false, // must be set to true for performance mode to work
     "fullscreenButton": true,
     "viewControlButtons": false,
     "deviceOrientationControl": true,
-    "debugMode": true,
+    "debugMode": false,
     "webPdUsed": false,
     "manySpotSwitch": true
   }

@@ -511,13 +511,13 @@ function switchScene(scene) {
 			bgSound.fade(1,0,1000);
 			bgSound.stop();
 			} // if there was bgSound, fade out and stop
-	   var departureView = lastscene.marzipanoObject.view();
-	   var newView = scene.marzipanoObject.view();
-	   newView.setParameters({
-		 yaw: departureView.yaw(),
-		 pitch: departureView.pitch(),
-		 fov: departureView.fov()
-	  });
+		var departureView = lastscene.marzipanoObject.view();
+		var newView = scene.marzipanoObject.view();
+		newView.setParameters({
+			yaw: departureView.yaw(),
+			pitch: departureView.pitch(),
+			fov: departureView.fov()
+		});
 	}
 	scene.marzipanoObject.switchTo(); // changes the scene
 	if (webPdUsed) { // send new scene id to webPd
@@ -745,7 +745,7 @@ function switchScene(scene) {
 	  }
 	   
 	  function onSpot (gazeSpot, pitch, yaw) {
-		if (debugMode) { debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch };
+		if (debugMode) { debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch + '<br />fov' + viewer.view().fov()};
 	  	var yawFactor; 
 	  	// check if pitch and gazeSpot.pitch in same hemisphere
 	  	// if so, bias the contribution of yaw according to view pitch so that it decreases to zero at the poles
