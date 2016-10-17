@@ -215,7 +215,7 @@ var APP_DATA = {
 			"pitch": 0.1,
 			"deviation": 0.2,
 			"selector": "children",
-			"audio": ['sounds/children.mp3', 'sounds/children.wav'],
+			"audio": ['sounds/Children.mp3', 'sounds/Children.wav'],
 			"baseOpacity": 0.6,
 			"timeout": 2000
       	},
