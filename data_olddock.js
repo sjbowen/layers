@@ -139,7 +139,7 @@ var APP_DATA = {
 	  	{
 	  		"target": "1-above-the-old-dock",
 	  		"trigger": 5,
-	  		"timeout": 2000
+	  		"timeout": 4000
 	  	}
     },
     {
@@ -251,7 +251,7 @@ var APP_DATA = {
 	  	{
 	  		"target": "2-inside-the-old-dock",
 	  		"trigger": 4,
-	  		"timeout": 2000,
+	  		"timeout": 4000,
 	  	}
     },
     {
@@ -286,11 +286,11 @@ var APP_DATA = {
       "infoHotspots": [],
       "embedHotspots": [
       	{
-			"yaw": -2.6,
-			"pitch": -0.11,
-			"radius": 200,
- 			"extraRotations": 'rotateX(0.11rad) rotateY(0.4rad)',
-			"html": '<p id="end" style="width:100px;opacity:0.3;color:black">The End?</p>'
+			"yaw": -2.68,
+			"pitch": -0.10,
+			"radius": 550,
+ 			"extraRotations": 'rotateX(-0.07rad) rotateY(0.2rad)',
+			"html": '<iframe id="slides" src="embed/olddockslides.html" style="width:200px;height:200px;opacity:0.8;"></iframe>'
       	}
       ],
       "gazeSpots": [
@@ -305,9 +305,9 @@ var APP_DATA = {
 			"yaw": -2.6,
 			"pitch": -0.11,
 			"deviation": 0.2,
-			"selector": "end",
+			"selector": "slides",
 			"audio": ['sounds/OldDockInfo2.mp3', 'sounds/OldDockInfo2.wav'],
-			"baseOpacity": 0.7,
+			"baseOpacity": 0.6,
 			"timeout": 2000
       	}		
       ],

@@ -14,13 +14,14 @@
     <script src="js/webpd-latest.js"></script>
  
 </head>
+
 <body class="multiple-scenes ">
 
 <div href="#" id="readyContainer" style="z-index:10;">
 
 	<p style="position:relative; width: 300px; height 200px; color:black; background-color: #eee; font-size:1.5em;padding: 10px; margin:10px auto; z-index:10;">Layers: Old Dock<br /><br />
-Stand at the crossroads near the signpost, and face towards the steps. Hold your phone in front of you and tap 'begin' when you are ready.</br></br>
-	<a href="#" id="ready">BEGIN</a> or <a href="index.html">CANCEL</a></p>
+Stand at the crossroads near the signpost, and face towards the steps. Turn your phone's volume up, hold it in front of you, and tap 'begin' when you are ready.</br></br>
+	<button type="button" class="button" id="ready">Begin</button>
 </div>
 
 <div id="pano"></div>
@@ -33,6 +34,10 @@ Stand at the crossroads near the signpost, and face towards the steps. Hold your
 <a href="#" id="fullscreenToggle">
   <img class="icon off" src="img/fullscreen.png">
   <img class="icon on" src="img/windowed.png">
+</a>
+
+<a href="index.html" id="back">
+  <img alt="back" class="icon on" src="img/back.png" />
 </a>
 
 <!-- Hack to make buttons invisible but functional is to append _invis.png to filename, e.g. gyro_invis.png -->

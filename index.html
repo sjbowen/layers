@@ -10,26 +10,6 @@
 
 </head>
 <body>
-<?php
-		$file = 'logs/indexlog.json';
-		//get the contents of the file as json
-		$data = json_decode(file_get_contents($file),true);
-		
-		///get the number of hits from the relevant field
-		$number_of_hits = $data['number_of_hits'];
-
-		//increment it
-		$number_of_hits++;
-
-		//replace the old number of hits with the new one
-		$data['number_of_hits'] = $number_of_hits;
-		//add a new browser to the array of browsers
-		array_push($data['browsers'], $_SERVER['HTTP_USER_AGENT']);
-		//add a new timestamp to the array of timestamps
-		array_push($data['timestamps'], time());
-		//write it back to the file as json overwriting the previous
-		file_put_contents($file, json_encode($data),  LOCK_EX);
-?>
 
 <div id="about">
 	<h1>Layers: Old Dock</h1>
