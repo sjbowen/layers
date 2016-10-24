@@ -1,0 +1,42 @@
+<html>
+<head>
+<script type="text/javascript">
+
+var slideimages = new Array() // create new array to preload images
+slideimages[0] = new Image() // create new instance of image object
+slideimages[0].src = "migrantchildren_slide.jpg" // set image src property to image path, preloading image in the process
+slideimages[1] = new Image()
+slideimages[1].src = "sale_slide.jpg"
+slideimages[2] = new Image()
+slideimages[2].src = "orientline_slide.jpg"
+slideimages[3] = new Image()
+slideimages[3].src = "manbrother_slide.jpg"
+
+</script>
+</head>
+<body>
+<img src="migrantchildren_slide.jpg" id="slide" width="200" height="200" />
+
+<script type="text/javascript">
+
+//variable that will increment through the images
+var step=0
+
+function slideit(){
+ //if browser does not support the image object, exit.
+ if (!document.images)
+  return
+ document.getElementById('slide').src = slideimages[step].src
+ if (step<3)
+  step++
+ else
+  step=0
+ //call function "slideit()" every 1 seconds
+ setTimeout("slideit()",2000)
+}
+
+slideit()
+
+</script>
+</body>
+</html>

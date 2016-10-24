@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Layers: Old Dock</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+  <style> @-ms-viewport { width: device-width; } </style>
+  <link rel="stylesheet" href="vendor/reset.min.css">
+  <link rel="stylesheet" href="style.css">
+
+<!-- scripts for webpd -->
+	<script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/webpd-latest.js"></script>
+ 
+</head>
+<body class="multiple-scenes ">
+
+<div href="#" id="readyContainer" style="z-index:10;">
+
+	<p style="position:relative; width: 300px; height 200px; color:black; background-color: #eee; font-size:1.5em;padding: 10px; margin:10px auto; z-index:10;">Layers:<br /> Old Dock<br /><br />
+Turn up the sound on your phone and move it around to explore.</br></br>
+	<a href="#" id="ready">BEGIN</a> or <a href="index.html">CANCEL</a></p>
+</div>
+
+<!-- Pre-load the audio -->
+<audio id="WallArtAudio">
+  <source src="sounds/WallArt.mp3" type="audio/mpeg">
+  <source src="sounds/WallArt.wav" type="audio/wav">
+  Your browser does not support the audio tag.
+</audio>
+<audio id="ChainsAudio">
+  <source src="sounds/Chains.mp3" type="audio/mpeg">
+  <source src="sounds/Chains.wav" type="audio/wav">
+  Your browser does not support the audio tag.
+</audio>
+<audio id="ChildrenAudio">
+  <source src="sounds/Children.mp3" type="audio/mpeg">
+  <source src="sounds/Children.wav" type="audio/wav">
+  Your browser does not support the audio tag.
+</audio>
+<audio id="SlaveShipAudio">
+  <source src="sounds/SlaveShip.mp3" type="audio/mpeg">
+  <source src="sounds/SlaveShip.wav" type="audio/wav">
+  Your browser does not support the audio tag.
+</audio>
+<audio id="SlaveSongAudio">
+  <source src="sounds/SlaveSong.mp3" type="audio/mpeg">
+  <source src="sounds/SlaveSong.wav" type="audio/wav">
+  Your browser does not support the audio tag.
+</audio>
+<audio id="ChildrensHomeAudio">
+  <source src="sounds/ChildrensHome.mp3" type="audio/mpeg">
+  <source src="sounds/ChildrensHome.wav" type="audio/wav">
+  Your browser does not support the audio tag.
+</audio>
+
+<div id="pano"></div>
+
+<a href="#" id="deviceOrientationToggle">
+  <img class="icon off" src="img/gyro.png">
+  <img class="icon on" src="img/gyro_disable.png">
+</a>
+
+<a href="#" id="fullscreenToggle">
+  <img class="icon off" src="img/fullscreen.png">
+  <img class="icon on" src="img/windowed.png">
+</a>
+
+<!-- Hack to make buttons invisible but functional is to append _invis.png to filename, e.g. gyro_invis.png -->
+
+<div id="debug" style="position:absolute;bottom:20px;left:0px;">
+&nbsp;
+</div>
+
+<div id="debug2" style="position:absolute;bottom:50px;right:50px;">
+&nbsp;
+</div>
+
+<script src="vendor/es5-shim.js"></script>
+<script src="vendor/eventShim.js"></script>
+<script src="vendor/classList.js"></script>
+<script src="vendor/requestAnimationFrame.js" ></script>
+<script src="vendor/screenfull.min.js" ></script>
+<script src="vendor/bowser.min.js"></script>
+<script src="vendor/marzipano0.3.0.js" ></script>
+
+<script src="data_olddock_nobg.js"></script>
+<script src="vendor/DeviceOrientationControlMethod.js"></script>
+<script src="index.js"></script>
+
+</body>
+</html>

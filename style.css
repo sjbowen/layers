@@ -149,6 +149,61 @@ body.deviceOrientationControl-enabled #deviceOrientationToggle {
 
 /* end device orientation controls */
 
+/* controls for back */
+#back {
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  // background-color: rgb(103,115,131);
+  // background-color: rgba(103,115,131,0.8);
+}
+
+
+.mobile #back {
+  width: 50px;
+  height: 50px;
+}
+ 
+#back .icon {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 30px;
+  height: 30px;
+}
+
+.mobile #back .icon {
+  top: 10px;
+  right: 10px;
+}
+
+/* Button styling */
+
+.button {
+  background: #d93434;
+  background-image: -webkit-linear-gradient(top, #d93434, #962929);
+  background-image: -moz-linear-gradient(top, #d93434, #962929);
+  background-image: -ms-linear-gradient(top, #d93434, #962929);
+  background-image: -o-linear-gradient(top, #d93434, #962929);
+  background-image: linear-gradient(to bottom, #d93434, #962929);
+  -webkit-border-radius: 17;
+  -moz-border-radius: 17;
+  border-radius: 17px;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.button:hover {
+  text-decoration: none;
+}
+
+/* end device orientation controls */
 
 #fullscreenToggle {
   display: none;

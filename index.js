@@ -2,30 +2,56 @@
 // this version written for marzipano version 0.3.0
 
 var debugMode = window.APP_DATA.settings.debugMode; 
-var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used
-
+var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used?
 var readyContainer = document.querySelector('#readyContainer');
 var readyElement = document.querySelector('#ready');
+var spotSounds = []; // create a new array to hold HTML selector, Howl sounds as objects (via a constructor function)
 
-if (webPdUsed && readyContainer!=null) {
+if (readyContainer!=null) {
 
-// check whether device has gyro functionality
+	// check whether device has gyro functionality
 	window.addEventListener('deviceorientation', function () {
 	    document.body.classList.remove('no-gyro');
     	document.body.classList.add('gyro');
 		});
 
-// start pano display either by click or touch, check if touch device at the same time
-// and get the necessary touchend to enable mobile devices to play audio
+	// start pano display either by click or touch, check if touch device at the same time
+	// and get the necessary touchend to enable mobile devices to play audio
+
+	// preload the gazeSpot audio
+	var loadCount = 0;
+	var sceneAudio = APP_DATA.scenes.map(function(sceneData) {
+		sceneData.gazeSpots.forEach(function (gazeSpot) {
+			if (gazeSpot.audio) {
+				var sound = new Howl({
+					src: gazeSpot.audio,
+					loop: true,
+					});
+				var spotSound = new soundSelect(gazeSpot.selector, sound);
+				sound.volume(0); // mute the sound
+				sound.play(); // play the sound, check playing all sounds doesn't slow down mobile browsers...
+				sound.stop(); // stop the sound, important for spoken clips so they start at the beginning
+				spotSounds.push(spotSound);
+			};
+		});
+	});
+	console.log(spotSounds);
 	
 	readyElement.addEventListener('click', function () {
 		console.log('click');
 		readyContainer.innerHTML = ''; // hide the ready link
-		var patch
-			$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
-			  patch = Pd.loadPatch(patchStr)
-			});
-		Pd.start();
+		if (webPdUsed) {
+			var patch
+				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
+				  patch = Pd.loadPatch(patchStr)
+				});
+			Pd.start();
+		}
+		// play a sound via Howler to avoid audio glitch on first playback of audio
+		var blopSound = new Howl({
+		  src: ['sounds/blop.mp3']
+		});		
+		blopSound.play();		
 		go();
 		});
 		
@@ -34,16 +60,29 @@ if (webPdUsed && readyContainer!=null) {
 	    document.body.classList.remove('no-touch');
     	document.body.classList.add('touch');
 		readyContainer.innerHTML = ''; // hide the ready link
-		var patch
-			$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
-			  patch = Pd.loadPatch(patchStr)
-			});
-		Pd.start();
+		if (webPdUsed) {
+			var patch
+				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
+				  patch = Pd.loadPatch(patchStr)
+				});
+			Pd.start();
+		}
+		// play a sound via Howler to avoid audio glitch on first playback of audio
+		// and to get use touchend to enable audio on mobile devices
+		var blopSound = new Howl({
+		  src: ['sounds/blop.mp3']
+		});		
+		blopSound.play();		
 		go();
 		});
 } else {
 	if (readyContainer!=null) {readyContainer.innerHTML = ''}; // hide the ready link
 	go();
+}
+
+function soundSelect (selector, sound) {	// object constructor for pairs of HTML selector, Howl sounds
+	this.selector = selector;
+	this.sound = sound;
 }
 
 function go() { // rather than as a self-invoking anonymous function, call this function when readyElement has been clicked or tapped
@@ -64,12 +103,13 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 
 	// variables for gazeSpots and performance mode
 	var switchTimer = null; // empty variable for timer
-	var revealTimer = null; // empty variable for timer
+	var fading = false; // switch for when fading content gazeSpots
 	var lastSpot = null; // empty variable for reveal gaze spot timer
 	var performTimers = []; // empty array for performance timers
 	var performYawSpeed = 0; // yaw spin speed
 	var performPitchSpeed = 0; // pitch speed
 	var sceneIndex = 0; // index for scene number
+	var bgSound = null; // empty variable for bgSound
 
   // Detect desktop or mobile mode using a matchMedia query for viewport sizes of 500px square or less
   if (window.matchMedia) {
@@ -132,6 +172,21 @@ function go() { // rather than as a self-invoking anonymous function, call this 
       view: view,
       pinFirstLevel: true
     });
+  	var spotsSeen = []; // array to keep track of gazeSpots found
+    var trigger;
+	if (sceneData.manySpotSwitch) { // check if this scene has a many GazeSpot switch and assign variables if so
+		trigger = sceneData.manySpotSwitch.trigger;
+		var manySpotTarget = sceneData.manySpotSwitch.target;
+		var manySpotTimeout = sceneData.manySpotSwitch.timeout;
+	} else {
+		trigger = false;
+	}
+	if 	(sceneData.bgAudio) { // check if this scene has background audio, assign variable if so
+		var bgAudio = sceneData.bgAudio;
+	}
+	if 	(sceneData.switchAudio) { // check if this scene has scene switch audio, assign variables if so
+		var switchAudio = sceneData.switchAudio;
+	}
 
     // Create link hotspots.
     sceneData.linkHotspots.forEach(function(hotspot) {
@@ -151,63 +206,110 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 			marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch }, { perspective: { radius: hotspot.radius, extraRotations: hotspot.extraRotations }});
 		});		
 		
-		// Add Gaze Spots by adding event listener for viewChange on the whole scene
-		marzipanoScene.addEventListener('viewChange', function() {
-			var yaw = viewer.view().yaw();
-			var pitch = viewer.view().pitch();
-			var gazing = false;
-			sceneData.gazeSpots.forEach(function (gazeSpot) {		
-			//for each gazespot, check if view closely matches, set gazing to true if so
-				if (onSpot(gazeSpot, pitch, yaw)) {
-				if ((switchTimer == null) && (revealTimer == null)) { // if timers havn't already been started, start them
+	// Add Gaze Spots by adding event listener for viewChange on the whole scene
+	marzipanoScene.addEventListener('viewChange', function() {
+		var yaw = viewer.view().yaw();
+		var pitch = viewer.view().pitch();
+		var gazing = false;
+		sceneData.gazeSpots.forEach(function (gazeSpot) {		
+		//for each gazespot, check if view closely matches, set gazing to true if so
+			if (onSpot(gazeSpot, pitch, yaw)) {
+				if ((switchTimer == null) && (fading == false)) { // if switch timer or fading not started, start them
+					lastSpot = gazeSpot; // store this gazeSpot data for when we move off it
 					if (gazeSpot.selector) { // if this is an embedded content reveal type gazespot
-						console.log($(gazeSpot.selector));
-						lastSpot = gazeSpot; // store this gazeSpot data for when we move off it
-						revealTimer = setTimeout(function () {
-							document.getElementById(gazeSpot.selector).style.opacity = 1;
-							document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out"; }, 500);
-						if (webPdUsed) {
-							Pd.send('send1', [gazeSpot.selector, 1]); // tell webPd the HTML selector of the embedded content
-							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the transition of the embedded content
-						};
+						console.log('gazeSpot found: '+ gazeSpot.selector);
+						fading = true; // switch fading on
+						// transition opacity to 1 over timeout duration
+						document.getElementById(gazeSpot.selector).style.opacity = 1;
+						document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out";						
+						if (gazeSpot.audio) { // if there is an audio component, fetch it and start playing at 0 volume
+							var sound;
+							spotSounds.forEach(function(spotSound) {	// look for sound matching selector
+								if (spotSound.selector == gazeSpot.selector) {
+									sound = spotSound.sound;
+								};
+							});
+							var currentVol = sound.volume();
+							if (!sound.playing()) { sound.play(); }; // if the sound hasn't been played yet, start it playing
+							console.log('Fade in from ' + currentVol);
+							sound.fade (currentVol, 1, gazeSpot.timeout);
+						}
+						// check to see if we've seen this gazeSpot already, add to spotsSeen if not
+						var seen = false;
+						var thisSpotSeen = new spotSeen(gazeSpot.selector, true);
+						spotsSeen.forEach (function(spotSeen) {	// check if have seen gazeSpot
+							if (spotSeen.selector == gazeSpot.selector) {
+								seen = true;
+							}
+ 						});
+						if (!spotsSeen[0] || !seen) { // if not seen this gazeSpot before or spotsSeen is empty 
+							spotsSeen.push(thisSpotSeen);
+						}
 					}
+// 						if (webPdUsed) {
+// 							Pd.send('send1', [gazeSpot.selector, 1]); // tell webPd the HTML selector of the embedded content
+// 							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the transition of the embedded content
+// 						};
 					if (gazeSpot.target) { // if this is a switch type gazeSpot
 						console.log("Gaze spot that switches to scene " + gazeSpot.target + " found at yaw: " + gazeSpot.yaw + ' pitch: ' + gazeSpot.pitch + " timer started"); 
-						lastSpot = gazeSpot; // store this gazeSpot data for when we move off it
 						switchTimer = setTimeout(function () {
 							console.log("timer elapsed");
 							if (gazeSpot.target) {switchScene(findSceneById(gazeSpot.target))}; // if gazeSpot has a target, set up a scene switch
 							gazing = false;
 						}, gazeSpot.timeout); 
-						if (webPdUsed) {
-							Pd.send('send1', [gazeSpot.target, 1]); // tell webPd the target of the scene switch
-							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the timeout of the scene switch
-						};
+// 						if (webPdUsed) {
+// 							Pd.send('send1', [gazeSpot.target, 1]); // tell webPd the target of the scene switch
+// 							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the timeout of the scene switch
+// 						};
 					}
 				} 
-				gazing = true;
-			}
-			});
- 			if (!gazing) { // if not gazing 
- 					if ((switchTimer != null) || (revealTimer != null)) { // and if the timers have not already been cleared
-						clearTimeout(switchTimer);  // clear the timer
-						clearTimeout(revealTimer);  // clear the timer
-						switchTimer = null;
-						revealTimer = null;
- 						console.log("off gazespot, timers cleared"); 
-						if (lastSpot) {
-							if (lastSpot.selector) { // if moved off an embedded content reveal type gazespot
-								document.getElementById(lastSpot.selector).style.opacity = lastSpot.baseOpacity;
-								document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; // hide content					
-								if (webPdUsed) {Pd.send('send1', [lastSpot.selector, 0])}; // tell webPD we've moved off this gazeSpot
+				gazing = true;				
+			};
+		});	
+		if (!gazing) { // if not gazing 
+				if ((switchTimer != null) || (fading == true)) { // and if the timers have not already been cleared
+					clearTimeout(switchTimer);  // clear the timer
+					switchTimer = null;
+					fading = false;  // turn off fading
+					console.log("off gazespot, timers cleared"); 
+					if (lastSpot) {
+						if (lastSpot.selector) { // if moved off an embedded content reveal type gazespot
+							document.getElementById(lastSpot.selector).style.opacity = lastSpot.baseOpacity;
+							document.getElementById(lastSpot.selector).style.transition = "opacity " + lastSpot.timeout + "ms ease-in-out"; // hide content	
+							if (lastSpot.audio) {
+								var sound;
+								spotSounds.forEach(function(spotSound) {	// look for sound matching selector
+									if (spotSound.selector == lastSpot.selector) {
+										sound = spotSound.sound;
+									};
+								});
+								var currentVol = sound.volume();
+								console.log('Fade out from ' + currentVol);
+								sound.fade(currentVol, 0, lastSpot.timeout);
 							}
-							if (lastSpot.target) { // if moved off a scene switch gazespot
-								if (webPdUsed) {Pd.send('send1', [lastSpot.target, 0])}; // tell webPD we've moved off this gazeSpot
-							}
+							if (trigger) { // if this scene has a many GazeSpot switch
+							// check to see if we've reached the trigger point for many spot switch and if timer not already set
+								if ((trigger == spotsSeen.length) && (!manySwitchTimer)) {
+									console.log("All gazeSpots found, switching to " + manySpotTarget); 
+									var manySwitchTimer = setTimeout(function () {
+										console.log("timer elapsed");
+										if (manySpotTarget) {switchScene(findSceneById(manySpotTarget))}; // set up a scene switch
+										gazing = false;
+									}, manySpotTimeout); 
+								} else {
+									console.log('Not  enough, yet ' + spotsSeen.length);
+								}
+							}						
+// 								if (webPdUsed) {Pd.send('send1', [lastSpot.selector, 0])}; // tell webPD we've moved off this gazeSpot
 						}
- 					}
- 				}
-		});
+						if (lastSpot.target) { // if moved off a scene switch gazespot
+// 								if (webPdUsed) {Pd.send('send1', [lastSpot.target, 0])}; // tell webPD we've moved off this gazeSpot
+						}
+					}
+				}
+			} 				
+	});
+		
     return {
       data: sceneData,
       marzipanoObject: marzipanoScene
@@ -405,13 +507,17 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 function switchScene(scene) {
 	stopAutorotate();
 	if (lastscene!=null) {
-	   var departureView = lastscene.marzipanoObject.view();
-	   var newView = scene.marzipanoObject.view();
-	   newView.setParameters({
-		 yaw: departureView.yaw(),
-		 pitch: departureView.pitch(),
-		 fov: departureView.fov()
-	  });
+		if (bgSound) {
+			bgSound.fade(1,0,1000);
+			bgSound.stop();
+			} // if there was bgSound, fade out and stop
+		var departureView = lastscene.marzipanoObject.view();
+		var newView = scene.marzipanoObject.view();
+		newView.setParameters({
+			yaw: departureView.yaw(),
+			pitch: departureView.pitch(),
+			fov: departureView.fov()
+		});
 	}
 	scene.marzipanoObject.switchTo(); // changes the scene
 	if (webPdUsed) { // send new scene id to webPd
@@ -419,6 +525,21 @@ function switchScene(scene) {
 // 		Pd.send('send3', [wpdScene]);
 		Pd.send('send3', [scene.data.id]);
 	}
+	if (scene.data.switchAudio) { // if there is switch audio load and play it
+		var switchSound = new Howl({
+			src: scene.data.switchAudio.source,
+			});
+		var switchSoundPlay = setTimeout (function () {switchSound.play();}, scene.data.switchAudio.delay);
+	} 
+	if (scene.data.bgAudio) { // if there is bg audio load and play it
+		bgSound = new Howl({
+			src: scene.data.bgAudio.source,
+			loop: true,
+			volume: 0,
+			});
+		bgSound.play();
+		bgSound.fade(0, scene.data.bgAudio.volume, 2000);
+	} 
 	lastscene = scene; // update lastscene to be the current scene
 	startAutorotate();
   }
@@ -624,7 +745,7 @@ function switchScene(scene) {
 	  }
 	   
 	  function onSpot (gazeSpot, pitch, yaw) {
-		if (debugMode) { debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch };
+		if (debugMode) { debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch + '<br />fov' + viewer.view().fov()};
 	  	var yawFactor; 
 	  	// check if pitch and gazeSpot.pitch in same hemisphere
 	  	// if so, bias the contribution of yaw according to view pitch so that it decreases to zero at the poles
@@ -651,5 +772,10 @@ function switchScene(scene) {
 	  	// return true if distance is less than gazeSpot deviation
 		return (distance < gazeSpot.deviation);
 	  }
-
+	  
+	function spotSeen (selector, seen) {	// object constructor for pairs of gazeSpot and boolean seen value
+		this.selector = selector;
+		this.seen = seen;
+	}
+	  
 }	   // end go function 

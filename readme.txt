@@ -21,6 +21,8 @@ send1 = either html selector (for overlayed content) or target scene id (for sce
 send2 = either reveal duration (for overlayed content) or timeout (for scence switch) in milliseconds
 send3 = scene id for scene just switched to (including initial scene when loaded)
 
+Audio Integration:
+Using howler.js - https://github.com/goldfire/howler.js
 
 style.css modifications:
 - styling for device orientation control elements
@@ -33,6 +35,9 @@ data.js modifications:
 the data.js file produced by marzipano web-based tool
 modified by Simon Bowen to include additional data for embedded html (embedHotspots)
 hotspots that respond to looking at a particular location (gazeSpots)
+scene to switch to after certain number of gazeSpots found (manySpotSwitch)
+audio to play on scene switch (switchAudio)
+background audio (bgAudio)
 and a script data object for an automatic playlist of view and scene changes
 common variables within embedHotspots, gazeSpots are:
 		yaw, pitch - location on rectilinear projection (in radians), -pitch is up, +pitch is down 
@@ -46,6 +51,7 @@ gazeSpot specific variables:
 	deviation - tolerance in radians around gazeSpot location to activate it
 	target (optional, 'scene switch' type gazeSpot) - id of scenes object this gazeSpot will switch to
 	selector (optional, 'embedded content reveal' type gazeSpot) - selector of embedded html to be revealed
+	audio (optional, for gazeSpots with audio elements) - array of URLs of audio to be played, i.e. to enable different formats
 	timeout - duration in milliseconds of scene switch or reveal
 	baseopacity - opacity element will return to once move off gazeSpot. So, can make elements remain in view if set to 1.0
 script object variables:
