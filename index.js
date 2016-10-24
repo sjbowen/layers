@@ -39,7 +39,8 @@ if (readyContainer!=null) {
 	
 	readyElement.addEventListener('click', function () {
 		console.log('click');
-		readyContainer.innerHTML = ''; // hide the ready link
+		readyContainer.style.display = "none"; // hide the ready container
+		document.body.style.height = "100%"; // set height back to 100%
 		if (webPdUsed) {
 			var patch
 				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
@@ -59,7 +60,8 @@ if (readyContainer!=null) {
 		console.log('touch');
 	    document.body.classList.remove('no-touch');
     	document.body.classList.add('touch');
-		readyContainer.innerHTML = ''; // hide the ready link
+		readyContainer.style.display = "none"; // hide the ready container
+		document.body.style.height = "100%"; // set height back to 100%
 		if (webPdUsed) {
 			var patch
 				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
