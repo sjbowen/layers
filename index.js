@@ -248,10 +248,6 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 							spotsSeen.push(thisSpotSeen);
 						}
 					}
-// 						if (webPdUsed) {
-// 							Pd.send('send1', [gazeSpot.selector, 1]); // tell webPd the HTML selector of the embedded content
-// 							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the transition of the embedded content
-// 						};
 					if (gazeSpot.target) { // if this is a switch type gazeSpot
 						console.log("Gaze spot that switches to scene " + gazeSpot.target + " found at yaw: " + gazeSpot.yaw + ' pitch: ' + gazeSpot.pitch + " timer started"); 
 						switchTimer = setTimeout(function () {
@@ -259,10 +255,6 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 							if (gazeSpot.target) {switchScene(findSceneById(gazeSpot.target))}; // if gazeSpot has a target, set up a scene switch
 							gazing = false;
 						}, gazeSpot.timeout); 
-// 						if (webPdUsed) {
-// 							Pd.send('send1', [gazeSpot.target, 1]); // tell webPd the target of the scene switch
-// 							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the timeout of the scene switch
-// 						};
 					}
 				} 
 				gazing = true;				
@@ -302,10 +294,6 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 									console.log('Not  enough, yet ' + spotsSeen.length);
 								}
 							}						
-// 								if (webPdUsed) {Pd.send('send1', [lastSpot.selector, 0])}; // tell webPD we've moved off this gazeSpot
-						}
-						if (lastSpot.target) { // if moved off a scene switch gazespot
-// 								if (webPdUsed) {Pd.send('send1', [lastSpot.target, 0])}; // tell webPD we've moved off this gazeSpot
 						}
 					}
 				}

@@ -11,7 +11,7 @@ var GEO_DATA = {
 			"latitude":53.9191144,
 			"longitude":-2.987572,
 			"deviation":0.0001, // v.roughly 10 metres tolerance
-			"url": "olddock.html" 
+			"url": "olddock/index.html" 
 		},
 		{ // Outside Culture Lab
 			"latitude":54.978802,
@@ -21,7 +21,7 @@ var GEO_DATA = {
 		},
 		{ // Simon's desk at home
 			"latitude":53.919071,
-			"longitude":-1.137836,
+			"longitude":-1.137512,
 			"deviation":0.0001, // v.roughly 10 metres tolerance
 			"url": "http://www.simon-bowen.com" 
 		}
