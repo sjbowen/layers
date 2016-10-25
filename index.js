@@ -7,6 +7,13 @@ var readyContainer = document.querySelector('#readyContainer');
 var readyElement = document.querySelector('#ready');
 var spotSounds = []; // create a new array to hold HTML selector, Howl sounds as objects (via a constructor function)
 
+// check if scene ID has been passed with URL query string, set to 0 if not
+if (window.location.search) {
+	var scenePoint = parseInt(window.location.search.slice(1));
+} else {
+	var scenePoint = 0;
+}
+
 if (readyContainer!=null) {
 
 	// check whether device has gyro functionality
@@ -99,6 +106,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
   var panoElement = document.querySelector('#pano');
   var autorotateToggleElement = document.querySelector('#autorotateToggle');
   var fullscreenToggleElement = document.querySelector('#fullscreenToggle');
+  var backButtonElement = document.querySelector('#backButton');
 	var deviceOrientationToggleElement = document.querySelector('#deviceOrientationToggle'); // for GYRO on/off
 	var debugElement = document.getElementById('debug'); // container for live location data
 	var debugElement2 = document.getElementById('debug2'); // container for scene info
@@ -112,6 +120,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	var performPitchSpeed = 0; // pitch speed
 	var sceneIndex = 0; // index for scene number
 	var bgSound = null; // empty variable for bgSound
+	var timeOutSwitch = null; // empty variable for timeOutSwitch timer
 
   // Detect desktop or mobile mode using a matchMedia query for viewport sizes of 500px square or less
   if (window.matchMedia) {
@@ -175,11 +184,10 @@ function go() { // rather than as a self-invoking anonymous function, call this 
       pinFirstLevel: true
     });
   	var spotsSeen = []; // array to keep track of gazeSpots found
-    var trigger;
 	if (sceneData.manySpotSwitch) { // check if this scene has a many GazeSpot switch and assign variables if so
-		trigger = sceneData.manySpotSwitch.trigger;
+		var trigger = sceneData.manySpotSwitch.trigger;
 		var manySpotTarget = sceneData.manySpotSwitch.target;
-		var manySpotTimeout = sceneData.manySpotSwitch.timeout;
+		var manySpotTimeout = sceneData.manySpotSwitch.timeout;		
 	} else {
 		trigger = false;
 	}
@@ -284,7 +292,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 							if (trigger) { // if this scene has a many GazeSpot switch
 							// check to see if we've reached the trigger point for many spot switch and if timer not already set
 								if ((trigger == spotsSeen.length) && (!manySwitchTimer)) {
-									console.log("All gazeSpots found, switching to " + manySpotTarget); 
+									console.log("Sufficient gazeSpots found, switching to " + manySpotTarget + " in " + manySpotTimeout + " milliseconds"); 
 									var manySwitchTimer = setTimeout(function () {
 										console.log("timer elapsed");
 										if (manySpotTarget) {switchScene(findSceneById(manySpotTarget))}; // set up a scene switch
@@ -307,7 +315,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
   });
 
   // Display the initial scene.
-  switchScene(scenes[0]);
+  switchScene(scenes[scenePoint]);
 
 	  // GYRO: need to create 'view' variable for use by enable/disableGyro
 	  var scene = viewer.scene(); // get the current scene
@@ -319,6 +327,14 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		deviceOrientationToggleElement.classList.add('enabled');
 		enableGyro();
 	  }
+	  
+	  // turn on back button, add event listener to reload page with query string
+	  backButtonElement.classList.add('enabled');
+	  backButtonElement.classList.add('backButton-enabled');
+	  backButtonElement.addEventListener('click', function () {
+	  	var url = "index.html?" + scenePoint;
+	  	window.parent.location = url;
+	  });
 	  
 	  // Set handler for DeviceOrientation control (GYRO) toggle.
 	  if (APP_DATA.settings.deviceOrientationControl) {
@@ -496,7 +512,9 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 
 function switchScene(scene) {
 	stopAutorotate();
-	if (lastscene!=null) {
+	// set the scenePoint to be new scene
+	scenePoint = parseInt(scene.data.id.slice(0,1));
+	if (lastscene!=null) { // if this isn't the first scene switch...
 		if (bgSound) {
 			bgSound.fade(1,0,1000);
 			bgSound.stop();
@@ -508,13 +526,13 @@ function switchScene(scene) {
 			pitch: departureView.pitch(),
 			fov: departureView.fov()
 		});
+		if (timeOutSwitch) { // if a timeOutSwitch timer is present, clear it
+			clearTimeout(timeOutSwitch);
+			timeOutSwitch = null;
+			console.log("timeOutSwitch timer cleared");
+		}
 	}
 	scene.marzipanoObject.switchTo(); // changes the scene
-	if (webPdUsed) { // send new scene id to webPd
-// 		var wpdScene = parseFloat(scene.data.id.charAt(0));
-// 		Pd.send('send3', [wpdScene]);
-		Pd.send('send3', [scene.data.id]);
-	}
 	if (scene.data.switchAudio) { // if there is switch audio load and play it
 		var switchSound = new Howl({
 			src: scene.data.switchAudio.source,
@@ -529,6 +547,13 @@ function switchScene(scene) {
 			});
 		bgSound.play();
 		bgSound.fade(0, scene.data.bgAudio.volume, 2000);
+	}
+	if (scene.data.timeOutSwitch) { // if new scene has a timeout switch, start the timer
+		console.log("timeOutSwitch on this scene, switching to " + scene.data.timeOutSwitch.target + " in " + scene.data.timeOutSwitch.timeout);
+		timeOutSwitch = setTimeout(function () {
+			console.log("timeOutSwitch timer elapsed");
+			switchScene(findSceneById(scene.data.timeOutSwitch.target)); 
+		}, scene.data.timeOutSwitch.timeout); 		
 	} 
 	lastscene = scene; // update lastscene to be the current scene
 	startAutorotate();

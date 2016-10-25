@@ -149,8 +149,8 @@ body.deviceOrientationControl-enabled #deviceOrientationToggle {
 
 /* end device orientation controls */
 
-/* controls for back */
-#back {
+/* controls for back button */
+#backButton {
   display: block;
   position: absolute;
   bottom: 0px;
@@ -162,13 +162,16 @@ body.deviceOrientationControl-enabled #deviceOrientationToggle {
   // background-color: rgba(103,115,131,0.8);
 }
 
+body.backButton-enabled #backButton {
+  display: block;
+}
 
-.mobile #back {
+.mobile #backButton {
   width: 50px;
   height: 50px;
 }
  
-#back .icon {
+#backButton .icon {
   position: absolute;
   top: 5px;
   left: 5px;
@@ -176,12 +179,29 @@ body.deviceOrientationControl-enabled #deviceOrientationToggle {
   height: 30px;
 }
 
-.mobile #back .icon {
+.mobile #backButton .icon {
   top: 10px;
   right: 10px;
 }
 
-/* end device orientation controls */
+#backButton .icon.on {
+  display: none;
+}
+
+#backButton .icon.off {
+  display: block;
+}
+
+#backButton.enabled .icon.on {
+  display: block;
+}
+
+#backButton.enabled .icon.off {
+  display: none;
+}
+
+
+/* end back button controls */
 
 #fullscreenToggle {
   display: none;

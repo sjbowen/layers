@@ -139,8 +139,13 @@ var APP_DATA = {
 	  	{
 	  		"target": "1-above-the-old-dock",
 	  		"trigger": 5,
-	  		"timeout": 4000
-	  	}
+	  		"timeout": 24000
+	  	},
+	  "timeOutSwitch":
+	  	{
+	  		"target": "1-above-the-old-dock",
+	  		"timeout": 180000 // 3 minutes until time out switch?
+	  	}	  
     },
     {
       "id": "1-above-the-old-dock",
@@ -251,8 +256,13 @@ var APP_DATA = {
 	  	{
 	  		"target": "2-inside-the-old-dock",
 	  		"trigger": 4,
-	  		"timeout": 4000,
-	  	}
+	  		"timeout": 10000,
+	  	},
+	  "timeOutSwitch":
+	  	{
+	  		"target": "2-inside-the-old-dock",
+	  		"timeout": 180000 // 3 minutes until time out switch?
+	  	}	  
     },
     {
       "id": "2-inside-the-old-dock",

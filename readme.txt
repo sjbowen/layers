@@ -54,6 +54,10 @@ gazeSpot specific variables:
 	audio (optional, for gazeSpots with audio elements) - array of URLs of audio to be played, i.e. to enable different formats
 	timeout - duration in milliseconds of scene switch or reveal
 	baseopacity - opacity element will return to once move off gazeSpot. So, can make elements remain in view if set to 1.0
+manySpotSwitch specific variables:
+	target - scene to switch to
+	trigger - number of gazeSpots to be found before switching
+	timeout - duration in milliseconds of scene switch - Note: timeout activates once off gazeSpot, but can accidentally move on/off gazeSpot so this value should be equal to or greater than duration of longest spoken audio clip in scene
 script object variables:
 		type: "rotate" or "scenechange"
 	time: time in milliseconds after which to execute rotation or scene change
