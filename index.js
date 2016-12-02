@@ -225,10 +225,10 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		var yaw = viewer.view().yaw();
 		var pitch = viewer.view().pitch();
 		var gazing = false;
-		if (progressElement && (trigger) && (spotsSeen.length != 0)) {progressElement.innerHTML =  spotsSeen.length + '/' + trigger};
 		sceneData.gazeSpots.forEach(function (gazeSpot) {		
 		//for each gazespot, check if view closely matches, set gazing to true if so
 			if (onSpot(gazeSpot, pitch, yaw)) {
+				if (progressElement && (trigger) && (spotsSeen.length != 0)) {progressElement.innerHTML =  spotsSeen.length + '/' + trigger}; // update progress element tally
 				if ((switchTimer == null) && (fading == false)) { // if switch timer or fading not started, start them
 					lastSpot = gazeSpot; // store this gazeSpot data for when we move off it
 					if (gazeSpot.selector) { // if this is an embedded content reveal type gazespot
@@ -302,6 +302,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 										console.log("timer elapsed");
 										if (manySpotTarget) {switchScene(findSceneById(manySpotTarget))}; // set up a scene switch
 										gazing = false;
+										manySwitchTimer = null;
 									}, manySpotTimeout); 
 								} else {
 									console.log('Not  enough, yet ' + spotsSeen.length);
