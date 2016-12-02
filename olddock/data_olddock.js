@@ -139,7 +139,7 @@ var APP_DATA = {
 	  	{
 	  		"target": "1-above-the-old-dock",
 	  		"trigger": 5,
-	  		"timeout": 24000
+	  		"timeout": 10000 // 10 seconds delay before many spot switch
 	  	},
 	  "timeOutSwitch":
 	  	{
@@ -208,13 +208,6 @@ var APP_DATA = {
       	}
      ],
       "gazeSpots": [
-		{
-			"yaw": 0,
-			"pitch": Math.PI/2,
-			"deviation": 0.2,
-			"target": "2-inside-the-old-dock",
-			"timeout": 5000
-		},
       	{
 			"yaw": -0.85,
 			"pitch": 0.1,
@@ -256,7 +249,7 @@ var APP_DATA = {
 	  	{
 	  		"target": "2-inside-the-old-dock",
 	  		"trigger": 4,
-	  		"timeout": 10000,
+	  		"timeout": 10000, // 10 seconds until many spot switch
 	  	},
 	  "timeOutSwitch":
 	  	{

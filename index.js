@@ -120,7 +120,9 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	var performPitchSpeed = 0; // pitch speed
 	var sceneIndex = 0; // index for scene number
 	var bgSound = null; // empty variable for bgSound
+	var switchSound = null; // empty variable for switchSound
 	var timeOutSwitch = null; // empty variable for timeOutSwitch timer
+	var manySwitchTimer = null; // empty variable for manySpotSwitch timer
 
   // Detect desktop or mobile mode using a matchMedia query for viewport sizes of 500px square or less
   if (window.matchMedia) {
@@ -293,7 +295,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 							// check to see if we've reached the trigger point for many spot switch and if timer not already set
 								if ((trigger == spotsSeen.length) && (!manySwitchTimer)) {
 									console.log("Sufficient gazeSpots found, switching to " + manySpotTarget + " in " + manySpotTimeout + " milliseconds"); 
-									var manySwitchTimer = setTimeout(function () {
+									manySwitchTimer = setTimeout(function () {
 										console.log("timer elapsed");
 										if (manySpotTarget) {switchScene(findSceneById(manySpotTarget))}; // set up a scene switch
 										gazing = false;
@@ -513,12 +515,15 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 function switchScene(scene) {
 	stopAutorotate();
 	// set the scenePoint to be new scene
-	scenePoint = parseInt(scene.data.id.slice(0,1));
+		scenePoint = parseInt(scene.data.id.slice(0,1));
 	if (lastscene!=null) { // if this isn't the first scene switch...
 		if (bgSound) {
 			bgSound.fade(1,0,1000);
 			bgSound.stop();
-			} // if there was bgSound, fade out and stop
+		} // if there was bgSound, fade out and stop
+		if (switchSound) {
+			switchSound.stop();
+		} // if there was switchSound, stop it
 		var departureView = lastscene.marzipanoObject.view();
 		var newView = scene.marzipanoObject.view();
 		newView.setParameters({
@@ -534,7 +539,7 @@ function switchScene(scene) {
 	}
 	scene.marzipanoObject.switchTo(); // changes the scene
 	if (scene.data.switchAudio) { // if there is switch audio load and play it
-		var switchSound = new Howl({
+		switchSound = new Howl({
 			src: scene.data.switchAudio.source,
 			});
 		var switchSoundPlay = setTimeout (function () {switchSound.play();}, scene.data.switchAudio.delay);
