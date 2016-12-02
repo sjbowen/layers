@@ -110,6 +110,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	var deviceOrientationToggleElement = document.querySelector('#deviceOrientationToggle'); // for GYRO on/off
 	var debugElement = document.getElementById('debug'); // container for live location data
 	var debugElement2 = document.getElementById('debug2'); // container for scene info
+	var progressElement = document.getElementById('progress'); // container for gazeSpot progress info
 
 	// variables for gazeSpots and performance mode
 	var switchTimer = null; // empty variable for timer
@@ -121,6 +122,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	var sceneIndex = 0; // index for scene number
 	var bgSound = null; // empty variable for bgSound
 	var switchSound = null; // empty variable for switchSound
+	var switchSoundTimer = null; // empty variable for switchSound timer
 	var timeOutSwitch = null; // empty variable for timeOutSwitch timer
 	var manySwitchTimer = null; // empty variable for manySpotSwitch timer
 
@@ -223,6 +225,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		var yaw = viewer.view().yaw();
 		var pitch = viewer.view().pitch();
 		var gazing = false;
+		if (progressElement && (trigger) && (spotsSeen.length != 0)) {progressElement.innerHTML =  spotsSeen.length + '/' + trigger};
 		sceneData.gazeSpots.forEach(function (gazeSpot) {		
 		//for each gazespot, check if view closely matches, set gazing to true if so
 			if (onSpot(gazeSpot, pitch, yaw)) {
@@ -514,6 +517,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 
 function switchScene(scene) {
 	stopAutorotate();
+	if (progressElement) { progressElement.innerHTML = ' ' };
 	// set the scenePoint to be new scene
 		scenePoint = parseInt(scene.data.id.slice(0,1));
 	if (lastscene!=null) { // if this isn't the first scene switch...
@@ -522,8 +526,10 @@ function switchScene(scene) {
 			bgSound.stop();
 		} // if there was bgSound, fade out and stop
 		if (switchSound) {
+			switchSound.fade(1,0,500);
 			switchSound.stop();
-		} // if there was switchSound, stop it
+			clearTimeout(switchSoundTimer);
+		} // if there was switchSound, stop it and clear the timer
 		var departureView = lastscene.marzipanoObject.view();
 		var newView = scene.marzipanoObject.view();
 		newView.setParameters({
@@ -542,7 +548,7 @@ function switchScene(scene) {
 		switchSound = new Howl({
 			src: scene.data.switchAudio.source,
 			});
-		var switchSoundPlay = setTimeout (function () {switchSound.play();}, scene.data.switchAudio.delay);
+		switchSoundTimer = setTimeout (function () {switchSound.play();}, scene.data.switchAudio.delay);
 	} 
 	if (scene.data.bgAudio) { // if there is bg audio load and play it
 		bgSound = new Howl({
