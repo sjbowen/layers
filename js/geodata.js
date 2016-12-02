@@ -8,15 +8,15 @@
 var GEO_DATA = {
 	"locations": [
 		{ // Footpath sign above the Old Dock
-			"latitude":53.9191144,
-			"longitude":-2.987572,
-			"deviation":0.0001, // v.roughly 10 metres tolerance
+			"latitude":53.403056,
+			"longitude":-2.987533,
+			"deviation":0.0050, // v.roughly 500 metres tolerance
 			"url": "olddock/index.html" 
 		},
 		{ // Outside Culture Lab
 			"latitude":54.978802,
 			"longitude":-1.614127,
-			"deviation":0.0001, // v.roughly 10 metres tolerance
+			"deviation":0.0050, // v.roughly 500 metres tolerance
 			"url": "http://www.ncl.ac.uk/culturelab/" 
 		},
 		{ // Simon's desk at home
