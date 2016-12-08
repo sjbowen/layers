@@ -2,39 +2,25 @@
 <html>
 <head>
 <title>Metro Futures</title>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
-<style> @-ms-viewport { width: device-width; } </style>
-<link rel="stylesheet" href="/vendor/reset.min.css">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+  <style> @-ms-viewport { width: device-width; } </style>
+  <link rel="stylesheet" href="/vendor/reset.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/layersstyle.css">
+
 </head>
 <body class="multiple-scenes ">
 
-<div id="pano"></div>
-
-<div id="sceneList">
-  <ul class="scenes">
-    
-      <a href="#" class="scene" data-id="0-doorway">
-        <li class="text">Doorway</li>
-      </a>
-    
-      <a href="#" class="scene" data-id="1-seated">
-        <li class="text">Seated</li>
-      </a>
-    
-      <a href="#" class="scene" data-id="2-vestibule">
-        <li class="text">Vestibule</li>
-      </a>
-    
-  </ul>
+<div href="#" id="readyContainer">
+	<h1>Metro Futures: Wish List</h1>
+	<p>View, rate and comment on ideas for the new Metro trains.</p>
+	<button type="button" class="button" id="ready">Go</button>	<button type="button" class="button" onclick="parent.history.back()">Back</button>
 </div>
 
-<a href="#" id="sceneListToggle">
-  <img class="icon off" src="/img/expand.png">
-  <img class="icon on" src="/img/collapse.png">
-</a>
+
+<div id="pano"></div>
 
 <a href="#" id="deviceOrientationToggle">
   <img class="icon off" src="/img/gyro.png">
@@ -56,7 +42,7 @@
 &nbsp;
 </div>
 
-<div id="debug" style="position:absolute;bottom:20px;left:0px;">
+<div id="debug" style="position:absolute;bottom:50px;left:0px;">
 &nbsp;
 </div>
 

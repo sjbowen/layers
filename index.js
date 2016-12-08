@@ -28,19 +28,21 @@ if (readyContainer!=null) {
 	// preload the gazeSpot audio
 	var loadCount = 0;
 	var sceneAudio = APP_DATA.scenes.map(function(sceneData) {
-		sceneData.gazeSpots.forEach(function (gazeSpot) {
-			if (gazeSpot.audio) {
-				var sound = new Howl({
-					src: gazeSpot.audio,
-					loop: true,
-					});
-				var spotSound = new soundSelect(gazeSpot.selector, sound);
-				sound.volume(0); // mute the sound
-				sound.play(); // play the sound, check playing all sounds doesn't slow down mobile browsers...
-				sound.stop(); // stop the sound, important for spoken clips so they start at the beginning
-				spotSounds.push(spotSound);
-			};
-		});
+		if (sceneData.gazespots) {
+			sceneData.gazeSpots.forEach(function (gazeSpot) {
+				if (gazeSpot.audio) {
+					var sound = new Howl({
+						src: gazeSpot.audio,
+						loop: true,
+						});
+					var spotSound = new soundSelect(gazeSpot.selector, sound);
+					sound.volume(0); // mute the sound
+					sound.play(); // play the sound, check playing all sounds doesn't slow down mobile browsers...
+					sound.stop(); // stop the sound, important for spoken clips so they start at the beginning
+					spotSounds.push(spotSound);
+				};
+			});
+		}
 	});
 	console.log(spotSounds);
 	
@@ -57,7 +59,7 @@ if (readyContainer!=null) {
 		}
 		// play a sound via Howler to avoid audio glitch on first playback of audio
 		var blopSound = new Howl({
-		  src: ['sounds/blop.mp3']
+		  src: ['/sounds/blop.mp3']
 		});		
 		blopSound.play();		
 		go();
@@ -79,7 +81,7 @@ if (readyContainer!=null) {
 		// play a sound via Howler to avoid audio glitch on first playback of audio
 		// and to get use touchend to enable audio on mobile devices
 		var blopSound = new Howl({
-		  src: ['sounds/blop.mp3']
+		  src: ['/sounds/blop.mp3']
 		});		
 		blopSound.play();		
 		go();
@@ -235,6 +237,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		var yaw = viewer.view().yaw();
 		var pitch = viewer.view().pitch();
 		var gazing = false;
+		if (debugMode) { debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch + '<br />fov' + viewer.view().fov()};
 		if (sceneData.gazeSpots) {
 			sceneData.gazeSpots.forEach(function (gazeSpot) {		
 			//for each gazespot, check if view closely matches, set gazing to true if so
@@ -791,7 +794,6 @@ function switchScene(scene) {
 	  }
 	   
 	  function onSpot (gazeSpot, pitch, yaw) {
-		if (debugMode) { debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch + '<br />fov' + viewer.view().fov()};
 	  	var yawFactor; 
 	  	// check if pitch and gazeSpot.pitch in same hemisphere
 	  	// if so, bias the contribution of yaw according to view pitch so that it decreases to zero at the poles
