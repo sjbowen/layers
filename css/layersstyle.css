@@ -31,6 +31,25 @@ em {
 	z-index:10;
 }
 
+#debug {
+	position:absolute;
+	bottom:50px;
+	left:0px;
+	display: none;
+}
+
+#debug2 {
+	position:absolute;
+	bottom:50px;
+	right:150px;
+}
+
+#progress {
+	position:absolute;
+	bottom:10px;
+	right:10px;
+}
+
 .button {
   -webkit-border-radius: 28;
   -moz-border-radius: 28;
@@ -46,4 +65,13 @@ em {
 .button:hover {
   background: #37db3c;
   text-decoration: none;
+}
+
+.centered {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 100px;
+	display: none;
 }

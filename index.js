@@ -113,6 +113,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	var debugElement = document.getElementById('debug'); // container for live location data
 	var debugElement2 = document.getElementById('debug2'); // container for scene info
 	var progressElement = document.getElementById('progress'); // container for gazeSpot progress info
+	var middleElement = document.getElementById('middle'); // container for crosshairs 
 
 	// variables for gazeSpots and performance mode
 	var switchTimer = null; // empty variable for timer
@@ -237,7 +238,12 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		var yaw = viewer.view().yaw();
 		var pitch = viewer.view().pitch();
 		var gazing = false;
-		if (debugMode) { debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch + '<br />fov' + viewer.view().fov()};
+		if (debugMode) {
+			debugElement.style = "display:block;";
+			middleElement.style = "display:block;";							
+			debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch + '<br />fov' + viewer.view().fov();
+			middleElement.innerHTML = '+';
+		};
 		if (sceneData.gazeSpots) {
 			sceneData.gazeSpots.forEach(function (gazeSpot) {		
 			//for each gazespot, check if view closely matches, set gazing to true if so
@@ -473,7 +479,13 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 				
 				case 74: // J to turn debugMode on or off
 					debugMode = !debugMode;
-					if (!debugMode) { debugElement.innerHTML = "" };
+					if (!debugMode) {
+						debugElement.style = "display:none;";
+						middleElement.style = "display:none;";
+					} else {
+						debugElement.style = "display:block;";
+						middleElement.style = "display:block;";				
+					};
 				break;
 				
 				case 75: // K to move up one scene
@@ -621,7 +633,7 @@ function switchScene(scene) {
 
     // Create image element.
     var icon = document.createElement('img');
-    icon.src = 'img/link.png';
+    icon.src = '/img/link.png';
     icon.classList.add('link-hotspot-icon');
 
     // Set rotation transform.
@@ -667,7 +679,7 @@ function switchScene(scene) {
     var iconWrapper = document.createElement('div');
     iconWrapper.classList.add('info-hotspot-icon-wrapper');
     var icon = document.createElement('img');
-    icon.src = 'img/info.png';
+    icon.src = '/img/info.png';
     icon.classList.add('info-hotspot-icon');
     iconWrapper.appendChild(icon);
 
@@ -683,7 +695,7 @@ function switchScene(scene) {
     var closeWrapper = document.createElement('div');
     closeWrapper.classList.add('info-hotspot-close-wrapper');
     var closeIcon = document.createElement('img');
-    closeIcon.src = 'img/close.png';
+    closeIcon.src = '/img/close.png';
     closeIcon.classList.add('info-hotspot-close-icon');
     closeWrapper.appendChild(closeIcon);
 
