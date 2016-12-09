@@ -2,19 +2,7 @@
 	{
 	  "yaw": -0.8179185676122458,
 	  "pitch": -0.35635436100161577,
-	  "title": "Information Displays",
-	  "text": "A sample idea about using advertising space for information displays."
-	},
-	{
-	  "yaw": -2.02506109162859,
-	  "pitch": 0.3726903441230398,
-	  "title": "Seating&nbsp;",
-	  "text": "An idea about the quality of seating."
-	},
-	{
-	  "yaw": 0.33186584550654885,
-	  "pitch": 1.3961588105858667,
-	  "title": "Chewing Gum",
-	  "text": "Chewing gum-proof floor coverings."
+	  "title": "Double Seats",
+	  "text": "iframes/doubleseat.html"
 	}
 ]}

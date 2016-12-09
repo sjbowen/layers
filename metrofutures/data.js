@@ -144,6 +144,6 @@ var APP_DATA = {
     "deviceOrientationControl": true,
     "debugMode": false,
     "webPdUsed": false,
-    "manySpotSwitch": true
+    "manySpotSwitch": false
   }
 };
