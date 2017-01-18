@@ -28,7 +28,7 @@ if (readyContainer!=null) {
 	// preload the gazeSpot audio
 	var loadCount = 0;
 	var sceneAudio = APP_DATA.scenes.map(function(sceneData) {
-		if (sceneData.gazespots) {
+		if (sceneData.gazeSpots) {
 			sceneData.gazeSpots.forEach(function (gazeSpot) {
 				if (gazeSpot.audio) {
 					var sound = new Howl({
