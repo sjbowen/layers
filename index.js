@@ -5,8 +5,11 @@ var debugMode = window.APP_DATA.settings.debugMode;
 var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used?
 var readyContainer = document.querySelector('#readyContainer');
 var readyElement = document.querySelector('#ready');
+var loadingElement = document.querySelector('#loading');
 var spotSounds = []; // create a new array to hold HTML selector, Howl sounds as objects (via a constructor function)
-
+var soundCount = 0;
+var loadCount = 0;
+	
 // check if scene ID has been passed with URL query string, set to 0 if not
 if (window.location.search) {
 	var scenePoint = parseInt(window.location.search.slice(1));
@@ -14,7 +17,7 @@ if (window.location.search) {
 	var scenePoint = 0;
 }
 
-if (readyContainer!=null) {
+if (readyContainer!=null) { // if there is a readyContainer present to get touch start/preload for audio
 
 	// check whether device has gyro functionality
 	window.addEventListener('deviceorientation', function () {
@@ -24,32 +27,9 @@ if (readyContainer!=null) {
 
 	// start pano display either by click or touch, check if touch device at the same time
 	// and get the necessary touchend to enable mobile devices to play audio
-
-	// preload the gazeSpot audio
-	var loadCount = 0;
-	var sceneAudio = APP_DATA.scenes.map(function(sceneData) {
-		if (sceneData.gazeSpots) {
-			sceneData.gazeSpots.forEach(function (gazeSpot) {
-				if (gazeSpot.audio) {
-					var sound = new Howl({
-						src: gazeSpot.audio,
-						loop: true,
-						});
-					var spotSound = new soundSelect(gazeSpot.selector, sound);
-					sound.volume(0); // mute the sound
-					sound.play(); // play the sound, check playing all sounds doesn't slow down mobile browsers...
-					sound.stop(); // stop the sound, important for spoken clips so they start at the beginning
-					spotSounds.push(spotSound);
-				};
-			});
-		}
-	});
-	console.log(spotSounds);
 	
 	readyElement.addEventListener('click', function () {
 		console.log('click');
-		readyContainer.style.display = "none"; // hide the ready container
-		document.body.style.height = "100%"; // set height back to 100%
 		if (webPdUsed) {
 			var patch
 				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
@@ -57,20 +37,13 @@ if (readyContainer!=null) {
 				});
 			Pd.start();
 		}
-		// play a sound via Howler to avoid audio glitch on first playback of audio
-		var blopSound = new Howl({
-		  src: ['/sounds/blop.mp3']
-		});		
-		blopSound.play();		
-		go();
+		loadSounds();
 		});
 		
 	readyElement.addEventListener('touchend', function () {
 		console.log('touch');
 	    document.body.classList.remove('no-touch');
     	document.body.classList.add('touch');
-		readyContainer.style.display = "none"; // hide the ready container
-		document.body.style.height = "100%"; // set height back to 100%
 		if (webPdUsed) {
 			var patch
 				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
@@ -78,17 +51,48 @@ if (readyContainer!=null) {
 				});
 			Pd.start();
 		}
-		// play a sound via Howler to avoid audio glitch on first playback of audio
-		// and to get use touchend to enable audio on mobile devices
-		var blopSound = new Howl({
-		  src: ['/sounds/blop.mp3']
-		});		
-		blopSound.play();		
-		go();
+		loadSounds();
 		});
 } else {
-	if (readyContainer!=null) {readyContainer.innerHTML = ''}; // hide the ready link
-	go();
+	if (readyContainer = null) {go()};
+}
+
+function loadSounds() { 	// preload the gazeSpot audio
+	// count the sounds
+	var sceneAudio = APP_DATA.scenes.map(function(sceneData) {
+		if (sceneData.gazeSpots) {
+			sceneData.gazeSpots.forEach(function (gazeSpot) {
+				if (gazeSpot.audio) {
+					soundCount++; // increment load counter
+				};
+			});
+		}
+	});
+	console.log(soundCount + " sounds in this interactive");
+	// load the sounds
+	sceneAudio = APP_DATA.scenes.map(function(sceneData) {
+		if (sceneData.gazeSpots) {
+			sceneData.gazeSpots.forEach(function (gazeSpot) {
+				if (gazeSpot.audio) {
+					var sound = new Howl({	// this isn't completing on iOS, the preload function will not work otherwise
+						src: gazeSpot.audio,
+						loop: true,
+						onload: loadCountInc(), // function to check if all sounds loaded yet
+						});
+					var spotSound = new soundSelect(gazeSpot.selector, sound);
+					sound.volume(0); // mute the sound
+// 					sound.play();
+// 					sound.stop();
+					spotSounds.push(spotSound);
+				};
+			});
+		} else { // if no sounds to load, hide ready container and go straight to go 
+			readyContainer.style.display = "none"; // hide the ready container
+			document.body.style.height = "100%"; // set height back to 100%
+			go();
+		}
+	});
+	console.log(spotSounds);
 }
 
 function soundSelect (selector, sound) {	// object constructor for pairs of HTML selector, Howl sounds
@@ -96,8 +100,24 @@ function soundSelect (selector, sound) {	// object constructor for pairs of HTML
 	this.sound = sound;
 }
 
+function loadCountInc() {	// function to increment loadCount, check if all sounds loaded, and turn on Go button if so
+	loadCount++;
+	console.log("sound " + loadCount + " loaded");
+	if (loadCount != soundCount) {
+		loadingElement.style.display = "block";
+		loadingElement.innerHTML = 'Loading ' + loadCount + ' of ' + soundCount + ' sounds.';
+	}
+	else {
+		readyContainer.style.display = "none"; // hide the ready container
+		document.body.style.height = "100%"; // set height back to 100%
+		console.log("All sounds loaded");
+		go();
+	}
+}
+
 function go() { // rather than as a self-invoking anonymous function, call this function when readyElement has been clicked or tapped
 
+  console.log("Go");
   var Marzipano = window.Marzipano;
   var bowser = window.bowser;
   var screenfull = window.screenfull;
@@ -240,8 +260,8 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		var pitch = viewer.view().pitch();
 		var gazing = false;
 		if (debugMode) {
-			debugElement.style = "display:block;";
-			middleElement.style = "display:block;";							
+			debugElement.style.display = "block;";
+			middleElement.style.display = "block;";							
 			debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch + '<br />fov' + viewer.view().fov();
 			middleElement.innerHTML = '+';
 		};
@@ -481,11 +501,11 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 				case 74: // J to turn debugMode on or off
 					debugMode = !debugMode;
 					if (!debugMode) {
-						debugElement.style = "display:none;";
-						middleElement.style = "display:none;";
+						debugElement.style.display = "none";
+						middleElement.style.display = "none";
 					} else {
-						debugElement.style = "display:block;";
-						middleElement.style = "display:block;";				
+						debugElement.style.display = "block";
+						middleElement.style.display = "block";				
 					};
 				break;
 				

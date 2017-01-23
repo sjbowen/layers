@@ -105,8 +105,10 @@ body.multiple-scenes.mobile #titleBar {
   width: 40px;
   height: 40px;
   padding: 5px;
-  // background-color: rgb(103,115,131);
-  // background-color: rgba(103,115,131,0.8);
+/* 
+  background-color: rgb(103,115,131);
+  background-color: rgba(103,115,131,0.8);
+ */
 }
 
 body.deviceOrientationControl-enabled #deviceOrientationToggle {
@@ -158,8 +160,10 @@ body.deviceOrientationControl-enabled #deviceOrientationToggle {
   width: 40px;
   height: 40px;
   padding: 5px;
-  // background-color: rgb(103,115,131);
-  // background-color: rgba(103,115,131,0.8);
+/* 
+  background-color: rgb(103,115,131);
+  background-color: rgba(103,115,131,0.8);
+ */
 }
 
 body.backButton-enabled #backButton {
@@ -211,8 +215,10 @@ body.backButton-enabled #backButton {
   width: 40px;
   height: 40px;
   padding: 5px;
-  // background-color: rgb(103,115,131);
-  // background-color: rgba(103,115,131,0.8);
+/* 
+  background-color: rgb(103,115,131);
+  background-color: rgba(103,115,131,0.8);
+ */
 }
 
 .mobile #fullscreenToggle {
