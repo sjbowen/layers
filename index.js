@@ -54,7 +54,7 @@ if (readyContainer!=null) { // if there is a readyContainer present to get touch
 		loadSounds();
 		});
 } else {
-	if (readyContainer = null) {go()};
+	go();
 }
 
 function loadSounds() { 	// preload the gazeSpot audio
@@ -380,8 +380,12 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	  backButtonElement.classList.add('enabled');
 	  backButtonElement.classList.add('backButton-enabled');
 	  backButtonElement.addEventListener('click', function () {
-	  	var url = "index.html?" + scenePoint;
-	  	window.parent.location = url;
+	  	if (readyElement !=null) {
+			var url = "index.html?" + scenePoint;
+			window.parent.location = url;
+	  	} else {
+	  		window.parent.history.back();
+	  	}
 	  });
 	  
 	  // Set handler for DeviceOrientation control (GYRO) toggle.
