@@ -74,7 +74,7 @@ function loadSounds() { 	// preload the gazeSpot audio
 		if (sceneData.gazeSpots) {
 			sceneData.gazeSpots.forEach(function (gazeSpot) {
 				if (gazeSpot.audio) {
-					var sound = new Howl({	// this isn't completing on iOS, the preload function will not work otherwise
+					var sound = new Howl({
 						src: gazeSpot.audio,
 						loop: true,
 						onload: loadCountInc(), // function to check if all sounds loaded yet
@@ -84,14 +84,15 @@ function loadSounds() { 	// preload the gazeSpot audio
 // 					sound.play();
 // 					sound.stop();
 					spotSounds.push(spotSound);
-				};
+				} 
 			});
-		} else { // if no sounds to load, hide ready container and go straight to go 
-			readyContainer.style.display = "none"; // hide the ready container
-			document.body.style.height = "100%"; // set height back to 100%
-			go();
-		}
+		} 
 	});
+	if (soundCount == 0) { 
+		readyContainer.style.display = "none"; // hide the ready container
+		document.body.style.height = "100%"; // set height back to 100%
+		go();
+	} 
 	console.log(spotSounds);
 }
 
@@ -384,7 +385,8 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 			var url = "index.html?" + scenePoint;
 			window.parent.location = url;
 	  	} else {
-	  		window.parent.history.back();
+	  		console.log('back');
+	  		window.history.back(); // this doesn't work in Safari on Mac or iOS....
 	  	}
 	  });
 	  
@@ -753,6 +755,7 @@ function switchScene(scene) {
     var toggle = function() {
       wrapper.classList.toggle('visible');
       modal.classList.toggle('visible');
+      console.log("toggle");
     };
 
     // Show content when hotspot is clicked.
@@ -768,7 +771,7 @@ function switchScene(scene) {
     return wrapper;
   }
 
-  // Prevent touch and scroll events from reaching the parent element.
+//   Prevent touch and scroll events from reaching the parent element.
   function stopTouchAndScrollEventPropagation(element, eventList) {
     var eventList = [ 'touchstart', 'touchmove', 'touchend', 'touchcancel',
                       'wheel', 'mousewheel' ];
