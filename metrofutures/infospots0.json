@@ -1,8 +1,20 @@
 {"infoHotspots": [
 	{
-	  "yaw": 0.2617,
-	  "pitch": 0.247,
-	  "title": "Double Seats",
-	  "text": "iframes/doubleseat.html"
+	  "yaw": -0.8179185676122458,
+	  "pitch": -0.35635436100161577,
+	  "title": "Information Displays",
+	  "text": "<iframe src='iframes/infodisplays.html' style='height:300px;'></iframe>."
+	},
+	{
+	  "yaw": -2.02506109162859,
+	  "pitch": 0.3726903441230398,
+	  "title": "Seating",
+	  "text": "An idea about the quality of seating."
+	},
+	{
+	  "yaw": 0.33186584550654885,
+	  "pitch": 1.3961588105858667,
+	  "title": "Chewing Gum",
+	  "text": "Chewing gum-proof floor coverings."
 	}
 ]}

@@ -123,7 +123,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
   var bowser = window.bowser;
   var screenfull = window.screenfull;
   var APP_DATA = window.APP_DATA;
-	var lastscene; //set up a variable for the lastscene
+  var lastscene; //set up a variable for the lastscene
 
   // Grab elements from DOM.
   var panoElement = document.querySelector('#pano');
@@ -132,6 +132,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
   var backButtonElement = document.querySelector('#backButton');
 	var deviceOrientationToggleElement = document.querySelector('#deviceOrientationToggle'); // for GYRO on/off
 	var debugElement = document.getElementById('debug'); // container for live location data
+	var debugElement2 = document.getElementById('debug2'); // container for scene info
 	var progressElement = document.getElementById('progress'); // container for gazeSpot progress info
 	var middleElement = document.getElementById('middle'); // container for crosshairs 
 
@@ -231,18 +232,16 @@ function go() { // rather than as a self-invoking anonymous function, call this 
     });
 
     // Create info hotspots - either from data in APP_DATA or from external JSON file, if present
-	var iframe = false;
 	if (sceneData.infoSpotsUrl) {
-		iframe = true;
 		$.getJSON( sceneData.infoSpotsUrl, function(data) {
 			console.log("infoSpots loaded" + data);
 			data.infoHotspots.forEach(function(hotspot) {
-			  var element = createInfoHotspotElement(hotspot, iframe);
+			  var element = createInfoHotspotElement(hotspot);
 			  marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch });
 			});
 		});
     } else {
-		sceneData.infoHotspots.forEach(function(hotspot, iframe) {
+		sceneData.infoHotspots.forEach(function(hotspot) {
 		  var element = createInfoHotspotElement(hotspot);
 		  marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch });
 		});
@@ -691,7 +690,7 @@ function switchScene(scene) {
     return wrapper;
   }
 
-  function createInfoHotspotElement(hotspot, iframe) {
+  function createInfoHotspotElement(hotspot) {
 
     // Create wrapper element to hold icon and tooltip.
     var wrapper = document.createElement('div');
@@ -731,17 +730,11 @@ function switchScene(scene) {
     header.appendChild(titleWrapper);
     header.appendChild(closeWrapper);
 
-    // Create text element either as div or iframe
-	if (!iframe) {
-		var text = document.createElement('div');
-		text.innerHTML = hotspot.text;
-		text.classList.add('info-hotspot-text');
-	} else if (iframe) {
-		var text = document.createElement("iframe");
-		text.setAttribute("src", hotspot.text);
-		text.style.width = "300px";
-		text.classList.add('info-hotspot-text');
-	}
+    // Create text element.
+    var text = document.createElement('div');
+    text.classList.add('info-hotspot-text');
+    text.innerHTML = hotspot.text;
+
     // Place header and text into wrapper element.
     wrapper.appendChild(header);
     wrapper.appendChild(text);
