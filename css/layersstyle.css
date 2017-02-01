@@ -50,7 +50,7 @@ em {
 	right:10px;
 }
 
-.button {
+.button, .goScene {
   -webkit-border-radius: 28;
   -moz-border-radius: 28;
   border-radius: 28px;
@@ -62,7 +62,7 @@ em {
   text-decoration: none;
 }
 
-.button:hover {
+.button:hover, .goScene:hover {
   background: #37db3c;
   text-decoration: none;
 }

@@ -9,13 +9,7 @@ var loadingElement = document.querySelector('#loading');
 var spotSounds = []; // create a new array to hold HTML selector, Howl sounds as objects (via a constructor function)
 var soundCount = 0;
 var loadCount = 0;
-	
-// check if scene ID has been passed with URL query string, set to 0 if not
-if (window.location.search) {
-	var scenePoint = parseInt(window.location.search.slice(1));
-} else {
-	var scenePoint = 0;
-}
+var scenePoint = 0;
 
 if (readyContainer!=null) { // if there is a readyContainer present to get touch start/preload for audio
 
@@ -23,38 +17,81 @@ if (readyContainer!=null) { // if there is a readyContainer present to get touch
 	window.addEventListener('deviceorientation', function () {
 	    document.body.classList.remove('no-gyro');
     	document.body.classList.add('gyro');
-		});
+	});
 
 	// start pano display either by click or touch, check if touch device at the same time
 	// and get the necessary touchend to enable mobile devices to play audio
 	
-	readyElement.addEventListener('click', function () {
-		console.log('click');
-		if (webPdUsed) {
-			var patch
-				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
-				  patch = Pd.loadPatch(patchStr)
-				});
-			Pd.start();
-		}
-		loadSounds();
-		});
+	var goElements = document.querySelectorAll('.goScene');  // if there is more than one go button
+	if (goElements) {
+		var i;
+		for (i = 0; i < goElements.length; i++) { // add event listeners for each button
+			goElements[i].addEventListener('click', goClick);
+			goElements[i].addEventListener('touchend', goTouch);		
+		}		
+	}
+	if (readyElement) {  // if just one button, add event listeners to it
+		readyElement.addEventListener('click', goClick);
+		readyElement.addEventListener('touchend', goTouch);		
+	}
 		
-	readyElement.addEventListener('touchend', function () {
-		console.log('touch');
-	    document.body.classList.remove('no-touch');
-    	document.body.classList.add('touch');
-		if (webPdUsed) {
-			var patch
-				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
-				  patch = Pd.loadPatch(patchStr)
-				});
-			Pd.start();
-		}
-		loadSounds();
-		});
+// 	readyElement.addEventListener('touchend', function () {
+// 		console.log('touch - v');
+// 	    document.body.classList.remove('no-touch');
+//     	document.body.classList.add('touch');
+// 		if (webPdUsed) {
+// 			var patch
+// 				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
+// 				  patch = Pd.loadPatch(patchStr)
+// 				});
+// 			Pd.start();
+// 		}
+// 		loadSounds();
+// 		});
 } else {
 	go();
+}
+
+function goClick (event) {
+	if (window.location.search) { // set scenePoint if set with search string, used when only one go button returning to linked scenes
+		scenePoint = parseInt(window.location.search.slice(1));
+	}
+	
+	if (goElements.length > 0) { // if there is more than one go button...
+		scenePoint = parseInt(event.currentTarget.id.slice(5));  // ...extract scene id from triggering element and set search string to this
+	} 
+	console.log("clicked to go to " + scenePoint);
+	
+	if (webPdUsed) {
+		var patch
+			$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
+			  patch = Pd.loadPatch(patchStr)
+			});
+		Pd.start();
+	}
+	loadSounds();
+}
+
+function goTouch () {
+	if (window.location.search) { // set scenePoint if set with search string, used when only one go button returning to linked scenes
+		scenePoint = parseInt(window.location.search.slice(1));
+	}
+	
+	if (goElements.length > 0) { // if there is more than one go button...
+		scenePoint = parseInt(event.currentTarget.id.slice(5));  // ...extract scene id from triggering element and set search string to this
+	} 
+	console.log("touched to go to " + scenePoint);
+
+	document.body.classList.remove('no-touch');
+	document.body.classList.add('touch');
+	if (webPdUsed) {
+		var patch
+			$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
+			  patch = Pd.loadPatch(patchStr)
+			});
+		Pd.start();
+	}
+	loadSounds();
 }
 
 function loadSounds() { 	// preload the gazeSpot audio
@@ -116,9 +153,8 @@ function loadCountInc() {	// function to increment loadCount, check if all sound
 	}
 }
 
-function go() { // rather than as a self-invoking anonymous function, call this function when readyElement has been clicked or tapped
+function go() { // rather than as a self-invoking anonymous function, call this function when a button has been clicked or tapped
 
-  console.log("Go");
   var Marzipano = window.Marzipano;
   var bowser = window.bowser;
   var screenfull = window.screenfull;
@@ -364,6 +400,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 
   // Display the initial scene.
   switchScene(scenes[scenePoint]);
+  console.log("Go to scene " + scenePoint);  
 
 	  // GYRO: need to create 'view' variable for use by enable/disableGyro
 	  var scene = viewer.scene(); // get the current scene
@@ -380,9 +417,9 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	  backButtonElement.classList.add('enabled');
 	  backButtonElement.classList.add('backButton-enabled');
 	  backButtonElement.addEventListener('click', function () {
-	  	if (readyElement !=null) {
+	  	if (readyContainer !=null) {
 			var url = "index.html?" + scenePoint;
-			window.parent.location = url;
+			window.location = url;
 	  	} else {
 	  		console.log('back');
 	  		window.history.back(); // this doesn't work in Safari on Mac or iOS....
@@ -580,7 +617,7 @@ function switchScene(scene) {
 	stopAutorotate();
 	if (progressElement) { progressElement.innerHTML = ' ' };
 	// set the scenePoint to be new scene
-		scenePoint = parseInt(scene.data.id.slice(0,1));
+	scenePoint = parseInt(scene.data.id.slice(0,1)); // set scenePoint to be new scene
 	if (lastscene!=null) { // if this isn't the first scene switch...
 		if (bgSound) {
 			bgSound.fade(1,0,1000);

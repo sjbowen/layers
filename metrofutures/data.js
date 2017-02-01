@@ -32,23 +32,9 @@ var APP_DATA = {
         "yaw": 0,
         "fov": 1.5707963267948966
       },
-      "linkHotspots": [
-        {
-          "yaw": 0,
-          "pitch": 0,
-          "rotation": 0,
-          "target": "1-seated"
-        }
-      ],
-      "infoHotspots": [
-        {
-          "yaw": -1.18329199393572,
-          "pitch": 0.28147642445077814,
-          "title": "Example - title",
-          "text": "Example - description"
-        }
-      ],
-       "infoSpotsUrl": "infospots0.json"
+      "linkHotspots": [],
+      "infoHotspots": [],
+      "infoSpotsUrl": "infospots0.json"
     },
     {
       "id": "1-seated",
@@ -74,20 +60,7 @@ var APP_DATA = {
         "yaw": 0,
         "fov": 1.5707963267948966
       },
-      "linkHotspots": [
-        {
-          "yaw": -0.13568971740135005,
-          "pitch": 0.002878153959853691,
-          "rotation": 0,
-          "target": "0-doorway"
-        },
-        {
-          "yaw": -3.0164877293810406,
-          "pitch": 0.002902460075461022,
-          "rotation": 0,
-          "target": "2-vestibule"
-        }
-      ],
+      "linkHotspots": [],
       "infoHotspots": [],
       "infoSpotsUrl": "infospots1.json"
     },
@@ -123,14 +96,7 @@ var APP_DATA = {
         "yaw": 0,
         "fov": 1.5707963267948966
       },
-      "linkHotspots": [
-        {
-          "yaw": 0.12308585688354334,
-          "pitch": 0.10448869868299937,
-          "rotation": 0,
-          "target": "1-seated"
-        }
-      ],
+      "linkHotspots": [],
       "infoHotspots": [],
       "infoSpotsUrl": "infospots2.json"
     }
