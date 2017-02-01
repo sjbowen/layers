@@ -34,20 +34,7 @@ if (readyContainer!=null) { // if there is a readyContainer present to get touch
 		readyElement.addEventListener('click', goClick);
 		readyElement.addEventListener('touchend', goTouch);		
 	}
-		
-// 	readyElement.addEventListener('touchend', function () {
-// 		console.log('touch - v');
-// 	    document.body.classList.remove('no-touch');
-//     	document.body.classList.add('touch');
-// 		if (webPdUsed) {
-// 			var patch
-// 				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
-// 				  patch = Pd.loadPatch(patchStr)
-// 				});
-// 			Pd.start();
-// 		}
-// 		loadSounds();
-// 		});
+
 } else {
 	go();
 }
