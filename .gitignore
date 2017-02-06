@@ -1,0 +1,21 @@
+# Ignore images etc. for marzipano pages #
+#######################################
+tiles/
+embed/
+assemblyrooms/
+metrofutures/tiles/
+olddock/
+standrews/
+soundspaces/
+patches/
+video/
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
