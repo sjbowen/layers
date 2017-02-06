@@ -5,79 +5,119 @@ var debugMode = window.APP_DATA.settings.debugMode;
 var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used?
 var readyContainer = document.querySelector('#readyContainer');
 var readyElement = document.querySelector('#ready');
+var loadingElement = document.querySelector('#loading');
 var spotSounds = []; // create a new array to hold HTML selector, Howl sounds as objects (via a constructor function)
+var soundCount = 0;
+var loadCount = 0;
+var scenePoint = 0;
 
-if (readyContainer!=null) {
+if (readyContainer!=null) { // if there is a readyContainer present to get touch start/preload for audio
 
 	// check whether device has gyro functionality
 	window.addEventListener('deviceorientation', function () {
 	    document.body.classList.remove('no-gyro');
     	document.body.classList.add('gyro');
-		});
+	});
 
 	// start pano display either by click or touch, check if touch device at the same time
 	// and get the necessary touchend to enable mobile devices to play audio
-
-	// preload the gazeSpot audio
-	var loadCount = 0;
-	var sceneAudio = APP_DATA.scenes.map(function(sceneData) {
-		sceneData.gazeSpots.forEach(function (gazeSpot) {
-			if (gazeSpot.audio) {
-				var sound = new Howl({
-					src: gazeSpot.audio,
-					loop: true,
-					});
-				var spotSound = new soundSelect(gazeSpot.selector, sound);
-				sound.volume(0); // mute the sound
-				sound.play(); // play the sound, check playing all sounds doesn't slow down mobile browsers...
-				sound.stop(); // stop the sound, important for spoken clips so they start at the beginning
-				spotSounds.push(spotSound);
-			};
-		});
-	});
-	console.log(spotSounds);
 	
-	readyElement.addEventListener('click', function () {
-		console.log('click');
-		readyContainer.innerHTML = ''; // hide the ready link
-		if (webPdUsed) {
-			var patch
-				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
-				  patch = Pd.loadPatch(patchStr)
-				});
-			Pd.start();
-		}
-		// play a sound via Howler to avoid audio glitch on first playback of audio
-		var blopSound = new Howl({
-		  src: ['sounds/blop.mp3']
-		});		
-		blopSound.play();		
-		go();
-		});
-		
-	readyElement.addEventListener('touchend', function () {
-		console.log('touch');
-	    document.body.classList.remove('no-touch');
-    	document.body.classList.add('touch');
-		readyContainer.innerHTML = ''; // hide the ready link
-		if (webPdUsed) {
-			var patch
-				$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
-				  patch = Pd.loadPatch(patchStr)
-				});
-			Pd.start();
-		}
-		// play a sound via Howler to avoid audio glitch on first playback of audio
-		// and to get use touchend to enable audio on mobile devices
-		var blopSound = new Howl({
-		  src: ['sounds/blop.mp3']
-		});		
-		blopSound.play();		
-		go();
-		});
+	var goElements = document.querySelectorAll('.goScene');  // if there is more than one go button
+	if (goElements) {
+		var i;
+		for (i = 0; i < goElements.length; i++) { // add event listeners for each button
+			goElements[i].addEventListener('click', goClick);
+			goElements[i].addEventListener('touchend', goTouch);		
+		}		
+	}
+	if (readyElement) {  // if just one button, add event listeners to it
+		readyElement.addEventListener('click', goClick);
+		readyElement.addEventListener('touchend', goTouch);		
+	}
+
 } else {
-	if (readyContainer!=null) {readyContainer.innerHTML = ''}; // hide the ready link
 	go();
+}
+
+function goClick (event) {
+	if (window.location.search) { // set scenePoint if set with search string, used when only one go button returning to linked scenes
+		scenePoint = parseInt(window.location.search.slice(1));
+	}
+	
+	if (goElements.length > 0) { // if there is more than one go button...
+		scenePoint = parseInt(event.currentTarget.id.slice(5));  // ...extract scene id from triggering element and set search string to this
+	} 
+	console.log("clicked to go to " + scenePoint);
+	
+	if (webPdUsed) {
+		var patch
+			$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
+			  patch = Pd.loadPatch(patchStr)
+			});
+		Pd.start();
+	}
+	loadSounds();
+}
+
+function goTouch () {
+	if (window.location.search) { // set scenePoint if set with search string, used when only one go button returning to linked scenes
+		scenePoint = parseInt(window.location.search.slice(1));
+	}
+	
+	if (goElements.length > 0) { // if there is more than one go button...
+		scenePoint = parseInt(event.currentTarget.id.slice(5));  // ...extract scene id from triggering element and set search string to this
+	} 
+	console.log("touched to go to " + scenePoint);
+
+	document.body.classList.remove('no-touch');
+	document.body.classList.add('touch');
+	if (webPdUsed) {
+		var patch
+			$.get(window.APP_DATA.settings.webPdPatch, function(patchStr) {
+			  patch = Pd.loadPatch(patchStr)
+			});
+		Pd.start();
+	}
+	loadSounds();
+}
+
+function loadSounds() { 	// preload the gazeSpot audio
+	// count the sounds
+	var sceneAudio = APP_DATA.scenes.map(function(sceneData) {
+		if (sceneData.gazeSpots) {
+			sceneData.gazeSpots.forEach(function (gazeSpot) {
+				if (gazeSpot.audio) {
+					soundCount++; // increment load counter
+				};
+			});
+		}
+	});
+	console.log(soundCount + " sounds in this interactive");
+	// load the sounds
+	sceneAudio = APP_DATA.scenes.map(function(sceneData) {
+		if (sceneData.gazeSpots) {
+			sceneData.gazeSpots.forEach(function (gazeSpot) {
+				if (gazeSpot.audio) {
+					var sound = new Howl({
+						src: gazeSpot.audio,
+						loop: true,
+						onload: loadCountInc(), // function to check if all sounds loaded yet
+						});
+					var spotSound = new soundSelect(gazeSpot.selector, sound);
+					sound.volume(0); // mute the sound
+// 					sound.play();
+// 					sound.stop();
+					spotSounds.push(spotSound);
+				} 
+			});
+		} 
+	});
+	if (soundCount == 0) { 
+		readyContainer.style.display = "none"; // hide the ready container
+		document.body.style.height = "100%"; // set height back to 100%
+		go();
+	} 
+	console.log(spotSounds);
 }
 
 function soundSelect (selector, sound) {	// object constructor for pairs of HTML selector, Howl sounds
@@ -85,21 +125,39 @@ function soundSelect (selector, sound) {	// object constructor for pairs of HTML
 	this.sound = sound;
 }
 
-function go() { // rather than as a self-invoking anonymous function, call this function when readyElement has been clicked or tapped
+function loadCountInc() {	// function to increment loadCount, check if all sounds loaded, and turn on Go button if so
+	loadCount++;
+	console.log("sound " + loadCount + " loaded");
+	if (loadCount != soundCount) {
+		loadingElement.style.display = "block";
+		loadingElement.innerHTML = 'Loading ' + loadCount + ' of ' + soundCount + ' sounds.';
+	}
+	else {
+		readyContainer.style.display = "none"; // hide the ready container
+		document.body.style.height = "100%"; // set height back to 100%
+		console.log("All sounds loaded");
+		go();
+	}
+}
+
+function go() { // rather than as a self-invoking anonymous function, call this function when a button has been clicked or tapped
 
   var Marzipano = window.Marzipano;
   var bowser = window.bowser;
   var screenfull = window.screenfull;
   var APP_DATA = window.APP_DATA;
-	var lastscene; //set up a variable for the lastscene
+  var lastscene; //set up a variable for the lastscene
 
   // Grab elements from DOM.
   var panoElement = document.querySelector('#pano');
   var autorotateToggleElement = document.querySelector('#autorotateToggle');
   var fullscreenToggleElement = document.querySelector('#fullscreenToggle');
+  var backButtonElement = document.querySelector('#backButton');
 	var deviceOrientationToggleElement = document.querySelector('#deviceOrientationToggle'); // for GYRO on/off
 	var debugElement = document.getElementById('debug'); // container for live location data
 	var debugElement2 = document.getElementById('debug2'); // container for scene info
+	var progressElement = document.getElementById('progress'); // container for gazeSpot progress info
+	var middleElement = document.getElementById('middle'); // container for crosshairs 
 
 	// variables for gazeSpots and performance mode
 	var switchTimer = null; // empty variable for timer
@@ -110,6 +168,10 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	var performPitchSpeed = 0; // pitch speed
 	var sceneIndex = 0; // index for scene number
 	var bgSound = null; // empty variable for bgSound
+	var switchSound = null; // empty variable for switchSound
+	var switchSoundTimer = null; // empty variable for switchSound timer
+	var timeOutSwitch = null; // empty variable for timeOutSwitch timer
+	var manySwitchTimer = null; // empty variable for manySpotSwitch timer
 
   // Detect desktop or mobile mode using a matchMedia query for viewport sizes of 500px square or less
   if (window.matchMedia) {
@@ -162,7 +224,6 @@ function go() { // rather than as a self-invoking anonymous function, call this 
       "tiles/" + sceneData.id + "/{z}/{f}/{y}/{x}.jpg",
       { cubeMapPreviewUrl: "tiles/" + sceneData.id + "/preview.jpg" });
     var geometry = new Marzipano.CubeGeometry(sceneData.levels);
-
     var limiter = Marzipano.RectilinearView.limit.traditional(sceneData.faceSize, 100*Math.PI/180, 120*Math.PI/180);
     var view = new Marzipano.RectilinearView(sceneData.initialViewParameters, limiter);
 
@@ -173,11 +234,10 @@ function go() { // rather than as a self-invoking anonymous function, call this 
       pinFirstLevel: true
     });
   	var spotsSeen = []; // array to keep track of gazeSpots found
-    var trigger;
 	if (sceneData.manySpotSwitch) { // check if this scene has a many GazeSpot switch and assign variables if so
-		trigger = sceneData.manySpotSwitch.trigger;
+		var trigger = sceneData.manySpotSwitch.trigger;
 		var manySpotTarget = sceneData.manySpotSwitch.target;
-		var manySpotTimeout = sceneData.manySpotSwitch.timeout;
+		var manySpotTimeout = sceneData.manySpotSwitch.timeout;		
 	} else {
 		trigger = false;
 	}
@@ -194,78 +254,90 @@ function go() { // rather than as a self-invoking anonymous function, call this 
       marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch });
     });
 
-    // Create info hotspots.
-    sceneData.infoHotspots.forEach(function(hotspot) {
-      var element = createInfoHotspotElement(hotspot);
-      marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch });
-    });
-    
+    // Create info hotspots - either from data in APP_DATA or from external JSON file, if present
+	if (sceneData.infoSpotsUrl) {
+		$.getJSON( sceneData.infoSpotsUrl, function(data) {
+			console.log("infoSpots loaded" + data);
+			data.infoHotspots.forEach(function(hotspot) {
+			  var element = createInfoHotspotElement(hotspot);
+			  marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch });
+			});
+		});
+    } else {
+		sceneData.infoHotspots.forEach(function(hotspot) {
+		  var element = createInfoHotspotElement(hotspot);
+		  marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch });
+		});
+    }
 		// Simon's code to create embedded content hotspots.
-		sceneData.embedHotspots.forEach(function(hotspot) {
-			var element = createEmbedHotspotElement(hotspot);
-			marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch }, { perspective: { radius: hotspot.radius, extraRotations: hotspot.extraRotations }});
-		});		
+		if (sceneData.embedHotspots) {
+			sceneData.embedHotspots.forEach(function(hotspot) {
+				var element = createEmbedHotspotElement(hotspot);
+				marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch }, { perspective: { radius: hotspot.radius, extraRotations: hotspot.extraRotations }});
+			});	
+		}	
 		
 	// Add Gaze Spots by adding event listener for viewChange on the whole scene
 	marzipanoScene.addEventListener('viewChange', function() {
 		var yaw = viewer.view().yaw();
 		var pitch = viewer.view().pitch();
 		var gazing = false;
-		sceneData.gazeSpots.forEach(function (gazeSpot) {		
-		//for each gazespot, check if view closely matches, set gazing to true if so
-			if (onSpot(gazeSpot, pitch, yaw)) {
-				if ((switchTimer == null) && (fading == false)) { // if switch timer or fading not started, start them
-					lastSpot = gazeSpot; // store this gazeSpot data for when we move off it
-					if (gazeSpot.selector) { // if this is an embedded content reveal type gazespot
-						console.log('gazeSpot found: '+ gazeSpot.selector);
-						fading = true; // switch fading on
-						// transition opacity to 1 over timeout duration
-						document.getElementById(gazeSpot.selector).style.opacity = 1;
-						document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out";						
-						if (gazeSpot.audio) { // if there is an audio component, fetch it and start playing at 0 volume
-							var sound;
-							spotSounds.forEach(function(spotSound) {	// look for sound matching selector
-								if (spotSound.selector == gazeSpot.selector) {
-									sound = spotSound.sound;
-								};
-							});
-							var currentVol = sound.volume();
-							if (!sound.playing()) { sound.play(); }; // if the sound hasn't been played yet, start it playing
-							console.log('Fade in from ' + currentVol);
-							sound.fade (currentVol, 1, gazeSpot.timeout);
-						}
-						// check to see if we've seen this gazeSpot already, add to spotsSeen if not
-						var seen = false;
-						var thisSpotSeen = new spotSeen(gazeSpot.selector, true);
-						spotsSeen.forEach (function(spotSeen) {	// check if have seen gazeSpot
-							if (spotSeen.selector == gazeSpot.selector) {
-								seen = true;
+		if (debugMode) {
+			debugElement.style.display = "block;";
+			middleElement.style.display = "block;";							
+			debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch + '<br />fov' + viewer.view().fov();
+			middleElement.innerHTML = '+';
+		};
+		if (sceneData.gazeSpots) {
+			sceneData.gazeSpots.forEach(function (gazeSpot) {		
+			//for each gazespot, check if view closely matches, set gazing to true if so
+				if (onSpot(gazeSpot, pitch, yaw)) {
+					if (progressElement && (trigger) && (spotsSeen.length != 0)) {progressElement.innerHTML =  spotsSeen.length + '/' + trigger}; // update progress element tally
+					if ((switchTimer == null) && (fading == false)) { // if switch timer or fading not started, start them
+						lastSpot = gazeSpot; // store this gazeSpot data for when we move off it
+						if (gazeSpot.selector) { // if this is an embedded content reveal type gazespot
+							console.log('gazeSpot found: '+ gazeSpot.selector);
+							fading = true; // switch fading on
+							// transition opacity to 1 over timeout duration
+							document.getElementById(gazeSpot.selector).style.opacity = 1;
+							document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out";						
+							if (gazeSpot.audio) { // if there is an audio component, fetch it and start playing at 0 volume
+								var sound;
+								spotSounds.forEach(function(spotSound) {	// look for sound matching selector
+									if (spotSound.selector == gazeSpot.selector) {
+										sound = spotSound.sound;
+									};
+								});
+								var currentVol = sound.volume();
+								if (!sound.playing()) { sound.play(); }; // if the sound hasn't been played yet, start it playing
+								console.log('Fade in from ' + currentVol);
+								sound.fade (currentVol, 1, gazeSpot.timeout);
 							}
- 						});
-						if (!spotsSeen[0] || !seen) { // if not seen this gazeSpot before or spotsSeen is empty 
-							spotsSeen.push(thisSpotSeen);
+							// check to see if we've seen this gazeSpot already, add to spotsSeen if not
+							var seen = false;
+							var thisSpotSeen = new spotSeen(gazeSpot.selector, true);
+							spotsSeen.forEach (function(spotSeen) {	// check if have seen gazeSpot
+								if (spotSeen.selector == gazeSpot.selector) {
+									seen = true;
+								}
+							});
+							if (!spotsSeen[0] || !seen) { // if not seen this gazeSpot before or spotsSeen is empty 
+								spotsSeen.push(thisSpotSeen);
+							}
 						}
-					}
-// 						if (webPdUsed) {
-// 							Pd.send('send1', [gazeSpot.selector, 1]); // tell webPd the HTML selector of the embedded content
-// 							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the transition of the embedded content
-// 						};
-					if (gazeSpot.target) { // if this is a switch type gazeSpot
-						console.log("Gaze spot that switches to scene " + gazeSpot.target + " found at yaw: " + gazeSpot.yaw + ' pitch: ' + gazeSpot.pitch + " timer started"); 
-						switchTimer = setTimeout(function () {
-							console.log("timer elapsed");
-							if (gazeSpot.target) {switchScene(findSceneById(gazeSpot.target))}; // if gazeSpot has a target, set up a scene switch
-							gazing = false;
-						}, gazeSpot.timeout); 
-// 						if (webPdUsed) {
-// 							Pd.send('send1', [gazeSpot.target, 1]); // tell webPd the target of the scene switch
-// 							Pd.send('send2', [gazeSpot.timeout]); // tell webPd the timeout of the scene switch
-// 						};
-					}
-				} 
-				gazing = true;				
-			};
-		});	
+						if (gazeSpot.target) { // if this is a switch type gazeSpot
+							console.log("Gaze spot that switches to scene " + gazeSpot.target + " found at yaw: " + gazeSpot.yaw + ' pitch: ' + gazeSpot.pitch + " timer started"); 
+							switchTimer = setTimeout(function () {
+								console.log("timer elapsed");
+								if (gazeSpot.target) {switchScene(findSceneById(gazeSpot.target))}; // if gazeSpot has a target, set up a scene switch
+								gazing = false;
+							}, gazeSpot.timeout); 
+						}
+					} 
+					gazing = true;				
+				};
+			});	
+		}
 		if (!gazing) { // if not gazing 
 				if ((switchTimer != null) || (fading == true)) { // and if the timers have not already been cleared
 					clearTimeout(switchTimer);  // clear the timer
@@ -290,20 +362,17 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 							if (trigger) { // if this scene has a many GazeSpot switch
 							// check to see if we've reached the trigger point for many spot switch and if timer not already set
 								if ((trigger == spotsSeen.length) && (!manySwitchTimer)) {
-									console.log("All gazeSpots found, switching to " + manySpotTarget); 
-									var manySwitchTimer = setTimeout(function () {
+									console.log("Sufficient gazeSpots found, switching to " + manySpotTarget + " in " + manySpotTimeout + " milliseconds"); 
+									manySwitchTimer = setTimeout(function () {
 										console.log("timer elapsed");
 										if (manySpotTarget) {switchScene(findSceneById(manySpotTarget))}; // set up a scene switch
 										gazing = false;
+										manySwitchTimer = null;
 									}, manySpotTimeout); 
 								} else {
 									console.log('Not  enough, yet ' + spotsSeen.length);
 								}
 							}						
-// 								if (webPdUsed) {Pd.send('send1', [lastSpot.selector, 0])}; // tell webPD we've moved off this gazeSpot
-						}
-						if (lastSpot.target) { // if moved off a scene switch gazespot
-// 								if (webPdUsed) {Pd.send('send1', [lastSpot.target, 0])}; // tell webPD we've moved off this gazeSpot
 						}
 					}
 				}
@@ -317,7 +386,8 @@ function go() { // rather than as a self-invoking anonymous function, call this 
   });
 
   // Display the initial scene.
-  switchScene(scenes[0]);
+  switchScene(scenes[scenePoint]);
+  console.log("Go to scene " + scenePoint);  
 
 	  // GYRO: need to create 'view' variable for use by enable/disableGyro
 	  var scene = viewer.scene(); // get the current scene
@@ -329,6 +399,19 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		deviceOrientationToggleElement.classList.add('enabled');
 		enableGyro();
 	  }
+	  
+	  // turn on back button, add event listener to reload page with query string
+	  backButtonElement.classList.add('enabled');
+	  backButtonElement.classList.add('backButton-enabled');
+	  backButtonElement.addEventListener('click', function () {
+	  	if (readyContainer !=null) {
+			var url = "index.html?" + scenePoint;
+			window.location = url;
+	  	} else {
+	  		console.log('back');
+	  		window.history.back(); // this doesn't work in Safari on Mac or iOS....
+	  	}
+	  });
 	  
 	  // Set handler for DeviceOrientation control (GYRO) toggle.
 	  if (APP_DATA.settings.deviceOrientationControl) {
@@ -351,32 +434,34 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		window.addEventListener('keydown', function(event) {
 			switch (event.keyCode) {
 				case 80: // P key to start auto-performance mode 					
-					// get the script events, set up Timeout functions for each
-					var script = APP_DATA.script;
-					script.forEach(function (script){
-						switch (script.type) {
-							case "scenechange":
-								var performTimer = setTimeout (function () {switchScene(findSceneById(script.target)); startAutorotate();}, script.time);
-								if (debugMode) {console.log("scenechange timer " + performTimer);};
-								performTimers.push(performTimer); // add scene switch timer to the array
-							break;
+					if (APP_DATA.script) {
+						// get the script events, set up Timeout functions for each
+						var script = APP_DATA.script;
+						script.forEach(function (script){
+							switch (script.type) {
+								case "scenechange":
+									var performTimer = setTimeout (function () {switchScene(findSceneById(script.target)); startAutorotate();}, script.time);
+									if (debugMode) {console.log("scenechange timer " + performTimer);};
+									performTimers.push(performTimer); // add scene switch timer to the array
+								break;
 						
-							case "rotate":
-								var performTimer = setTimeout (function () {
-									autorotate = Marzipano.autorotate({ yawSpeed: script.yawSpeed, pitchSpeed: script.pitchSpeed, fovSpeed: script.fovSpeed, yawAccel: script.yawAccel, pitchAccel: script.pitchAccel, fovAccell: script.fovAccel, targetPitch: script.targetPitch, targetFov: script.targetFov });
-									startAutorotate();}, script.time);
-								if (debugMode) {console.log("rotate event timer " + performTimer);};	
-								performTimers.push(performTimer); // add rotation timer to the array
-							break;
+								case "rotate":
+									var performTimer = setTimeout (function () {
+										autorotate = Marzipano.autorotate({ yawSpeed: script.yawSpeed, pitchSpeed: script.pitchSpeed, fovSpeed: script.fovSpeed, yawAccel: script.yawAccel, pitchAccel: script.pitchAccel, fovAccell: script.fovAccel, targetPitch: script.targetPitch, targetFov: script.targetFov });
+										startAutorotate();}, script.time);
+									if (debugMode) {console.log("rotate event timer " + performTimer);};	
+									performTimers.push(performTimer); // add rotation timer to the array
+								break;
 							
-							case "repeat":
-								//var performTimer = setTimeout (function () {doScript();}, script.time); // recurse function to repeat
-								if (debugMode) {console.log("repeat timer");};
-								//performTimers.push(performTimer); // add repeat timer to the array
-							break;
-						}
-					});	
-					if (debugMode) {console.log("play");};
+								case "repeat":
+									//var performTimer = setTimeout (function () {doScript();}, script.time); // recurse function to repeat
+									if (debugMode) {console.log("repeat timer");};
+									//performTimers.push(performTimer); // add repeat timer to the array
+								break;
+							}
+						});	
+						if (debugMode) {console.log("play");};
+					}
 				break;
 				
 				case 32: // SPACE to stop all timers and movement	
@@ -442,12 +527,23 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 					startAutorotate();				
 				break;
 				
+				case 74: // J to turn debugMode on or off
+					debugMode = !debugMode;
+					if (!debugMode) {
+						debugElement.style.display = "none";
+						middleElement.style.display = "none";
+					} else {
+						debugElement.style.display = "block";
+						middleElement.style.display = "block";				
+					};
+				break;
+				
 				case 75: // K to move up one scene
 					if (debugMode) {console.log("move up one scene");};					
 					if (sceneIndex <= (scenes.length-2)) {sceneIndex +=1;} else {sceneIndex = 0;};
 					switchScene(scenes[sceneIndex]);
 					// call autorotate again to maintain movement				
-				break;
+				break;				
 				
 				case 76: // L to move down one scene
 					if (debugMode) {console.log("move down one scene");};					
@@ -506,11 +602,19 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 
 function switchScene(scene) {
 	stopAutorotate();
-	if (lastscene!=null) {
+	if (progressElement) { progressElement.innerHTML = ' ' };
+	// set the scenePoint to be new scene
+	scenePoint = parseInt(scene.data.id.slice(0,1)); // set scenePoint to be new scene
+	if (lastscene!=null) { // if this isn't the first scene switch...
 		if (bgSound) {
 			bgSound.fade(1,0,1000);
 			bgSound.stop();
-			} // if there was bgSound, fade out and stop
+		} // if there was bgSound, fade out and stop
+		if (switchSound) {
+			switchSound.fade(1,0,500);
+			switchSound.stop();
+			clearTimeout(switchSoundTimer);
+		} // if there was switchSound, stop it and clear the timer
 		var departureView = lastscene.marzipanoObject.view();
 		var newView = scene.marzipanoObject.view();
 		newView.setParameters({
@@ -518,18 +622,18 @@ function switchScene(scene) {
 			pitch: departureView.pitch(),
 			fov: departureView.fov()
 		});
+		if (timeOutSwitch) { // if a timeOutSwitch timer is present, clear it
+			clearTimeout(timeOutSwitch);
+			timeOutSwitch = null;
+			console.log("timeOutSwitch timer cleared");
+		}
 	}
 	scene.marzipanoObject.switchTo(); // changes the scene
-	if (webPdUsed) { // send new scene id to webPd
-// 		var wpdScene = parseFloat(scene.data.id.charAt(0));
-// 		Pd.send('send3', [wpdScene]);
-		Pd.send('send3', [scene.data.id]);
-	}
 	if (scene.data.switchAudio) { // if there is switch audio load and play it
-		var switchSound = new Howl({
+		switchSound = new Howl({
 			src: scene.data.switchAudio.source,
 			});
-		var switchSoundPlay = setTimeout (function () {switchSound.play();}, scene.data.switchAudio.delay);
+		switchSoundTimer = setTimeout (function () {switchSound.play();}, scene.data.switchAudio.delay);
 	} 
 	if (scene.data.bgAudio) { // if there is bg audio load and play it
 		bgSound = new Howl({
@@ -539,6 +643,13 @@ function switchScene(scene) {
 			});
 		bgSound.play();
 		bgSound.fade(0, scene.data.bgAudio.volume, 2000);
+	}
+	if (scene.data.timeOutSwitch) { // if new scene has a timeout switch, start the timer
+		console.log("timeOutSwitch on this scene, switching to " + scene.data.timeOutSwitch.target + " in " + scene.data.timeOutSwitch.timeout);
+		timeOutSwitch = setTimeout(function () {
+			console.log("timeOutSwitch timer elapsed");
+			switchScene(findSceneById(scene.data.timeOutSwitch.target)); 
+		}, scene.data.timeOutSwitch.timeout); 		
 	} 
 	lastscene = scene; // update lastscene to be the current scene
 	startAutorotate();
@@ -572,7 +683,7 @@ function switchScene(scene) {
 
     // Create image element.
     var icon = document.createElement('img');
-    icon.src = 'img/link.png';
+    icon.src = '/img/link.png';
     icon.classList.add('link-hotspot-icon');
 
     // Set rotation transform.
@@ -618,7 +729,7 @@ function switchScene(scene) {
     var iconWrapper = document.createElement('div');
     iconWrapper.classList.add('info-hotspot-icon-wrapper');
     var icon = document.createElement('img');
-    icon.src = 'img/info.png';
+    icon.src = '/img/info.png';
     icon.classList.add('info-hotspot-icon');
     iconWrapper.appendChild(icon);
 
@@ -634,7 +745,7 @@ function switchScene(scene) {
     var closeWrapper = document.createElement('div');
     closeWrapper.classList.add('info-hotspot-close-wrapper');
     var closeIcon = document.createElement('img');
-    closeIcon.src = 'img/close.png';
+    closeIcon.src = '/img/close.png';
     closeIcon.classList.add('info-hotspot-close-icon');
     closeWrapper.appendChild(closeIcon);
 
@@ -661,6 +772,7 @@ function switchScene(scene) {
     var toggle = function() {
       wrapper.classList.toggle('visible');
       modal.classList.toggle('visible');
+      console.log("toggle");
     };
 
     // Show content when hotspot is clicked.
@@ -676,7 +788,7 @@ function switchScene(scene) {
     return wrapper;
   }
 
-  // Prevent touch and scroll events from reaching the parent element.
+//   Prevent touch and scroll events from reaching the parent element.
   function stopTouchAndScrollEventPropagation(element, eventList) {
     var eventList = [ 'touchstart', 'touchmove', 'touchend', 'touchcancel',
                       'wheel', 'mousewheel' ];
@@ -745,7 +857,6 @@ function switchScene(scene) {
 	  }
 	   
 	  function onSpot (gazeSpot, pitch, yaw) {
-		if (debugMode) { debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch + '<br />fov' + viewer.view().fov()};
 	  	var yawFactor; 
 	  	// check if pitch and gazeSpot.pitch in same hemisphere
 	  	// if so, bias the contribution of yaw according to view pitch so that it decreases to zero at the poles

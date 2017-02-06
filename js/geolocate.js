@@ -7,7 +7,7 @@ getLocation();
 function getLocation() {
     if (navigator.geolocation) {
         // need to enableHighAccuracy or GPS coords on mobiles vary too much
-        navigator.geolocation.getCurrentPosition(checkPosition, showError, {timeout: 0, enableHighAccuracy: true, maximumAge: Infinity});
+        navigator.geolocation.getCurrentPosition(checkPosition, showError, {'enableHighAccuracy':true,'timeout':10000,'maximumAge':0});
     } else {
     	x.innerHTML = "Geolocation is not supported by this browser.";
     }
@@ -15,11 +15,12 @@ function getLocation() {
 
 function checkPosition(position) {
     var locations = GEO_DATA.locations.map(function(geoData) {
+//     	console.log("Checking " + geoData.url); 
 		if (atLocation(geoData, position.coords.latitude, position.coords.longitude)) {
 			parent.location=geoData.url;
 		} else {
 	    	console.log("Not at " + geoData.url); 
-	    	x.innerHTML = "You're not at a layers location." + "Latitude: " + position.coords.latitude + "<br />Longitude: " + position.coords.longitude;
+	    	x.innerHTML = "You're not at a layers location. <br />" + "Latitude: " + position.coords.latitude + "<br />Longitude: " + position.coords.longitude;
 		};	
 	}); 
 }
@@ -73,6 +74,5 @@ function atLocation (location, latitude, longitude) {
 	// return true if distance is less than location deviation
 	return (distance < locationdeviation);
 }
-
 
 // Geolocation API needs to be via https on Chrome 50+
