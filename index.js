@@ -19,6 +19,15 @@ if (readyContainer!=null) { // if there is a readyContainer present to get touch
     	document.body.classList.add('gyro');
 	});
 
+	// if there are storyIDs for hotspots, add a tracking pixel
+	
+	if (window.APP_DATA.settings.tracking) {
+	    var logpixel = document.createElement('img');
+    	logpixel.height = "1px";
+    	logpixel.width = "1px";
+    	console.log("tracking pixel created");
+    }
+
 	// start pano display either by click or touch, check if touch device at the same time
 	// and get the necessary touchend to enable mobile devices to play audio
 	
@@ -140,6 +149,11 @@ function loadCountInc() {	// function to increment loadCount, check if all sound
 	}
 }
 
+function logComment(id) {
+	var comment = prompt("Please enter your short comment");
+	logpixel.src = (comment + "_" + id);
+}
+
 function go() { // rather than as a self-invoking anonymous function, call this function when a button has been clicked or tapped
 
   var Marzipano = window.Marzipano;
@@ -257,7 +271,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
     // Create info hotspots - either from data in APP_DATA or from external JSON file, if present
 	if (sceneData.infoSpotsUrl) {
 		$.getJSON( sceneData.infoSpotsUrl, function(data) {
-			console.log("infoSpots loaded" + data);
+			console.log("infoSpots loaded");
 			data.infoHotspots.forEach(function(hotspot) {
 			  var element = createInfoHotspotElement(hotspot);
 			  marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch });
@@ -757,7 +771,15 @@ function switchScene(scene) {
     // Create text element.
     var text = document.createElement('div');
     text.classList.add('info-hotspot-text');
-    text.innerHTML = hotspot.text;
+    if (hotspot.storyID) {
+    	text.innerHTML = (
+    	"<p>" + hotspot.text + "</p>" 
+    	+ "<p><a href='#' onclick='alert(\"Thank you, your vote has been registered.\");logpixel.src = \"" + hotspot.storyID + "_up\"'>&#9989; Agree</a> <a href='#' onclick='alert(\"Thank you, your vote has been registered.\");logpixel.src = \"" + hotspot.storyID + "_down\"'>&#10062; Disagree</a></p>" 
+    	+ "<p><button onclick='logComment(" + hotspot.storyID + ")'>Comment.</button></p>" 	
+    	);
+    } else {
+    	text.innerHTML = ("<p>" + hotspot.text + "</p>");    
+    }
 
     // Place header and text into wrapper element.
     wrapper.appendChild(header);
@@ -787,6 +809,11 @@ function switchScene(scene) {
 
     return wrapper;
   }
+
+	function logComment(id) {
+		var comment = prompt("Please enter a short comment below.");
+		window.location.search = id + comment;
+	}
 
 //   Prevent touch and scroll events from reaching the parent element.
   function stopTouchAndScrollEventPropagation(element, eventList) {
