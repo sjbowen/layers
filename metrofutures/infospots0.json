@@ -4,55 +4,55 @@
 		"storyID":"112",
 		"pitch":"0.064400000",
 		"yaw":"-0.790000000",
-		"text":"As a Commuter (or any Metro passenger), I would like the new Metrocars to Have grab rails by the doors (more of and easier to hold on to). Because They aren't long enough, especially for children. "
+		"text":"As a commuter (or any Metro passenger), I would like the new Metrocars to have grab rails by the doors (more of and easier to hold on to) because they aren't long enough, especially for children. "
 	},
 	{
 		"title":"Standing by Doors",
 		"storyID":"107",
 		"pitch":"0.116000000",
 		"yaw":"1.954000000",
-		"text":"As a Passenger over short journeys, I would like the new Metrocars to Have room to stand by the doors because It is not worth trying to find a seat if only travelling for 1 or 2 stops."
+		"text":"As a Passenger over short journeys, I would like the new Metrocars to have room to stand by the doors because it is not worth trying to find a seat if only travelling for 1 or 2 stops."
 	},
 	{
 		"title":"Metro Staff on Trains",
 		"storyID":"114",
 		"pitch":"0.052100000",
 		"yaw":"2.932000000",
-		"text":"As a Metro passenger, I would like the new Metrocars to Have a Metro staff member in every train to provide basic information and security because It will help prevent antisocial behaviour and help with breakdowns with IT, and be another source of information. Anti-social behaviour is common inside Metrocars, affects every passenger to some degree, and puts some people off using the Metro. "
+		"text":"As a Metro passenger, I would like the new Metrocars to have a Metro staff member in every train to provide basic information and security because It will help prevent antisocial behaviour and help with breakdowns with IT, and be another source of information. Anti-social behaviour is common inside Metrocars, affects every passenger to some degree, and puts some people off using the Metro. "
 	},
 	{
 		"title":"Gap to Platform Edge",
 		"storyID":"126",
 		"pitch":"0.790000000",
 		"yaw":"-1.565000000",
-		"text":"As a Wheelchair user, I would like the new Metrocars to Have a closer fit between trains and platforms, as the gap when boarding with a wheelchair can be difficult to navigate because It can be off-putting not knowing if there will be difficulty getting on or off because the a gap/step."
+		"text":"As a wheelchair user, I would like the new Metrocars to have a closer fit between trains and platforms, as the gap when boarding with a wheelchair can be difficult to navigate because it can be off-putting not knowing if there will be difficulty getting on or off because of the gap/step."
 	},
 	{
 		"title":"Push Chair Space",
 		"storyID":"127",
 		"pitch":"0.189000000",
 		"yaw":"-0.245000000",
-		"text":"As a Passenger with a push chair, I would like the new Metrocars to Have level access and places for push chairs because Stairs are difficult to manage alone with a push chair."
+		"text":"As a passenger with a push chair, I would like the new Metrocars to have level access and places for push chairs because stairs are difficult to manage alone with a push chair."
 	},
 	{
 		"title":"Cycle Space",
 		"storyID":"101",
 		"pitch":"0.424000000",
 		"yaw":"-2.380000000",
-		"text":"As a Cycle commuter, I would like the new Metrocars to Have a designated area for all cycles to board the metro (always at the same position on the platform), then a large capacity to take several bikes because I want to travel to and from the Metro by bike together with my daughter and mum/friends; knowing where to gather on the platform ready to embark; happy that my group are all going to get on the same train. "
+		"text":"As a cycle commuter, I would like the new Metrocars to Have a designated area for all cycles to board the metro (always at the same position on the platform), then a large capacity to take several bikes because I want to travel to and from the Metro by bike together with my daughter and mum/friends; knowing where to gather on the platform ready to embark; happy that my group are all going to get on the same train."
 	},
 	{
 		"title":"Full-width Cabs",
 		"storyID":"156",
 		"pitch":"0.064000000",
 		"yaw":"2.575000000",
-		"text":"As a Driver, I would like the new Metrocars to have full length driving cabs because they're currently a very very small and cramped place to spend your working day. This would also allow for more room in the cab for a trainer to be when training new staff or doing competence training with current drivers. "
+		"text":"As a driver, I would like the new Metrocars to have full length driving cabs because they're currently a very very small and cramped place to spend your working day. This would also allow for more room in the cab for a trainer to be when training new staff or doing competence training with current drivers."
 	},
 	{
 		"title":"Time to Get On\/Off Trains",
 		"storyID":"125",
 		"pitch":"-0.052000000",
 		"yaw":"1.195000000",
-		"text":"As an older person,  I would like the new Metrocars to Allow more time to board or get off trains because My mobility is a little wobbly and I cannot move as quickly as I used to. "
+		"text":"As an older person, I would like the new Metrocars to allow more time to board or get off trains because my mobility is a little wobbly and I cannot move as quickly as I used to."
 	}
 ]}

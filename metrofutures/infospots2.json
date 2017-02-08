@@ -1,20 +1,72 @@
-{"infoHotspots": [
+{"infoHotspots":[
 	{
-	  "yaw": -0.8179185676122458,
-	  "pitch": -0.35635436100161577,
-	  "title": "Information Displays",
-	  "text": "A sample idea about using advertising space for information displays."
+		"title":"Busy Bot",
+		"storyID":"115",
+		"pitch":"-0.210000000",
+		"yaw":"-0.046000000",
+		"text":"As a Metro passenger, I would like the new Metrocars to give me a 'busy bot' to tell how crowded the carriages are because I could choose the best place to get onto the train."
 	},
 	{
-	  "yaw": -2.02506109162859,
-	  "pitch": 0.3726903441230398,
-	  "title": "Seating&nbsp;",
-	  "text": "An idea about the quality of seating."
+		"title":"Flip-up Seats",
+		"storyID":"105",
+		"pitch":"0.081000000",
+		"yaw":"-2.980000000",
+		"text":"As a passenger at busy times and/or visually impaired person, I would like the new Metrocars to Have flip-up seats facing front and back (where blocks of 4 seats currently are) because people like to travel in different directions and to provide storage space for luggage and shopping. For visually impaired people there is space for guide dogs and there is continuity when finding a seat because they are only feeling for the backs of seats."
 	},
 	{
-	  "yaw": 0.33186584550654885,
-	  "pitch": 1.3961588105858667,
-	  "title": "Chewing Gum",
-	  "text": "Chewing gum-proof floor coverings."
+		"title":"Longer Carriages",
+		"storyID":"109",
+		"pitch":"0.035300000",
+		"yaw":"2.066000000",
+		"text":"As a Metro passenger, I would like the new Metrocars to have a door between trains, and/or longer carriages because this would make it possible to move to a less crowded section of the train."
+	},
+	{
+		"title":"Dual Voltage",
+		"storyID":"131",
+		"pitch":"0.710000000",
+		"yaw":"-3.096000000",
+		"text":"As a Metro passenger between Pelaw, Sunderland and beyond, I would like the new Metrocars to be dual voltage so they also comply to the national standard of 25,000 volts because It would allow the National Rail Durham Coast line to be electrified and would improve my whole journey."
+	},
+	{
+		"title":"Toilet",
+		"storyID":"103",
+		"pitch":"-0.042000000",
+		"yaw":"-1.167000000",
+		"text":"As a passenger over long distances, I would like the new Metrocars to have a toilet because it is necessary for longer journeys."
+	},
+	{
+		"title":"Windows and Skylights",
+		"storyID":"132",
+		"pitch":"-0.153000000",
+		"yaw":"0.769000000",
+		"text":"As a person with seasonal affective disorder (SAD), I would like the new Metrocars to have more windows and skylights to allow for more natural light because this will help with my SAD therefore allowing for a more comfortable journey."
+	},
+	{
+		"title":"Real Time Information",
+		"storyID":"116",
+		"pitch":"0.377000000",
+		"yaw":"-0.537000000",
+		"text":"As a Metro passenger, I would like the new Metrocars to provide me with real time information on the carriage/platform and on my phone (train locations, time etc.) because It makes it easy to plan, and is useful for people with visual impairments."
+	},
+	{
+		"title":"Audible Destination Information",
+		"storyID":"123",
+		"pitch":"-0.334000000",
+		"yaw":"2.700000000",
+		"text":"As a visually impaired person, I would like the new Metrocars to give audible information about destination and upcoming stops because I can't read or see the signs."
+	},
+	{
+		"title":"Fold-down Ramp",
+		"storyID":"117",
+		"pitch":"0.307000000",
+		"yaw":"0.359000000",
+		"text":"As a visually impaired person, I would like the new Metrocars to give me the option to use a fold-down ramp because the gap between the train and the platform can be dangerously large."
+	},
+	{
+		"title":"Driver-less Trains",
+		"storyID":"124",
+		"pitch":"0.016000000",
+		"yaw":"3.130000000",
+		"text":"As a Metro driver, I would like the new Metrocars to be automated, like the Docklands Light Railway in London, so that I would become a passenger safety advisor because this would allow me to offer support to all passengers who require assistance, however small; ensure passenger safety; and reduce anti-social behaviour"
 	}
 ]}

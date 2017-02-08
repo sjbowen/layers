@@ -1,20 +1,72 @@
-{"infoHotspots": [
+{"infoHotspots":[
 	{
-	  "yaw": -0.8179185676122458,
-	  "pitch": -0.35635436100161577,
-	  "title": "Information Displays",
-	  "text": "A sample idea about using advertising space for information displays."
+		"title":"Aircraft Style Seating",
+		"storyID":"145",
+		"pitch":"0.330000000",
+		"yaw":"-1.474000000",
+		"text":"As a person travelling longer distances, I would like the new Metrocars to have aircraft style seating in one area of the trains with tray tables because luggage can be stored under the seats rather than in the isles, and it will be possible to work on a longer journey"
 	},
 	{
-	  "yaw": -2.02506109162859,
-	  "pitch": 0.3726903441230398,
-	  "title": "Seating&nbsp;",
-	  "text": "An idea about the quality of seating."
+		"title":"Green\/Sustainable Metro",
+		"storyID":"158",
+		"pitch":"-0.094000000",
+		"yaw":"-2.371000000",
+		"text":"As a person who cares about the environment, I would like the new Metrocars to be green and sustainable because This would send a positive message to all and could save Nexus some money too!"
 	},
 	{
-	  "yaw": 0.33186584550654885,
-	  "pitch": 1.3961588105858667,
-	  "title": "Chewing Gum",
-	  "text": "Chewing gum-proof floor coverings."
+		"title":"Safety at Night",
+		"storyID":"155",
+		"pitch":"0.190000000",
+		"yaw":"-0.560000000",
+		"text":"As a woman, I would like the new Metrocars to be women friendly, provide good lighting and a safe space, especially at night because it can be quite intimidating to sit on your own and not have somebody in the carriage watching out in case some other passengers get offensive."
+	},
+	{
+		"title":"High Contrast Colour",
+		"storyID":"110",
+		"pitch":"-0.380000000",
+		"yaw":"2.920000000",
+		"text":"As a visually impaired person, I would like the new Metrocars to Have continuity of a high contrast colour scheme because then I can identify what the item is."
+	},
+	{
+		"title":"Standing Space",
+		"storyID":"146",
+		"pitch":"-0.190000000",
+		"yaw":"0.255200000",
+		"text":"As a commuter, I would like the new Metrocars to Have more standing space because Metro relies on fare income from commuters, but there was is not an adequate amount of space to accommodate all of the travellers who have to stand on peak time trains"
+	},
+	{
+		"title":"Defining Double Seat",
+		"storyID":"133",
+		"pitch":"0.642000000",
+		"yaw":"2.848000000",
+		"text":"As a commuter, I would like the new Metrocars to Have some way of defining the middle of the double seat because some people take more than their fair share of the double seat."
+	},
+	{
+		"title":"Clearer Signage",
+		"storyID":"157",
+		"pitch":"-0.920000000",
+		"yaw":"0.898000000",
+		"text":"As a passenger, I would like the new Metrocars to have larger and clearer signage around the system. I'd also like to see more languages used in signage, visual displays and audio announcements especially at the Airport and Central Station because there's a lot of different people use the Metro who may not use English as their first language."
+	},
+	{
+		"title":"Consistent Seating Layout",
+		"storyID":"104",
+		"pitch":"0.824000000",
+		"yaw":"0.283000000",
+		"text":"As a Metro passenger, I would like the new Metrocars to have a consistent seating layout for all trains because various passengers will know which door to use."
+	},
+	{
+		"title":"Driver Announcements",
+		"storyID":"119",
+		"pitch":"-0.557000000",
+		"yaw":"-1.951000000",
+		"text":"As a Metro passenger, I would like the new Metrocars' driver announcements to be clear, loud, at a consistent volume, and be repeated on displays because currently driver announcements are unintelligible."
+	},
+	{
+		"title":"Leg Room",
+		"storyID":"129",
+		"pitch":"1.370000000",
+		"yaw":"-2.787000000",
+		"text":"As a commuter, I would like the new Metrocars to have more leg room because at current seats are too close and I end up almost touching other people's legs."
 	}
 ]}

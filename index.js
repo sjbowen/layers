@@ -19,7 +19,7 @@ if (readyContainer!=null) { // if there is a readyContainer present to get touch
     	document.body.classList.add('gyro');
 	});
 
-	// if there are storyIDs for hotspots, add a tracking pixel
+	// if there are storyIDs for hotspots, add a tracking pixel element
 	
 	if (window.APP_DATA.settings.tracking) {
 	    var logpixel = document.createElement('img');
@@ -151,7 +151,7 @@ function loadCountInc() {	// function to increment loadCount, check if all sound
 
 function logComment(id) {
 	var comment = prompt("Please enter your short comment");
-	logpixel.src = (comment + "_" + id);
+	logpixel.src = (id + "_" + comment);
 }
 
 function go() { // rather than as a self-invoking anonymous function, call this function when a button has been clicked or tapped
@@ -809,11 +809,6 @@ function switchScene(scene) {
 
     return wrapper;
   }
-
-	function logComment(id) {
-		var comment = prompt("Please enter a short comment below.");
-		window.location.search = id + comment;
-	}
 
 //   Prevent touch and scroll events from reaching the parent element.
   function stopTouchAndScrollEventPropagation(element, eventList) {
