@@ -1,4 +1,5 @@
 'use strict';
+
 var listContainer = document.querySelector('#list');
 var APP_DATA = window.APP_DATA;
 var visible = false;
@@ -55,7 +56,7 @@ function createInfoHotspotElement(hotspot) {
 	var iconWrapper = document.createElement('div');
 	iconWrapper.classList.add('info-hotspot-icon-wrapper');
 	var icon = document.createElement('img');
-	icon.src = '/img/info.png';
+	icon.src = '../img/info.png';
 	icon.classList.add('info-hotspot-icon');
 	iconWrapper.appendChild(icon);
 
@@ -69,13 +70,14 @@ function createInfoHotspotElement(hotspot) {
 
 	// Create list title element
 	var listTitle = document.createElement('p');
-	listTitle.innerHTML = (hotspot.title + "<br/>");
+	listTitle.classList.add('list-title');
+	listTitle.innerHTML = (hotspot.title);
 
 	// Create close element.
 	var closeWrapper = document.createElement('div');
 	closeWrapper.classList.add('info-hotspot-close-wrapper');
 	var closeIcon = document.createElement('img');
-	closeIcon.src = '/img/close.png';
+	closeIcon.src = '../img/close.png';
 	closeIcon.classList.add('info-hotspot-close-icon');
 	closeWrapper.appendChild(closeIcon);
 
@@ -88,13 +90,19 @@ function createInfoHotspotElement(hotspot) {
 	var text = document.createElement('div');
 	text.classList.add('info-hotspot-text');
 	if (hotspot.storyID) {
-		text.innerHTML = (
-		"<p>" + hotspot.text + "</p>" 
-		+ "<p><a href='#' onclick='alert(\"Thank you, your vote has been registered.\");logpixel.src = \"" + hotspot.storyID + "_up\"'>&#9989; Agree</a> <a href='#' onclick='alert(\"Thank you, your vote has been registered.\");logpixel.src = \"" + hotspot.storyID + "_down\"'>&#10062; Disagree</a></p>" 
-		+ "<p><button onclick='logComment(" + hotspot.storyID + ")'>Comment.</button></p>" 	
-		);
+		
+		text.innerHTML = "";
+		text.innerHTML += "<p>"+hotspot.text+"</p>";
+		text.innerHTML += "<p>";
+		text.innerHTML += "<button href='#' class='upvote' data-id='"+hotspot.storyID+"'>  <i class='fa fa-thumbs-up'></i>  Agree  </button>";
+		text.innerHTML += "<button href='#' class='downvote' data-id='"+hotspot.storyID+"'>  <i class='fa fa-thumbs-down'></i>  Disagree  </button>";
+		text.innerHTML += "</p>";
+		text.innerHTML += "<p>";
+		text.innerHTML += "<button href='#' class='comment' data-id='"+hotspot.storyID+"'>  <i class='fa fa-commenting'></i>  Add a Comment  </button>";
+		text.innerHTML += "</p>";
+		
 	} else {
-		text.innerHTML = ("<p>" + hotspot.text + "</p>");    
+		text.innerHTML = ("<p>" + hotspot.text + "</p>");
 	}
 
 	// Place header and text into wrapper element.
@@ -142,3 +150,42 @@ function stopTouchAndScrollEventPropagation(element, eventList) {
 	}
 }
 
+
+
+
+/*
+ *	Robs changes
+ */
+function logInteraction(type, id, value) {
+	
+	logpixel.src=id+'_'+type+'_'+value;
+	
+	var object = {
+		type: type,
+		storyID: id,
+		value: value,
+		date: new Date()
+	};
+	
+	// TODO: Write the object somewhere?
+	// -> Would make importing the data easier
+}
+
+$(document).on('click', 'button.upvote', function(e) {
+	
+	e.preventDefault();
+	logInteraction('vote', $(this).data('id'), 1);
+});
+
+$(document).on('click', 'button.downvote', function(e) {
+	
+	e.preventDefault();
+	logInteraction('vote', $(this).data('id'), -1);
+});
+
+$(document).on('click', 'button.comment', function(e) {
+	
+	e.preventDefault();
+	var message = prompt("Please enter your short comment");
+	logInteraction('vote', $(this).data('id'), message);
+});

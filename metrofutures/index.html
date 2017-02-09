@@ -6,27 +6,30 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
   <style> @-ms-viewport { width: device-width; } </style>
-  <link rel="stylesheet" href="/vendor/reset.min.css">
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/layersstyle.css">
+  <link rel="stylesheet" href="../vendor/reset.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/mf_style.css">
+  <link rel="stylesheet" href="../css/layersstyle.css">
+  
+  <link rel="stylesheet" href="../css/font-awesome.min.css">
 
 </head>
-<body class="multiple-scenes ">
+<body class="multiple-scenes mf">
 
 <div id="pano"></div>
 
 <a href="#" id="deviceOrientationToggle">
-  <img class="icon off" src="/img/gyro.png">
-  <img class="icon on" src="/img/gyro_disable.png">
+  <img class="icon off" src="../img/gyro.png">
+  <img class="icon on" src="../img/gyro_disable.png">
 </a>
 
 <a href="#" id="fullscreenToggle">
-  <img class="icon off" src="/img/fullscreen.png">
-  <img class="icon on" src="/img/windowed.png">
+  <img class="icon off" src="../img/fullscreen.png">
+  <img class="icon on" src="../img/windowed.png">
 </a>
 
 <a href="#" id="backButton">
-  <img alt="back" class="icon on" src="/img/back.png" />
+  <img alt="back" class="icon on" src="../img/back.png" />
 </a>
 
 <!-- Hack to make buttons invisible but functional is to append _invis.png to filename, e.g. gyro_invis.png -->
@@ -37,27 +40,39 @@
 
 <div id="middle" class="centered"></div>
 
-<div href="#" id="readyContainer">
+<div href="#" id="readyContainer" class="container">
 	<h1>Metro Futures: Ideas in 360&deg;</h1>
 	<p>Move around three images of the insides of current Metrocars to view, rate and comment on suggestions for the new Metro trains.</p>
-	<p><img src="/img/info.png" style="background-color:gray;width:50px;height:50px;" /> Click or tap on this icon to view suggestions.</p>
-	<button type="button" class="goScene" id="scene0">Doorway</button><button type="button" class="goScene" id="scene1">Seating</button><button type="button" class="goScene" id="scene2">Vestibule</button>
-	<br /><br /><button type="button" class="button" onclick="parent.location='/index.html'">Return to Introduction</button>
+	<br>
+    
+    
+    
+    <p><img class="info-icon" src="../img/info.png" style="background-color:gray;width:50px;height:50px;" /> Click or tap on this icon to view suggestions.</p>
+    <br>
+    
+	<button type="button" class="goScene" id="scene0">Doorway</button>
+    <button type="button" class="goScene" id="scene1">Seating</button>
+    <button type="button" class="goScene" id="scene2">Vestibule</button>
+    
+    
+	<br>
+    <br>
+    <button type="button" class="button" onclick="parent.location='../index_mf.html'"> &laquo; Back </button>
 </div>
 
-<script src="/vendor/es5-shim.js"></script>
-<script src="/vendor/eventShim.js"></script>
-<script src="/vendor/classList.js"></script>
-<script src="/vendor/requestAnimationFrame.js" ></script>
-<script src="/vendor/screenfull.min.js" ></script>
-<script src="/vendor/bowser.min.js"></script>
-<script src="/vendor/howler.core.min.js"></script>
-<script src="/vendor/marzipano0.3.0.js" ></script>
-<script src="/js/jquery-2.1.0.min.js"></script>
+<script src="../vendor/es5-shim.js"></script>
+<script src="../vendor/eventShim.js"></script>
+<script src="../vendor/classList.js"></script>
+<script src="../vendor/requestAnimationFrame.js" ></script>
+<script src="../vendor/screenfull.min.js" ></script>
+<script src="../vendor/bowser.min.js"></script>
+<script src="../vendor/howler.core.min.js"></script>
+<script src="../vendor/marzipano0.3.0.js" ></script>
+<script src="../js/jquery-2.1.0.min.js"></script>
 
 <script src="data.js"></script>
-<script src="/vendor/DeviceOrientationControlMethod.js"></script>
-<script src="/index.js"></script>
+<script src="../vendor/DeviceOrientationControlMethod.js"></script>
+<script src="../index.js"></script>
 
 </body>
 </html>

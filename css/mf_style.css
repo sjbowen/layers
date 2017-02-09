@@ -1,0 +1,61 @@
+
+@font-face {
+    font-family: 'Arvo'; src: '../fonts/Arvo.ttf';
+}
+
+@font-face {
+    font-family: 'Lato'; src: '../fonts/Lato.ttf';
+}
+
+
+body.mf button {
+    border: none;
+    background: #008b45;
+    color: white;
+    border-radius: 5px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    
+    padding: 10px 15px;
+    font-size: 16px;
+}
+
+body.mf button:hover {
+    background: #00bd5e;
+    cursor: pointer;
+}
+
+html, body.mf {
+    background: #f1eeea;
+}
+
+body.mf .container {
+    border-radius: 5px;
+    
+    padding: 40px !important;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.05);
+    margin: 60px auto !important;
+    max-width: 100%;
+    /*width: 800px;*/
+}
+
+body.mf h1 {
+    font-family: Arvo;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: initial;
+}
+
+body.mf p, body.mf li, body.mf td {
+    font-family: Lato, sans-serif;
+}
+
+body.mf .info-icon {
+    border-radius: 50%;
+}
+
+
+
+body.mf .info-hotspot-modal.visible .list-title {
+    display: none;
+}
