@@ -924,13 +924,17 @@ function switchScene(scene) {
 	
 	function logInteraction(type, id, value) {
 		
-		logpixel.src=id+'_'+type+'_'+value;
+		var date = new Date();
+		
+		var ts = Math.round(date.getTime() / 1000);
+		
+		logpixel.src='360_'+type+'_'+ts+'_'+id+'_'+value;
 		
 		var object = {
 			type: type,
 			storyID: id,
 			value: value,
-			date: new Date()
+			date: date
 		};
 		
 		// TODO: Write the object somewhere?
@@ -950,7 +954,7 @@ function switchScene(scene) {
 	$(document).on('click', 'button.comment', function(e) {
 		e.preventDefault();
 		var message = prompt("Please enter your short comment");
-		logInteraction('vote', $(this).data('id'), message);
+		logInteraction('comment', $(this).data('id'), message);
 	});
 	
 	
@@ -958,3 +962,14 @@ function switchScene(scene) {
 	
 	
 }	   // end go function
+
+
+
+$(document).ready(function() {
+	
+	if (window.location.search === "?noback") {
+		$('.back-button').remove();
+	}
+	
+	console.log(window.location.search);
+});

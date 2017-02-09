@@ -157,20 +157,24 @@ function stopTouchAndScrollEventPropagation(element, eventList) {
 /*
  *	Robs changes
  */
-function logInteraction(type, id, value) {
-	
-	logpixel.src=id+'_'+type+'_'+value;
-	
-	var object = {
-		type: type,
-		storyID: id,
-		value: value,
-		date: new Date()
-	};
-	
-	// TODO: Write the object somewhere?
-	// -> Would make importing the data easier
-}
+ function logInteraction(type, id, value) {
+ 	
+ 	var date = new Date();
+ 	
+ 	var ts = Math.round(date.getTime() / 1000);
+ 	
+ 	logpixel.src='list_'+type+'_'+ts+'_'+id+'_'+value;
+ 	
+ 	var object = {
+ 		type: type,
+ 		storyID: id,
+ 		value: value,
+ 		date: date
+ 	};
+ 	
+ 	// TODO: Write the object somewhere?
+ 	// -> Would make importing the data easier
+ }
 
 $(document).on('click', 'button.upvote', function(e) {
 	
@@ -188,5 +192,5 @@ $(document).on('click', 'button.comment', function(e) {
 	
 	e.preventDefault();
 	var message = prompt("Please enter your short comment");
-	logInteraction('vote', $(this).data('id'), message);
+	logInteraction('comment', $(this).data('id'), message);
 });

@@ -64,3 +64,26 @@ body.mf .action-list {
     text-align: center;
     margin: 0px;
 }
+
+
+body.mf .info-hotspot-text {
+    max-height: 300px;
+}
+
+
+body.mf button.upvote {
+    /*background-color: #39c442;*/
+}
+
+body.mf button.downvote {
+    background-color: #eb6f6f;
+}
+
+body.mf .info-hotspot-text {
+    border-top: none;
+    text-align: center;
+}
+
+body.mf .info-hotspot-title-wrapper {
+    text-align: center;
+}
