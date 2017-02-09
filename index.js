@@ -773,15 +773,16 @@ function switchScene(scene) {
     text.classList.add('info-hotspot-text');
     if (hotspot.storyID) {
 		
-		text.innerHTML = "";
-		text.innerHTML += "<p>"+hotspot.text+"</p>";
-		text.innerHTML += "<p>";
-		text.innerHTML += "<button href='#' class='upvote' data-id='"+hotspot.storyID+"'>  <i class='fa fa-thumbs-up'></i>  Agree  </button>";
-		text.innerHTML += "<button href='#' class='downvote' data-id='"+hotspot.storyID+"'>  <i class='fa fa-thumbs-down'></i>  Disagree  </button>";
-		text.innerHTML += "</p>";
-		text.innerHTML += "<p>";
-		text.innerHTML += "<button href='#' class='comment' data-id='"+hotspot.storyID+"'>  <i class='fa fa-commenting'></i>  Add a Comment  </button>";
-		text.innerHTML += "</p>";
+		var inner = "";
+		inner += "<p>"+hotspot.text+"</p>";
+		inner += "<p class='action-list'>";
+		inner += "<button href='#' class='upvote' data-id='"+hotspot.storyID+"'>  <i class='fa fa-thumbs-up'></i>  Agree  </button>";
+		inner += "<button href='#' class='downvote' data-id='"+hotspot.storyID+"'>  <i class='fa fa-thumbs-down'></i>  Disagree  </button>";
+		inner += "</p>";
+		inner += "<p class='action-list'>";
+		inner += "<button href='#' class='comment' data-id='"+hotspot.storyID+"'>  <i class='fa fa-commenting'></i>  Add a Comment  </button>";
+		inner += "</p>";
+		text.innerHTML = inner;
 		
     } else {
     	text.innerHTML = ("<p>" + hotspot.text + "</p>");
