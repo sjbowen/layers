@@ -2,11 +2,13 @@
 // this version written for marzipano version 0.3.0
 
 var debugMode = window.APP_DATA.settings.debugMode; 
-var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used?
+var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used? optional
+var audioScrubbing = window.APP_DATA.audioScrubbing; // object containing audio to scrub info, optional
 var readyContainer = document.querySelector('#readyContainer');
 var readyElement = document.querySelector('#ready');
 var loadingElement = document.querySelector('#loading');
 var spotSounds = []; // create a new array to hold HTML selector, Howl sounds as objects (via a constructor function)
+var audioScrub; // create an empty variable for Howl sound used for audio scrubbing
 var soundCount = 0;
 var loadCount = 0;
 var scenePoint = 0;
@@ -91,6 +93,15 @@ function goTouch () {
 }
 
 function loadSounds() { 	// preload the gazeSpot audio
+	if (audioScrubbing) {  // create the Howl for audio scrubbing, if present
+		audioScrub = new Howl({
+			src: audioScrubbing.audio,
+			loop: true
+		});
+		console.log(audioScrubbing.basevolume);
+		audioScrub.play();
+		audioScrub.volume(audioScrubbing.basevolume); // set base volume of sound
+	}
 	// count the sounds
 	var sceneAudio = APP_DATA.scenes.map(function(sceneData) {
 		if (sceneData.gazeSpots) {
@@ -302,10 +313,15 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 			debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch + '<br />fov' + viewer.view().fov();
 			middleElement.innerHTML = '+';
 		};
+		if (audioScrubbing) { // if there is audio to playback on scrubbing, change its volume and playback
+			var scrubVolume = pitch/(Math.PI/2);
+			audioScrub.volume(scrubVolume); // how to only get volume based on movement?
+		}
 		if (sceneData.gazeSpots) {
 			sceneData.gazeSpots.forEach(function (gazeSpot) {		
 			//for each gazespot, check if view closely matches, set gazing to true if so
-				if (onSpot(gazeSpot, pitch, yaw)) {
+				var distance = spotDistance (gazeSpot, pitch, yaw);
+				if (distance < gazeSpot.deviation) {
 					if (progressElement && (trigger) && (spotsSeen.length != 0)) {progressElement.innerHTML =  spotsSeen.length + '/' + trigger}; // update progress element tally
 					if ((switchTimer == null) && (fading == false)) { // if switch timer or fading not started, start them
 						lastSpot = gazeSpot; // store this gazeSpot data for when we move off it
@@ -878,7 +894,7 @@ function switchScene(scene) {
 		}
 	  }
 	   
-	  function onSpot (gazeSpot, pitch, yaw) {
+	  function spotDistance (gazeSpot, pitch, yaw) {
 	  	var yawFactor; 
 	  	// check if pitch and gazeSpot.pitch in same hemisphere
 	  	// if so, bias the contribution of yaw according to view pitch so that it decreases to zero at the poles
@@ -902,8 +918,9 @@ function switchScene(scene) {
 	  		dYaw = yawFactor * dYaw2;
 	  	}
 	  	var distance = Math.sqrt((dPitch*dPitch)+(dYaw*dYaw));
-	  	// return true if distance is less than gazeSpot deviation
-		return (distance < gazeSpot.deviation);
+// 	  	console.log("Distance to "+ gazeSpot.selector + " is " + distance); 
+	  	// return distance
+		return (distance);
 	  }
 	  
 	function spotSeen (selector, seen) {	// object constructor for pairs of gazeSpot and boolean seen value
