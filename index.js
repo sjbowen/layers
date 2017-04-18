@@ -951,7 +951,7 @@ function switchScene(scene) {
 	function deviceMotionHandler(eventData) {
 		var acceleration = eventData.acceleration;
 		var average = Math.abs((acceleration.x + acceleration.y + acceleration.z)/3);
-		if (average > stillQuiet.tolerance) { console.log("moved " + average); movementVolume(); }
+		if ((stillQuiet) && (average > stillQuiet.tolerance)) { console.log("moved " + average); movementVolume(); }
 	}  
 	
 	function movementVolume () {

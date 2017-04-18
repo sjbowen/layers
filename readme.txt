@@ -67,3 +67,4 @@ for rotate parameters, see http://www.marzipano.net/reference/global.html#autoro
   	yawAccel, pitchAccel, fovAccel
 	targetPitch, targetFov
 to prevent movement stopping between rotate events, set accelerations to Infinity
+
