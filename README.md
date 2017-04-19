@@ -19,14 +19,14 @@ I have modified the contents of index.js, style.css and index.html and extended 
 ## Audio Integration
 Using [howler.js] (https://github.com/goldfire/howler.js)
 
-##style.css modifications:
+## style.css modifications:
 * styling for device orientation control elements
 
-##index.html modifications:
+## index.html modifications:
 * removed #sceneList, #sceneListToggle, #titleBar, #autorotateToggle <div>s
 * reference to DeviceOrientationControlMethod.js
 
-##data.js modifications:
+## data.js modifications:
 Modified data.js file produced by marzipano web-based tool
 to include additional data for:
 
@@ -37,18 +37,18 @@ to include additional data for:
 * background audio (bgAudio)
 * and, a script data object for an automatic playlist of view and scene changes
 
-###Variables within embedHotspots, gazeSpots:
+### Variables within embedHotspots, gazeSpots:
 
 * yaw, pitch - location on rectilinear projection (in radians), -pitch is up, +pitch is down 
 
-###embedHotspot specific variables:
+### embedHotspot specific variables:
 * radius - radius in pixels of sphere that html is placed upon (so, lower is closer)
 * extraRotations - rotate embedded content in X,Y direction so no longer on surface of sphere uses strings of the form 'rotateX(#rad) rotateY(#deg)' 
 
 Tip: to place content vertically, rotate X equivalent to pitch of embeddedHotspot
 Tip: to place content horizontally, rotate X equivalent to PI/2 - pitch of embeddedHotspot
 
-###gazeSpot specific variables:
+### gazeSpot specific variables:
 * deviation - tolerance in radians around gazeSpot location to activate it
 * target (optional, 'scene switch' type gazeSpot) - id of scenes object this gazeSpot will switch to
 * selector (optional, 'embedded content reveal' type gazeSpot) - selector of embedded html to be revealed
@@ -56,12 +56,12 @@ Tip: to place content horizontally, rotate X equivalent to PI/2 - pitch of embed
 * timeout - duration in milliseconds of scene switch or reveal
 * baseopacity - opacity element will return to once move off gazeSpot. So, can make elements remain in view if set to 1.0
 
-###manySpotSwitch specific variables:
+### manySpotSwitch specific variables:
 * target - scene to switch to
 * trigger - number of gazeSpots to be found before switching
 * timeout - duration in milliseconds of scene switch - Note: timeout activates once off gazeSpot, but can accidentally move on/off gazeSpot so this value should be equal to or greater than duration of longest spoken audio clip in scene
 
-###script object variables:
+### script object variables:
 * type: "rotate" or "scenechange"
 * time: time in milliseconds after which to execute rotation or scene change.
 
