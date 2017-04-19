@@ -4,6 +4,7 @@
 var debugMode = window.APP_DATA.settings.debugMode; 
 var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used? optional
 var stillQuiet = window.APP_DATA.settings.stillQuiet;  // average device motion tolerance before audio fade in/out
+var deviceInitialYaw = window.APP_DATA.settings.deviceInitialYaw; // using the device's orientation for Yaw of initial view, instead of initial view values in data.js
 var readyContainer = document.querySelector('#readyContainer');
 var readyElement = document.querySelector('#ready');
 var loadingElement = document.querySelector('#loading');
@@ -896,6 +897,15 @@ function switchScene(scene) {
 			view.setPitch(pitch);
 		  }
 		});
+
+		if (deviceInitialYaw) { // if using device's yaw orientation to set view
+			deviceOrientationControlMethod.getYaw(function(err, yaw) {
+				if (!err) {
+					view.setYaw(yaw);
+					console.log("Initial yaw is " + Marzipano.util.radToDeg(yaw));
+				}
+			});
+		}
 		controls.enableMethod('deviceOrientation');
 	  }
 
@@ -951,7 +961,10 @@ function switchScene(scene) {
 	function deviceMotionHandler(eventData) {
 		var acceleration = eventData.acceleration;
 		var average = Math.abs((acceleration.x + acceleration.y + acceleration.z)/3);
-		if ((stillQuiet) && (average > stillQuiet.tolerance)) { console.log("moved " + average); movementVolume(); }
+		if ((stillQuiet) && (average > stillQuiet.tolerance)) {
+// 			console.log("moved " + average);
+			movementVolume();
+		}
 	}  
 	
 	function movementVolume () {

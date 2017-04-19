@@ -33,6 +33,7 @@ function DeviceOrientationControlMethod() {
   this._tmp = {};
 
   this._getPitchCallbacks = [];
+  this._getYawCallbacks = [];
 }
 
 Marzipano.dependencies.eventEmitter(DeviceOrientationControlMethod);
@@ -48,6 +49,7 @@ DeviceOrientationControlMethod.prototype.destroy = function() {
   this._current = null;
   this._tmp = null;
   this._getPitchCallbacks = null;
+  this._getYawCallbacks = null;
 };
 
 
@@ -55,6 +57,9 @@ DeviceOrientationControlMethod.prototype.getPitch = function(cb) {
   this._getPitchCallbacks.push(cb);
 };
 
+DeviceOrientationControlMethod.prototype.getYaw = function(cb) {
+  this._getYawCallbacks.push(cb);
+};
 
 DeviceOrientationControlMethod.prototype._handleData = function(data) {
   var previous = this._previous,
@@ -72,6 +77,12 @@ DeviceOrientationControlMethod.prototype._handleData = function(data) {
     callback(null, current.pitch);
   });
   this._getPitchCallbacks.length = 0;
+
+  // Report current yaw value.
+  this._getYawCallbacks.forEach(function(callback) {
+    callback(null, current.yaw);
+  });
+  this._getYawCallbacks.length = 0;
 
   // Emit control offsets.
   if (previous.yaw != null && previous.pitch != null && previous.roll != null) {

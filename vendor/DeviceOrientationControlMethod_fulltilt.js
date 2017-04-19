@@ -22,45 +22,39 @@ function DeviceOrientationControlMethod() {
     pitch: new Marzipano.Dynamics()
   };
 
-  this._deviceOrientationHandler = this._handleData.bind(this);
-
-//   if (window.DeviceOrientationEvent) {
-//     window.addEventListener('deviceorientation', this._deviceOrientationHandler);
-//   }
+  var moveView = this._handleData.bind(this);
+  var orientationData;
   
-// Create a new FULLTILT Promise for e.g. *compass*-based deviceorientation data
-  var promise = new FULLTILT.getDeviceOrientation({ 'type': 'world' });
-
-  promise
-    .then(function(deviceOrientation) {
-      var euler = deviceOrientation.getScreenAdjustedEuler();
-      console.log(euler);
-    })
-    .catch(function(message) {
-      console.error(message);
-    });
-// this bit works!! now, to work out how to use promise object instead of event listener...  
-
+  if (window.DeviceOrientationEvent) {
+	orientationData = new FULLTILT.DeviceOrientation( { 'type': 'world' } );  
+	orientationData.start(function() {
+	  // DeviceOrientation updated
+		var euler = orientationData.getScreenAdjustedEuler();
+		moveView(euler);
+	});
+  }
+  
   this._previous = {};
   this._current = {};
   this._tmp = {};
 
   this._getPitchCallbacks = [];
+  this._getYawCallbacks = [];
 }
 
 Marzipano.dependencies.eventEmitter(DeviceOrientationControlMethod);
 
-
 DeviceOrientationControlMethod.prototype.destroy = function() {
   this._dynamics = null;
   if (window.DeviceOrientationEvent) {
-    window.removeEventListener('deviceorientation', this._deviceOrientationHandler);
+	orientationData.stop();
   }
   this._deviceOrientationHandler = null;
   this._previous = null;
   this._current = null;
   this._tmp = null;
   this._getPitchCallbacks = null;
+  this._getYawCallbacks = null;
 };
 
 
@@ -68,6 +62,9 @@ DeviceOrientationControlMethod.prototype.getPitch = function(cb) {
   this._getPitchCallbacks.push(cb);
 };
 
+DeviceOrientationControlMethod.prototype.getYaw = function(cb) {
+  this._getYawCallbacks.push(cb);
+};
 
 DeviceOrientationControlMethod.prototype._handleData = function(data) {
   
@@ -78,7 +75,7 @@ DeviceOrientationControlMethod.prototype._handleData = function(data) {
   tmp.yaw = Marzipano.util.degToRad(data.alpha);
   tmp.pitch = Marzipano.util.degToRad(data.beta);
   tmp.roll = Marzipano.util.degToRad(data.gamma);
-
+  
   rotateEuler(tmp, current);
 
   // Report current pitch value.
@@ -86,6 +83,12 @@ DeviceOrientationControlMethod.prototype._handleData = function(data) {
     callback(null, current.pitch);
   });
   this._getPitchCallbacks.length = 0;
+
+  // Report current yaw value.
+  this._getYawCallbacks.forEach(function(callback) {
+    callback(null, current.yaw);
+  });
+  this._getYawCallbacks.length = 0;
 
   // Emit control offsets.
   if (previous.yaw != null && previous.pitch != null && previous.roll != null) {
