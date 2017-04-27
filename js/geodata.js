@@ -10,7 +10,7 @@ var GEO_DATA = {
 		{ // Footpath sign above the Old Dock
 			"latitude":53.403056,
 			"longitude":-2.987533,
-			"deviation":0.0050, // v.roughly 500 metres tolerance
+			"deviation":0.02, // v.roughly 2km tolerance
 			"url": "olddock/index.html" 
 		},
 		{ // Outside Culture Lab

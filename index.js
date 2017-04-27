@@ -3,7 +3,6 @@
 
 var debugMode = window.APP_DATA.settings.debugMode; 
 var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used? optional
-var stillQuiet = window.APP_DATA.settings.stillQuiet;  // average device motion tolerance before audio fade in/out
 var deviceInitialYaw = window.APP_DATA.settings.deviceInitialYaw; // using the device's orientation for Yaw of initial view, instead of initial view values in data.js
 var readyContainer = document.querySelector('#readyContainer');
 var readyElement = document.querySelector('#ready');
@@ -191,13 +190,6 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	var timeOutSwitch = null; // empty variable for timeOutSwitch timer
 	var manySwitchTimer = null; // empty variable for manySpotSwitch timer
 	
-	// Add an event listener for DeviceMotion, if supported and on a touch device
-	var touchDeviceMotion = (window.DeviceMotionEvent) && (document.body.classList.contains('touch'));
-	if (touchDeviceMotion) {
-		console.log("DeviceMotionEvent supported");
-		window.addEventListener('devicemotion', deviceMotionHandler, false);
-	}
-
   // Detect desktop or mobile mode using a matchMedia query for viewport sizes of 500px square or less
   if (window.matchMedia) {
     var setMode = function() {
@@ -307,7 +299,6 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		var yaw = viewer.view().yaw();
 		var pitch = viewer.view().pitch();
 		var gazing = false;
-		if ((stillQuiet) && !(touchDeviceMotion)) { movementVolume();} else if (!touchDeviceMotion) {Howler.volume(1);} // increase/decrease global volume according to movement
 		if (debugMode) {
 			debugElement.style.display = "block;";
 			middleElement.style.display = "block;";							
@@ -411,21 +402,21 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 					}
 				}
 			}
-			if (sceneData.gazeSpots) {  // adjust offspot audio volumes according to distance
-				sceneData.gazeSpots.forEach(function (gazeSpot) {
-					var distance = spotDistance (gazeSpot, pitch, yaw);
-					if (gazeSpot.offspotaudio) { 
-						var expdecay = 1/(Math.exp(distance));
-						var sound;
-						spotSounds.forEach(function(spotSound) {	// look for sound matching selector
-							if (spotSound.selector == gazeSpot.selector) {
-								sound = spotSound.sound;
-							};
-						});
-						sound.volume(expdecay);
-					}				
-				});
-			}				
+// 			if (sceneData.gazeSpots) {  // adjust offspot audio volumes according to distance
+// 				sceneData.gazeSpots.forEach(function (gazeSpot) {
+// 					var distance = spotDistance (gazeSpot, pitch, yaw);
+// 					if (gazeSpot.offspotaudio) { 
+// 						var expdecay = 1/(Math.exp(distance));
+// 						var sound;
+// 						spotSounds.forEach(function(spotSound) {	// look for sound matching selector
+// 							if (spotSound.selector == gazeSpot.selector) {
+// 								sound = spotSound.sound;
+// 							};
+// 						});
+// 						sound.volume(expdecay);
+// 					}				
+// 				});
+// 			}				
 		} 				
 	});
 		
@@ -957,36 +948,5 @@ function switchScene(scene) {
 		this.selector = selector;
 		this.seen = seen;
 	}
-	
-	function deviceMotionHandler(eventData) {
-		var acceleration = eventData.acceleration;
-		var average = Math.abs((acceleration.x + acceleration.y + acceleration.z)/3);
-		if ((stillQuiet) && (average > stillQuiet.tolerance)) {
-// 			console.log("moved " + average);
-			movementVolume();
-		}
-	}  
-	
-	function movementVolume () {
-	// volume down interval timer keeps reducing volume unless volume up timer increases it - the former always running after first view change, the latter only on subsequent view changes 
-		if (!voldownTimer) { // if decrease global volume interval timer not started, create and start
-			voldownTimer = setInterval(function()
-				{
-					globalVolume -= 0.1;
-					if (globalVolume < 0) {globalVolume = 0};
-					Howler.volume(globalVolume);
-					if (globalVolume == 0) {clearInterval(voldownTimer); voldownTimer = null;}
-				}, (2*stillQuiet.interval)); // decrease global volume by 0.05 every 2 * interval
-		}
-		if (!volupTimer) { // if increase global volume timer not started, create and start
-			volupTimer = setTimeout(function()
-				{
-					globalVolume += 0.1;
-					if (globalVolume > 1) {globalVolume = 1};
-					Howler.volume(globalVolume);
-					clearTimeout(volupTimer);
-					volupTimer = null;
-				}, stillQuiet.interval); // increase global volume by 0.1 every interval
-		}
-	}
+		
 }	   // end go function 
