@@ -1,6 +1,6 @@
 Code for creating interactive spherical panoramas based on Marzipano (v0.3.0)
 
-This version by Simon Bowen March/April 2017,
+This version by Simon Bowen May 2017,
 [www.simon-bowen.com] ([www.simon-bowen.com])
 
 # Modified Marzipano
@@ -8,13 +8,14 @@ Uses the code created by Marzipano tools as a starting point: [http://www.marzip
 
 I have modified the contents of index.js, style.css and index.html and extended the format of data.js
 
-* index.js modifications:
+index.js modifications:
+
 * removed all functions for displaying and controlling scene list
 * removed all functions for view control buttons
 * removed all functions for autorotate button
 * added functionality from DeviceOrientationControlMethod
-* added embed hotspots
-* added gazespots
+* added embed hotspots (my term for embedding HTML in hotspot container)
+* added gazespots (my term for a hotspot that is activated by looking in one particular direction for a set period of time, i.e. rather than by tapping/clicking on something)
 
 ## Audio Integration
 Using [howler.js] (https://github.com/goldfire/howler.js)
@@ -68,9 +69,10 @@ Tip: to place content horizontally, rotate X equivalent to PI/2 - pitch of embed
 Time is cummulative, so to execute every second use time = 1000, 2000, 3000 etc.
 
 For rotate parameters, see [Marzipano documentation:](http://www.marzipano.net/reference/global.html#autorotate) 
-  	yawSpeed, pitchSpeed, fovSpeed
+
+	yawSpeed, pitchSpeed, fovSpeed
   	yawAccel, pitchAccel, fovAccel
 	targetPitch, targetFov
 	
-To prevent movement stopping between rotate events, set accelerations to Infinity
+To prevent movement stopping between rotate events, set accelerations to Infinity.
 
