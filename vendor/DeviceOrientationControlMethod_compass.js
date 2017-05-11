@@ -33,7 +33,6 @@ function DeviceOrientationControlMethod() {
   this._tmp = {};
 
   this._getPitchCallbacks = [];
-  this._getYawCallbacks = [];
 }
 
 Marzipano.dependencies.eventEmitter(DeviceOrientationControlMethod);
@@ -49,7 +48,6 @@ DeviceOrientationControlMethod.prototype.destroy = function() {
   this._current = null;
   this._tmp = null;
   this._getPitchCallbacks = null;
-  this._getYawCallbacks = null;
 };
 
 
@@ -57,16 +55,21 @@ DeviceOrientationControlMethod.prototype.getPitch = function(cb) {
   this._getPitchCallbacks.push(cb);
 };
 
-DeviceOrientationControlMethod.prototype.getYaw = function(cb) {
-  this._getYawCallbacks.push(cb);
-};
 
 DeviceOrientationControlMethod.prototype._handleData = function(data) {
   var previous = this._previous,
       current = this._current,
       tmp = this._tmp;
+	var compassDiff;
 
-  tmp.yaw = Marzipano.util.degToRad(data.alpha);
+	// work out difference between compass heading and alpha (yaw)
+	if(event.webkitCompassHeading) {
+	  // Apple works only with this, alpha doesn't work
+	  compassDiff = event.alpha - event.webkitCompassHeading;  
+	}
+	else compassDiff = 0;
+
+  tmp.yaw = Marzipano.util.degToRad(data.alpha) - compassDiff;
   tmp.pitch = Marzipano.util.degToRad(data.beta);
   tmp.roll = Marzipano.util.degToRad(data.gamma);
 
@@ -77,12 +80,6 @@ DeviceOrientationControlMethod.prototype._handleData = function(data) {
     callback(null, current.pitch);
   });
   this._getPitchCallbacks.length = 0;
-
-  // Report current yaw value.
-  this._getYawCallbacks.forEach(function(callback) {
-    callback(null, current.yaw);
-  });
-  this._getYawCallbacks.length = 0;
 
   // Emit control offsets.
   if (previous.yaw != null && previous.pitch != null && previous.roll != null) {

@@ -1,0 +1,78 @@
+Code for creating interactive spherical panoramas based on Marzipano (v0.3.0)
+
+This version by Simon Bowen May 2017,
+[www.simon-bowen.com] ([www.simon-bowen.com])
+
+# Modified Marzipano
+Uses the code created by Marzipano tools as a starting point: [http://www.marzipano.net/tool/] (http://www.marzipano.net/tool/)
+
+I have modified the contents of index.js, style.css and index.html and extended the format of data.js
+
+index.js modifications:
+
+* removed all functions for displaying and controlling scene list
+* removed all functions for view control buttons
+* removed all functions for autorotate button
+* added functionality from DeviceOrientationControlMethod
+* added embed hotspots (my term for embedding HTML in hotspot container)
+* added gazespots (my term for a hotspot that is activated by looking in one particular direction for a set period of time, i.e. rather than by tapping/clicking on something)
+
+## Audio Integration
+Using [howler.js] (https://github.com/goldfire/howler.js)
+
+## style.css modifications:
+* styling for device orientation control elements
+
+## index.html modifications:
+* removed #sceneList, #sceneListToggle, #titleBar, #autorotateToggle <div>s
+* reference to DeviceOrientationControlMethod.js
+
+## data.js modifications:
+Modified data.js file produced by marzipano web-based tool
+to include additional data for:
+
+* embedded html (embedHotspots)
+* hotspots that respond to looking at a particular location (gazeSpots)
+* scene to switch to after certain number of gazeSpots found (manySpotSwitch)
+* audio to play on scene switch (switchAudio)
+* background audio (bgAudio)
+* and, a script data object for an automatic playlist of view and scene changes
+
+### Variables within embedHotspots, gazeSpots:
+
+* yaw, pitch - location on rectilinear projection (in radians), -pitch is up, +pitch is down 
+
+### embedHotspot specific variables:
+* radius - radius in pixels of sphere that html is placed upon (so, lower is closer)
+* extraRotations - rotate embedded content in X,Y direction so no longer on surface of sphere uses strings of the form 'rotateX(#rad) rotateY(#deg)' 
+
+Tip: to place content vertically, rotate X equivalent to pitch of embeddedHotspot
+Tip: to place content horizontally, rotate X equivalent to PI/2 - pitch of embeddedHotspot
+
+### gazeSpot specific variables:
+* deviation - tolerance in radians around gazeSpot location to activate it
+* target (optional, 'scene switch' type gazeSpot) - id of scenes object this gazeSpot will switch to
+* selector (optional, 'embedded content reveal' type gazeSpot) - selector of embedded html to be revealed
+* audio (optional, for gazeSpots with audio elements) - array of URLs of audio to be played, i.e. to enable different formats
+* timeout - duration in milliseconds of scene switch or reveal
+* baseopacity - opacity element will return to once move off gazeSpot. So, can make elements remain in view if set to 1.0
+
+### manySpotSwitch specific variables:
+* target - scene to switch to
+* trigger - number of gazeSpots to be found before switching
+* timeout - duration in milliseconds of scene switch - Note: timeout activates once off gazeSpot, but can accidentally move on/off gazeSpot so this value should be equal to or greater than duration of longest spoken audio clip in scene
+
+### script object variables:
+* type: "rotate" or "scenechange"
+* time: time in milliseconds after which to execute rotation or scene change.
+
+Time is cummulative, so to execute every second use time = 1000, 2000, 3000 etc.
+
+For rotate parameters, see [Marzipano documentation:](http://www.marzipano.net/reference/global.html#autorotate) 
+
+	yawSpeed, pitchSpeed, fovSpeed
+  	yawAccel, pitchAccel, fovAccel
+	targetPitch, targetFov
+	
+To prevent movement stopping between rotate events, set accelerations to Infinity.
+

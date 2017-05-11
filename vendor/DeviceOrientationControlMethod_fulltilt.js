@@ -22,12 +22,18 @@ function DeviceOrientationControlMethod() {
     pitch: new Marzipano.Dynamics()
   };
 
-  this._deviceOrientationHandler = this._handleData.bind(this);
-
+  var moveView = this._handleData.bind(this);
+  var orientationData;
+  
   if (window.DeviceOrientationEvent) {
-    window.addEventListener('deviceorientation', this._deviceOrientationHandler);
+	orientationData = new FULLTILT.DeviceOrientation( { 'type': 'world' } );  
+	orientationData.start(function() {
+	  // DeviceOrientation updated
+		var euler = orientationData.getScreenAdjustedEuler();
+		moveView(euler);
+	});
   }
-
+  
   this._previous = {};
   this._current = {};
   this._tmp = {};
@@ -38,11 +44,10 @@ function DeviceOrientationControlMethod() {
 
 Marzipano.dependencies.eventEmitter(DeviceOrientationControlMethod);
 
-
 DeviceOrientationControlMethod.prototype.destroy = function() {
   this._dynamics = null;
   if (window.DeviceOrientationEvent) {
-    window.removeEventListener('deviceorientation', this._deviceOrientationHandler);
+	orientationData.stop();
   }
   this._deviceOrientationHandler = null;
   this._previous = null;
@@ -62,6 +67,7 @@ DeviceOrientationControlMethod.prototype.getYaw = function(cb) {
 };
 
 DeviceOrientationControlMethod.prototype._handleData = function(data) {
+  
   var previous = this._previous,
       current = this._current,
       tmp = this._tmp;
@@ -69,7 +75,7 @@ DeviceOrientationControlMethod.prototype._handleData = function(data) {
   tmp.yaw = Marzipano.util.degToRad(data.alpha);
   tmp.pitch = Marzipano.util.degToRad(data.beta);
   tmp.roll = Marzipano.util.degToRad(data.gamma);
-
+  
   rotateEuler(tmp, current);
 
   // Report current pitch value.
