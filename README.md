@@ -16,6 +16,7 @@ index.js modifications:
 * added functionality from DeviceOrientationControlMethod
 * added embed hotspots (my term for embedding HTML in hotspot container)
 * added gazespots (my term for a hotspot that is activated by looking in one particular direction for a set period of time, i.e. rather than by tapping/clicking on something)
+* added code to run basic image slideshows within embed hotspots
 
 ## Audio Integration
 Using [howler.js] (https://github.com/goldfire/howler.js)
@@ -36,6 +37,7 @@ to include additional data for:
 * scene to switch to after certain number of gazeSpots found (manySpotSwitch)
 * audio to play on scene switch (switchAudio)
 * background audio (bgAudio)
+* timeout between slides (slidesTimeout), allows one slideshow per scene created as several images within a div using the class fadein 
 * and, a script data object for an automatic playlist of view and scene changes
 
 ### Variables within embedHotspots, gazeSpots:
@@ -44,10 +46,13 @@ to include additional data for:
 
 ### embedHotspot specific variables:
 * radius - radius in pixels of sphere that html is placed upon (so, lower is closer)
-* extraRotations - rotate embedded content in X,Y direction so no longer on surface of sphere uses strings of the form 'rotateX(#rad) rotateY(#deg)' 
+* extraRotations - rotate embedded content in X,Y direction so rectangle is no longer placed tangential to surface of sphere, uses strings of the form 'rotateX(#rad) rotateY(#deg)' 
 
-Tip: to place content vertically, rotate X equivalent to pitch of embeddedHotspot
-Tip: to place content horizontally, rotate X equivalent to PI/2 - pitch of embeddedHotspot
+Tip: to place rectangle vertically, rotate X equivalent to pitch of embeddedHotspot.
+
+Tip: to place rectangle horizontally, rotate X equivalent to PI/2 - pitch of embeddedHotspot.
+
+Tip: to rotate rectangle so that it is appears parallel with walls, rotate Y equivalent to difference between embeddedHotspot yaw and yaw when looking directly at wall.
 
 ### gazeSpot specific variables:
 * deviation - tolerance in radians around gazeSpot location to activate it
@@ -55,7 +60,8 @@ Tip: to place content horizontally, rotate X equivalent to PI/2 - pitch of embed
 * selector (optional, 'embedded content reveal' type gazeSpot) - selector of embedded html to be revealed
 * audio (optional, for gazeSpots with audio elements) - array of URLs of audio to be played, i.e. to enable different formats
 * timeout - duration in milliseconds of scene switch or reveal
-* baseopacity - opacity element will return to once move off gazeSpot. So, can make elements remain in view if set to 1.0
+* baseOpacity - opacity element will return to once move off gazeSpot. So, can make elements remain in view if set to 1.0
+* maxOpacity (optional) - maximum opacity embedded element will transition to
 
 ### manySpotSwitch specific variables:
 * target - scene to switch to
