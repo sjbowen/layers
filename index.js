@@ -454,7 +454,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	  backButtonElement.classList.add('backButton-enabled');
 	  backButtonElement.addEventListener('click', function () {
 	  	if (readyContainer !=null) {
-			var url = "index.html?" + scenePoint;
+			var url = window.location.pathname + "?" + scenePoint;
 			window.location = url;
 	  	} else {
 	  		console.log('back');
