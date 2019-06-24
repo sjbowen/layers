@@ -85,4 +85,4 @@ em {
 /* styles for slideshow.js */
 .fadein { position:relative;}
 .fadein img { position:absolute; left:0; top:0; transition:opacity 1s; opacity:1; }
-.fadein img.is-hidden { opacity:0; }
+.fadein img.is-hidden {  position:absolute; left:0; top:0; opacity:0; }
