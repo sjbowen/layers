@@ -14,6 +14,7 @@ var voldownTimer = null;
 var soundCount = 0;
 var loadCount = 0;
 var scenePoint = 0;
+var slidesTimeout = window.APP_DATA.settings.slidesTimeout;
 
 if (readyContainer!=null) { // if there is a readyContainer present to get touch start/preload for audio
 
@@ -129,7 +130,7 @@ function loadSounds() { 	// preload the gazeSpot audio
 		document.body.style.height = "100%"; // set height back to 100%
 		go();
 	} 
-	console.log(spotSounds);
+	console.log(spotSounds); 
 }
 
 function soundSelect (selector, sound) {	// object constructor for pairs of HTML selector, Howl sounds
@@ -264,6 +265,9 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	if 	(sceneData.switchAudio) { // check if this scene has scene switch audio, assign variables if so
 		var switchAudio = sceneData.switchAudio;
 	}
+	if (sceneData.slidesTimeout) { // check if this scene has a slideshow, assign slide timeout variable if so
+		var slidesTimeout = sceneData.slidesTimeout;
+	}
 
     // Create link hotspots.
     sceneData.linkHotspots.forEach(function(hotspot) {
@@ -318,8 +322,16 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 						if (gazeSpot.selector) { // if this is an embedded content reveal type gazespot
 							console.log('gazeSpot found: '+ gazeSpot.selector);
 							fading = true; // switch fading on
-							// transition opacity to 1 over timeout duration
-							document.getElementById(gazeSpot.selector).style.opacity = 1;
+							// transition opacity to maxOpacity or 1 over timeout duration
+							if (gazeSpot.maxOpacity) {
+								document.getElementById(gazeSpot.selector).style.opacity = gazeSpot.maxOpacity;
+							} else {
+								document.getElementById(gazeSpot.selector).style.opacity = 1;
+							}
+							
+							// Conflicted version in master branch :transition opacity to 1 over timeout duration
+							// document.getElementById(gazeSpot.selector).style.opacity = 1;
+
 							document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out";
 							if (gazeSpot.audio) { // if there is an audio component, fetch it and start playing at 0 volume
 								var sound;
@@ -428,7 +440,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 
   // Display the initial scene.
   switchScene(scenes[scenePoint]);
-  console.log("Go to scene " + scenePoint);  
+  console.log("Go to scene " + scenePoint);
 
 	  // GYRO: need to create 'view' variable for use by enable/disableGyro
 	  var scene = viewer.scene(); // get the current scene
@@ -446,7 +458,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	  backButtonElement.classList.add('backButton-enabled');
 	  backButtonElement.addEventListener('click', function () {
 	  	if (readyContainer !=null) {
-			var url = "index.html?" + scenePoint;
+			var url = window.location.pathname + "?" + scenePoint;
 			window.location = url;
 	  	} else {
 	  		console.log('back');
@@ -670,6 +682,7 @@ function switchScene(scene) {
 		}
 	}
 	scene.marzipanoObject.switchTo(); // changes the scene
+	if (scene.data.slidesTimeout) {slideshow(scene.data.slidesTimeout)} // if scene has a slideshow, start it
 	if (scene.data.switchAudio) { // if there is switch audio load and play it
 		switchSound = new Howl({
 			src: scene.data.switchAudio.source,
@@ -947,6 +960,29 @@ function switchScene(scene) {
 	function spotSeen (selector, seen) {	// object constructor for pairs of gazeSpot and boolean seen value
 		this.selector = selector;
 		this.seen = seen;
+	}
+
+	// Based on Snook's Simplest JavaScript Slideshow: https://snook.ca/archives/javascript/simplest-javascript-slideshow
+	function slideshow(timeout) {
+		console.log("slides started");
+		var i;
+		var root = document.querySelector('.fadein');
+		var els = root.querySelectorAll(':not(:first-child)');
+		for (i=0; i < els.length; i++) {
+			els[i].classList.add('is-hidden');
+		}
+
+		root.addEventListener('transitionend', function(){
+			var el = root.querySelector(':first-child.is-hidden');
+			if (el != null) { 
+				root.insertBefore(el, null);
+			}
+		});
+
+		setInterval(function(){
+			root.querySelector(':first-child').classList.add('is-hidden');
+			root.querySelector(':nth-child(2)').classList.remove('is-hidden');
+			}, timeout);
 	}
 		
 }	   // end go function 
