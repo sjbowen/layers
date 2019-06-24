@@ -328,6 +328,10 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 							} else {
 								document.getElementById(gazeSpot.selector).style.opacity = 1;
 							}
+							
+							// Conflicted version in master branch :transition opacity to 1 over timeout duration
+							// document.getElementById(gazeSpot.selector).style.opacity = 1;
+
 							document.getElementById(gazeSpot.selector).style.transition = "opacity " + gazeSpot.timeout + "ms ease-in-out";
 							if (gazeSpot.audio) { // if there is an audio component, fetch it and start playing at 0 volume
 								var sound;
