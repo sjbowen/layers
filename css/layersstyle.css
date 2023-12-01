@@ -41,7 +41,7 @@ em {
 	position:absolute;
 	bottom:50px;
 	left:0px;
-	display: none;
+	/* display: none; */
 }
 
 #debug2 {
@@ -79,7 +79,7 @@ em {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	font-size: 100px;
-	display: none;
+	/* display: none; */
 }
 
 /* styles for slideshow.js */
