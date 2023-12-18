@@ -1,6 +1,6 @@
 Code for creating interactive spherical panoramas based on Marzipano (v0.3.0)
 
-This version by Simon Bowen May 2017,
+This version by Simon Bowen May 2017, minor updates December 2023.
 [www.simon-bowen.com] ([www.simon-bowen.com])
 
 # Modified Marzipano
@@ -81,4 +81,21 @@ For rotate parameters, see [Marzipano documentation:](http://www.marzipano.net/r
 	targetPitch, targetFov
 	
 To prevent movement stopping between rotate events, set accelerations to Infinity.
+
+# Adding New Panoramas
+
+Begin with the web root folder containing the following folders/contents from the repository:
+
+	/css
+	/img
+	/js
+	/sounds
+	/vector
+	/template
+	index.js
+
+1. Use the [Marzipano Tool](https://www.marzipano.net/tool/) to upload rectilinear image and create files for a web application.
+2. Duplicate the /template folder and rename with panorama title
+3. Copy the /tiles folder from the exported web application into new panorama folder
+4. Cut and paste ‘scenes’ data objects from the exported data.js into panorama folder data.js (and add embedhotspots, gazeSpots and script data objects if using)
 
