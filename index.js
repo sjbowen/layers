@@ -55,6 +55,7 @@ if (readyContainer!=null) { // if there is a readyContainer present to get touch
 }
 
 function goClick (event) {
+
 	if (window.location.search) { // set scenePoint if set with search string, used when only one go button returning to linked scenes
 		scenePoint = parseInt(window.location.search.slice(1));
 	}
@@ -75,6 +76,7 @@ function goClick (event) {
 }
 
 function goTouch () {
+
 	if (window.location.search) { // set scenePoint if set with search string, used when only one go button returning to linked scenes
 		scenePoint = parseInt(window.location.search.slice(1));
 	}
