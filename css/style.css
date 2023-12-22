@@ -96,21 +96,34 @@ body.multiple-scenes.mobile #titleBar {
 }
 
 
-/* controls for device orientation */
-#deviceOrientationToggle {
-  display: none;
+/* controls for device orientation - updated to match revised code from GitHub repo, previous commented out below */
+#toggleDeviceOrientation {
+  width: 50px;
+  height: 50px;
   position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 40px;
-  height: 40px;
-  padding: 5px;
-/* 
-  background-color: rgb(103,115,131);
-  background-color: rgba(103,115,131,0.8);
- */
+  top: 10px;
+  left: 10px;
+  /* background-color: rgb(103,115,131);
+  background-color: rgba(103,115,131,0.8); */
 }
 
+#toggleDeviceOrientation img {
+  width: 34px;
+  margin: 8px;
+}
+
+#toggleDeviceOrientation .disable {
+  display: none;
+}
+
+#toggleDeviceOrientation.enabled .disable {
+  display: block;
+}
+
+#toggleDeviceOrientation.enabled .enable {
+  display: none;
+}
+/* 
 body.deviceOrientationControl-enabled #deviceOrientationToggle {
   display: block;
 }
@@ -147,7 +160,7 @@ body.deviceOrientationControl-enabled #deviceOrientationToggle {
 
 #deviceOrientationToggle.enabled .icon.off {
   display: none;
-}
+} */
 
 /* end device orientation controls */
 
@@ -208,17 +221,15 @@ body.backButton-enabled #backButton {
 /* end back button controls */
 
 #fullscreenToggle {
-  display: none;
+  /* display: none; */
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10px;
+  right: 10px;
   width: 40px;
   height: 40px;
   padding: 5px;
-/* 
-  background-color: rgb(103,115,131);
-  background-color: rgba(103,115,131,0.8);
- */
+  /* background-color: rgb(103,115,131);
+  background-color: rgba(103,115,131,0.8); */
 }
 
 .mobile #fullscreenToggle {
@@ -865,8 +876,8 @@ body.single-scene #sceneList, body.single-scene #sceneListToggle {
   width: 40px;
   height: 40px;
   padding: 5px;
-  background-color: rgb(103,115,131);
-  background-color: rgba(103,115,131,0.8);
+  /* background-color: rgb(103,115,131);
+  background-color: rgba(103,115,131,0.8); */
 }
 
 body.view-control-buttons .viewControlButton {
@@ -907,5 +918,3 @@ body.view-control-buttons .viewControlButton {
 .viewControlButton-6 {
   margin-left: 105px;
 }
-
-/* Controls for device orientation */

@@ -2,6 +2,7 @@
 // this version written for marzipano version 0.3.0
 
 var debugMode = window.APP_DATA.settings.debugMode; 
+console.log("debugMode is" , debugMode);
 var webPdUsed = window.APP_DATA.settings.webPdUsed;  // is web pd being used? optional
 var deviceInitialYaw = window.APP_DATA.settings.deviceInitialYaw; // using the device's orientation for Yaw of initial view, instead of initial view values in data.js
 var readyContainer = document.querySelector('#readyContainer');
@@ -18,11 +19,11 @@ var slidesTimeout = window.APP_DATA.settings.slidesTimeout;
 
 if (readyContainer!=null) { // if there is a readyContainer present to get touch start/preload for audio
 
-	// check whether device has gyro functionality
-	window.addEventListener('deviceorientation', function () {
-	    document.body.classList.remove('no-gyro');
-    	document.body.classList.add('gyro');
-	});
+	// // check whether device has gyro functionality
+	// window.addEventListener('deviceorientation', function () {
+	//     document.body.classList.remove('no-gyro');
+    // 	document.body.classList.add('gyro');
+	// });
 
 	// if there are storyIDs for hotspots, add a tracking pixel element
 	
@@ -54,6 +55,7 @@ if (readyContainer!=null) { // if there is a readyContainer present to get touch
 }
 
 function goClick (event) {
+
 	if (window.location.search) { // set scenePoint if set with search string, used when only one go button returning to linked scenes
 		scenePoint = parseInt(window.location.search.slice(1));
 	}
@@ -74,6 +76,7 @@ function goClick (event) {
 }
 
 function goTouch () {
+
 	if (window.location.search) { // set scenePoint if set with search string, used when only one go button returning to linked scenes
 		scenePoint = parseInt(window.location.search.slice(1));
 	}
@@ -171,7 +174,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
   var autorotateToggleElement = document.querySelector('#autorotateToggle');
   var fullscreenToggleElement = document.querySelector('#fullscreenToggle');
   var backButtonElement = document.querySelector('#backButton');
-	var deviceOrientationToggleElement = document.querySelector('#deviceOrientationToggle'); // for GYRO on/off
+//	var deviceOrientationToggleElement = document.querySelector('#deviceOrientationToggle'); // for GYRO on/off
 	var debugElement = document.getElementById('debug'); // container for live location data
 	var debugElement2 = document.getElementById('debug2'); // container for scene info
 	var progressElement = document.getElementById('progress'); // container for gazeSpot progress info
@@ -242,7 +245,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
       "tiles/" + sceneData.id + "/{z}/{f}/{y}/{x}.jpg",
       { cubeMapPreviewUrl: "tiles/" + sceneData.id + "/preview.jpg" });
     var geometry = new Marzipano.CubeGeometry(sceneData.levels);
-    var limiter = Marzipano.RectilinearView.limit.traditional(sceneData.faceSize, 100*Math.PI/180, 120*Math.PI/180);
+    var limiter = Marzipano.RectilinearView.limit.traditional(sceneData.faceSize, 100 * Math.PI / 180, 120 * Math.PI / 180);
     var view = new Marzipano.RectilinearView(sceneData.initialViewParameters, limiter);
 
     var marzipanoScene = viewer.createScene({
@@ -294,7 +297,7 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		if (sceneData.embedHotspots) {
 			sceneData.embedHotspots.forEach(function(hotspot) {
 				var element = createEmbedHotspotElement(hotspot);
-				marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch }, { perspective: { radius: hotspot.radius, extraRotations: hotspot.extraRotations }});
+				marzipanoScene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch }, { perspective: { radius: hotspot.radius, extraTransforms: hotspot.extraRotations }});
 			});	
 		}	
 		
@@ -304,8 +307,8 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 		var pitch = viewer.view().pitch();
 		var gazing = false;
 		if (debugMode) {
-			debugElement.style.display = "block;";
-			middleElement.style.display = "block;";							
+			// debugElement.style.display = "block;";
+			// middleElement.style.display = "block;";
 			debugElement.innerHTML = 'yaw' + yaw + '<br />pitch' + pitch + '<br />fov' + viewer.view().fov();
 			middleElement.innerHTML = '+';
 		};
@@ -445,13 +448,15 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	  // GYRO: need to create 'view' variable for use by enable/disableGyro
 	  var scene = viewer.scene(); // get the current scene
 	  var view = scene.view();    // get the scene's view
-  
+	  // add variable for device orientation toggle element here (was lower down, but needed earlier)
+
+
 	  // turn on GYRO navigation if on a compatible device with both gyro and touch functions
-	  // this is because Chrome on MacOS registers deviceorientation events
-	  if (document.body.classList.contains('gyro') && document.body.classList.contains('touch') ) {
-		deviceOrientationToggleElement.classList.add('enabled');
-		enableGyro();
-	  }
+	  // this is because Chrome on MacOS registers deviceorientation events - turning off to see if this is still necessary
+	//   if (document.body.classList.contains('gyro') && document.body.classList.contains('touch') ) {
+	// 	deviceOrientationToggleElement.classList.add('enabled');
+	// 	enableGyro();
+	//   }
 	  
 	  // turn on back button, add event listener to reload page with query string
 	  backButtonElement.classList.add('enabled');
@@ -466,19 +471,21 @@ function go() { // rather than as a self-invoking anonymous function, call this 
 	  	}
 	  });
 	  
-	  // Set handler for DeviceOrientation control (GYRO) toggle.
-	  if (APP_DATA.settings.deviceOrientationControl) {
-    	document.body.classList.add('deviceOrientationControl-enabled');
-    	deviceOrientationToggleElement.addEventListener('click', toggleDeviceOrientation);
-	  } else {
-    	document.body.classList.add('deviceOrientationControl-disabled');
-	  }
+	  // Set handler for DeviceOrientation control (GYRO) toggle. Turned off to see if new code for detecting device orientation
+	//   if (APP_DATA.settings.deviceOrientationControl) {
+    // 	document.body.classList.add('deviceOrientationControl-enabled');
+    // 	deviceOrientationToggleElement.addEventListener('click', toggleDeviceOrientation);
+	//   } else {
+    // 	document.body.classList.add('deviceOrientationControl-disabled');
+	//   }
  
 // Note cannot automatically switch full screen mode on, prohibited, needs user input so replace icons with transparent GIFs instead
 // Uses screenfull.js  (https://github.com/sindresorhus/screenfull.js) which is not currently compatible with Safari on iOS and Chrome on Android
-  if (screenfull.enabled && APP_DATA.settings.fullscreenButton) {
-    document.body.classList.add('fullscreen-enabled');
+  if (screenfull.isEnabled && APP_DATA.settings.fullscreenButton) {
+	// if (APP_DATA.settings.fullscreenButton) {
+document.body.classList.add('fullscreen-enabled');
     fullscreenToggleElement.addEventListener('click', toggleFullscreen);
+	console.log("Fullscreen button enabled");
   } else {
     document.body.classList.add('fullscreen-disabled');
   }
@@ -723,8 +730,10 @@ function switchScene(scene) {
     screenfull.toggle();
     if (screenfull.isFullscreen) {
       fullscreenToggleElement.classList.add('enabled');
+	  console.log("Fullscreen disabled");
     } else {
       fullscreenToggleElement.classList.remove('enabled');
+	  console.log("Fullscreen enabled");
     }
   }
 
@@ -895,12 +904,45 @@ function switchScene(scene) {
  
 	  // GYRO: Gyro functions
 
-	  function enableGyro() { 
-		deviceOrientationControlMethod.getPitch(function(err, pitch) {
-		  if(!err) {
-			view.setPitch(pitch);
-		  }
-		});
+	var enabled = false;
+
+	var toggleElement = document.getElementById('toggleDeviceOrientation');
+
+	function requestPermissionForIOS() {
+		console.log("Asking permission for device orientation");
+		window.DeviceOrientationEvent.requestPermission()
+		.then(response => {
+			if (response === 'granted') {
+			enableDeviceOrientation()
+			}
+		}).catch((e) => {
+			console.error(e)
+		})
+	}
+  
+  function enableDeviceOrientation() {
+	deviceOrientationControlMethod.getPitch(function (err, pitch) {
+	  if (!err) {
+		view.setPitch(pitch);
+	  }
+	});
+	controls.enableMethod('deviceOrientation');
+	enabled = true;
+	toggleElement.className = 'enabled';
+	console.log("device orientation enabled");
+  }
+  
+  // note renamed function to enableGyro from enable as it is called in GitHub demo repo
+  function enableGyro() {
+	if (window.DeviceOrientationEvent) {
+	  if (typeof (window.DeviceOrientationEvent.requestPermission) == 'function') {
+		requestPermissionForIOS()
+	  } else {
+		enableDeviceOrientation()
+	  }
+	}
+  }
+  
 
 		if (deviceInitialYaw) { // if using device's yaw orientation to set view
 			deviceOrientationControlMethod.getYaw(function(err, yaw) {
@@ -910,24 +952,40 @@ function switchScene(scene) {
 				}
 			});
 		}
-		controls.enableMethod('deviceOrientation');
-	  }
-
+		// controls.enableMethod('deviceOrientation');
+	  
+//note this function is called disable in GitHut demo repo
 	  function disableGyro() {
-		controls.disableMethod('deviceOrientation');
-	  }
+			controls.disableMethod('deviceOrientation');
+			enabled = false;
+			toggleElement.className = '';
+		}
+// previous toggle device orentation function
+	//   function toggleDeviceOrientation() {
+	// 	if (deviceOrientationToggleElement.classList.contains('enabled')) {
+	// 	  deviceOrientationToggleElement.classList.remove('enabled');
+	// 	  console.log("Gyro disabled");
+	// 	  disableGyro();
+	// 	} else {
+	// 	  deviceOrientationToggleElement.classList.add('enabled');
+	// 	  console.log("Gyro enabled");
+	// 	  enableGyro();
+	// 	}
+	//   }
 
-	  function toggleDeviceOrientation() {
-		if (deviceOrientationToggleElement.classList.contains('enabled')) {
-		  deviceOrientationToggleElement.classList.remove('enabled');
+	function toggle() {
+		if (enabled) {
 		  disableGyro();
 		} else {
-		  deviceOrientationToggleElement.classList.add('enabled');
 		  enableGyro();
 		}
 	  }
-	   
-	  function spotDistance (gazeSpot, pitch, yaw) {
+	  
+	toggleElement.addEventListener('click', toggle);
+   
+
+
+	function spotDistance (gazeSpot, pitch, yaw) {
 	  	var yawFactor; 
 	  	// check if pitch and gazeSpot.pitch in same hemisphere
 	  	// if so, bias the contribution of yaw according to view pitch so that it decreases to zero at the poles
