@@ -1,6 +1,6 @@
 # Ignore images etc. for marzipano pages #
 #######################################
-tiles/
+# tiles/ # 
 embed/
 abbotsford/
 argyll/
