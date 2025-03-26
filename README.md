@@ -1,7 +1,7 @@
 Code for creating interactive spherical panoramas based on Marzipano (v0.3.0)
 
 This version by Simon Bowen May 2017, minor updates December 2023, example projects added March 2025 see [https://sjbowen.github.io/layers/](https://sjbowen.github.io/layers/).
-[www.simon-bowen.com] ([www.simon-bowen.com])
+[www.simon-bowen.com]([www.simon-bowen.com])
 
 # Modified Marzipano
 Uses the code created by Marzipano tools as a starting point: [http://www.marzipano.net/tool/](http://www.marzipano.net/tool/)
