@@ -1,0 +1,42 @@
+<html>
+<head>
+<script type="text/javascript">
+
+var slideimages = new Array() // create new array to preload images
+slideimages[0] = new Image() // create new instance of image object
+slideimages[0].src = "felixnamque1.jpg" // set image src property to image path, preloading image in the process
+slideimages[1] = new Image()
+slideimages[1].src = "felixnamque2.jpg"
+slideimages[2] = new Image()
+slideimages[2].src = "felixnamque3.jpg"
+slideimages[3] = new Image()
+slideimages[3].src = "felixnamque4.jpg"
+
+</script>
+</head>
+<body>
+<img src="felixnamque1.jpg" id="slide" />
+
+<script type="text/javascript">
+
+//variable that will increment through the images
+var step=0
+
+function slideit(){
+ //if browser does not support the image object, exit.
+ if (!document.images)
+  return
+ document.getElementById('slide').src = slideimages[step].src
+ if (step<3)
+  step++
+ else
+  step=0
+ //call function "slideit()" every 10 seconds
+ setTimeout("slideit()",10000)
+}
+
+slideit()
+
+</script>
+</body>
+</html>

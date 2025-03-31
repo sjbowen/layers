@@ -1,0 +1,45 @@
+<html>
+<head>
+</head>
+<!-- Based on Snook's Simplest CSS Slideshow: https://snook.ca/archives/html_and_css/simplest-css-slideshow -->
+
+<body>
+<style>
+body {margin:0;padding:0; font-family:Arial, Helvetica, sans-serif; font-size:12px;}
+
+@keyframes fade { /* keyframes are percentages of duration of the entire slideshow, here 40 seconds so 1 second = 2.5% */
+  0% { opacity: 0; } /* start transparent */
+  2.5%   { opacity: 1; } /* 1 second fade-in */
+  12.5%   { opacity: 1; } /* + 4 seconds visible = 5 seconds total */
+  15%  { opacity: 0; } /* + 1 second fade-out (overlap, so crossfade) = 6 seconds total */
+  100% { opacity: 0; } /* remainder transparent */
+}
+
+.fadein { position:relative; height:1200px; width:845px; }
+.fadein img { position:absolute; left:0; right:0; opacity:0; animation-name: fade; animation-duration: 40s; animation-iteration-count: infinite; }
+.fadein img:nth-child(1) { animation-delay: 0s;  } /* delay each slide by sum of duration of fade-in + visible for all preceding slides */
+.fadein img:nth-child(2) { animation-delay: 5s;  }
+.fadein img:nth-child(3) { animation-delay: 10s;  }
+.fadein img:nth-child(4) { animation-delay: 15s;  }
+.fadein img:nth-child(5) { animation-delay: 20s;  }
+.fadein img:nth-child(6) { animation-delay: 25s;  }
+.fadein img:nth-child(7) { animation-delay: 30s;  }
+.fadein img:nth-child(8) { animation-delay: 35s;  }
+
+
+</style>
+
+<div class="fadein">
+	<img src="rood1.jpg">
+	<img src="rood2.jpg">
+	<img src="rood3.jpg">
+	<img src="rood4.jpg">
+	<img src="rood5.jpg">
+	<img src="rood6.jpg">
+	<img src="rood7.jpg">
+	<img src="rood8.jpg">
+</div>
+
+
+</body>
+</html>

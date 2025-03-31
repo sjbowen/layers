@@ -1,0 +1,46 @@
+<html>
+<head>
+</head>
+<!-- Based on Snook's Simplest JavaScript Slideshow: https://snook.ca/archives/javascript/simplest-javascript-slideshow -->
+<style>
+.fadein { position:relative; height:1200px; width:845px; }
+.fadein img { position:absolute; left:0; top:0; transition:opacity 1s; opacity:1; }
+.fadein img.is-hidden { opacity:0; }
+</style>
+<body style="margin:0;padding:0">
+
+<div class="fadein">
+	<img src="rood1.jpg">
+	<img src="rood2.jpg">
+	<img src="rood3.jpg">
+	<img src="rood4.jpg">
+	<img src="rood5.jpg">
+	<img src="rood6.jpg">
+	<img src="rood7.jpg">
+	<img src="rood8.jpg">
+</div>
+
+<script type="text/javascript">
+
+var i;
+var root = document.querySelector('.fadein');
+var els = root.querySelectorAll(':not(:first-child)');
+for (i=0; i < els.length; i++) {
+	els[i].classList.add('is-hidden');
+}
+
+root.addEventListener('transitionend', function(){
+	var el = root.querySelector(':first-child.is-hidden');
+	if (el != null) { 
+		root.insertBefore(el, null);
+	}
+});
+
+setInterval(function(){
+	root.querySelector(':first-child').classList.add('is-hidden');
+	root.querySelector(':nth-child(2)').classList.remove('is-hidden');
+	}, 8000)
+
+</script>
+</body>
+</html>
